@@ -1,0 +1,59 @@
+/* =========================================
+   1. VARIABLES DE COLOR (Basadas en tu Figma)
+   ========================================= */
+:root {
+    /* Colores principales */
+    --color-primario: #2563EB;       /* Azul fuerte de los botones y el header */
+    --color-fondo: #F0F4FF;          /* Azul muy clarito del fondo de la página */
+    --color-blanco: #FFFFFF;         /* Blanco para las tarjetas */
+    
+    /* Colores de texto */
+    --texto-oscuro: #1E293B;         /* Gris muy oscuro para títulos */
+    --texto-gris: #64748B;           /* Gris para textos secundarios */
+    
+    /* Colores de estados (para los reportes) */
+    --estado-reportado: #3B82F6;     /* Azul */
+    --estado-revision: #F59E0B;      /* Naranja/Amarillo */
+    --estado-reparado: #10B981;      /* Verde */
+    
+    /* Tipografía */
+    --fuente-principal: 'Poppins', sans-serif; /* O la que hayas elegido en Figma */
+}
+
+/* =========================================
+   2. RESET Y ESTILOS BÁSICOS
+   ========================================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* Esto evita que los bordes rompan el ancho */
+}
+
+body {
+    font-family: var(--fuente-principal);
+    background-color: var(--color-fondo);
+    color: var(--texto-oscuro);
+    line-height: 1.6;
+}
+
+/* =========================================
+   3. CLASES ÚTILES (Para reutilizar)
+   ========================================= */
+/* Para las tarjetas blancas que se ven en tu Figma */
+.tarjeta {
+    background-color: var(--color-blanco);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); /* Sombra suave */
+}
+
+/* Para los botones azules */
+.boton-primario {
+    background-color: var(--color-primario);
+    color: var(--color-blanco);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: var(--fuente-principal);
+}
