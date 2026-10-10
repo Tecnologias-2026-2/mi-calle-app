@@ -5,20 +5,166 @@
     <meta charset="UTF-8">
     <meta name="viewport" 
     content="width=device-width, initial-scale=1.0">
-    <title>Mi Calle - Portal Usuario</title>
+    <title>usuario</title>
     
-    <!-- Enlace al CSS Global (el que acabas de crear) -->
+    <!-- CSS global -->
     <link rel="stylesheet" href="../../css/styles.css">
     
-    <!-- Enlace a tu CSS específico (si lo necesitas) -->
-    <link rel="stylesheet" href="usuario.css">
+    <!-- CSS de mi portal usuario-->
+    <link rel="stylesheet" href="../usuario.css/usuario.css">
+
+    <!-- Font Awesome (Librería de iconos) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+      <!-- Fuente Poppins-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
  
 
 </head>
 <body>
     
-    <h1>Prueba de Fondo</h1>
-    <p>¡el CSS funciona!</p>
+<!-- HEADER  --> 
+ <header class="header-usuario">
+    <div class="logo">
+         <!-- Aquí irá la imagen del logo. Por ahora un texto de prueba -->
+        <div class="logo-icono">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="logo-texto">
+            <h2>Mi Calle</h2>
+            <span>Portal Ciudadano</span>
+        </div>
+
+    </div>
+
+    
+    <nav class="menu-navegacion">
+        <a href="index.html" class="activo">Inicio</a>
+        <a href="reportar.html">Reportar un problema</a>
+        <a href="mis_reportes.html">Mis reportes</a>
+        <a href="mapa.html">Mapa de reportes</a>
+    </nav>
+
+    <div class="acciones-header">
+        <a href="perfil.html" class="avatar-usuario">
+            <i class="fa-solid fa-user"></i>
+        </a>
+    </div>
+ </header>
+
+  <main class="dashboard-inicio">
+    <h1 class="titulo-bienvenida">¡Hola, María!</h1>
+    
+    <!-- AQUÍ INICIA EL LAYOUT DE 2 COLUMNAS -->
+    <div class="layout-principal">
+        
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="columna-izquierda-inicio">
+            
+            <!-- Sección Acciones Rápidas -->
+            <section class="tarjeta-blanco seccion-acciones">
+                <h3 class="subtitulo">Acción rápida</h3>
+                <div class="grid-acciones">
+                    <a href="reportar.html" class="btn-accion-rapida">
+                        <i class="fa-solid fa-location-dot"></i>
+                        <span>Reportar problema</span>
+                    </a>
+            
+
+                </div>
+            </section>
+
+            <!-- Sección Actividad Reciente -->
+            <section class="tarjeta-blanco">
+                <h3 class="subtitulo">Actividad reciente</h3>
+                <div class="lista-actividad">
+                    
+                    <div class="item-actividad-inicio">
+                        <div class="icono-act-inicio azul"><i class="fa-solid fa-trash"></i></div>
+                        <div class="info-act-inicio">
+                            <strong>Nombre del reporte</strong>
+                            <span>Hace 2 días</span>
+                        </div>
+                        <span class="estado estado-azul">Reportado</span>
+                    </div>
+
+                    <div class="item-actividad-inicio">
+                        <div class="icono-act-inicio amarillo"><i class="fa-solid fa-lightbulb"></i></div>
+                        <div class="info-act-inicio">
+                            <strong>Nombre del reporte</strong>
+                            <span>Hace 1 semana</span>
+                        </div>
+                        <span class="estado estado-rojo">En revisión</span>
+                    </div>
+
+                    <div class="item-actividad-inicio">
+                        <div class="icono-act-inicio verde"><i class="fa-solid fa-car"></i></div>
+                        <div class="info-act-inicio">
+                            <strong>Nombre del reporte</strong>
+                            <span>Hace 1 mes</span>
+                        </div>
+                        <span class="estado estado-verde">Resuelto</span>
+                    </div>
+
+                    <div class="item-actividad-inicio">
+                        <div class="icono-act-inicio azul"><i class="fa-solid fa-road"></i></div>
+                        <div class="info-act-inicio">
+                            <strong>Nombre del reporte</strong>
+                            <span>Hace 2 meses</span>
+                        </div>
+                        <span class="estado estado-azul">Reportado</span>
+                    </div>
+
+                </div>
+            </section>
+        </div> <!-- ✅ AQUÍ CIERRA LA COLUMNA IZQUIERDA -->
+
+        <!-- COLUMNA DERECHA (Banner, Resumen, Ayuda) -->
+        <div class="columna-derecha-inicio">
+            
+            <!-- Banner Azul -->
+            <div class="banner-ayuda">
+                <h3>Ayúdenos a mejorar nuestra ciudad</h3>
+                <p>Reporte huecos, semáforos dañados, alumbrado en mal estado y otros problemas para contribuir al mejoramiento de la comunidad.</p>
+            </div>
+
+            <!-- Resumen de Actividad -->
+            <section class="tarjeta-blanco">
+                <h3 class="subtitulo">Resumen de actividad</h3>
+                <div class="grid-resumen-inicio">
+                    <div class="tarjeta-resumen-inicio borde-gris">
+                        <span class="numero-inicio">6</span>
+                        <span class="etiqueta-inicio">Total reportes</span>
+                    </div>
+                    <div class="tarjeta-resumen-inicio borde-azul">
+                        <span class="numero-inicio azul">3</span>
+                        <span class="etiqueta-inicio">Reportados</span>
+                    </div>
+                    <div class="tarjeta-resumen-inicio borde-amarillo">
+                        <span class="numero-inicio amarillo">1</span>
+                        <span class="etiqueta-inicio">En proceso</span>
+                    </div>
+                    <div class="tarjeta-resumen-inicio borde-verde">
+                        <span class="numero-inicio verde">2</span>
+                        <span class="etiqueta-inicio">Resueltos</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tarjeta de Ayuda -->
+            <section class="tarjeta-ayuda">
+                <i class="fa-regular fa-circle-question icono-ayuda"></i>
+                <div>
+                    <h4>¿Cómo reportar?</h4>
+                    <p>Toma unos minutos de tu tiempo y ayúdanos a reportar problemas en tu comunidad.</p>
+                </div>
+            </section>
+
+        </div> <!-- ✅ AQUÍ CIERRA LA COLUMNA DERECHA -->
+
+    </div> <!-- ✅ AQUÍ CIERRA EL LAYOUT PRINCIPAL -->
+
+ </main>
 
 </body>
 </html>

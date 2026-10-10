@@ -1,0 +1,830 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    width: 100%;
+    overflow-x: hidden;
+    font-family: 'Poppins', sans-serif;
+    color: #414C65;
+}
+
+.header-usuario{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: white;
+    
+}
+
+.logo{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.logo-icono{
+    width: 40px;
+    height: 40px;
+    background-color: #1D6ADB;
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.logo-texto h2{
+    font-size: 1rem;
+    color: #414C65;
+    margin: 0%;
+    line-height: 1;
+}
+
+.logo-texto span{
+    font-size: 0.7rem;
+    color: #1D6ADB;
+}
+
+.menu-navegacion{
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.menu-navegacion a{
+    text-decoration: none;
+    color: #1D6ADB;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.menu-navegacion a:hover{
+    background-color: #1D6ADB;
+    color: white;
+}
+
+.menu-navegacion a.activo{
+    background-color: #1D6ADB;
+    color: white;
+}
+
+.acciones-header{
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar-usuario{
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    color: #1D6ADB;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.avatar-usuario:hover{
+    background-color: #1D6ADB;
+    color: white;
+}
+.avatar-usuario.activo {
+    background-color: #1D6ADB;
+    color: white;
+}
+
+/* =========================================
+   ESTILOS ESPECÍFICOS DEL INICIO (DASHBOARD)
+   ========================================= */
+
+/* Fondo general de la página */
+body {
+    background-color: #f4f7fc; /* Azul muy clarito de fondo */
+    font-family: 'Poppins', sans-serif;
+    color: #414C65;
+}
+
+.dashboard-inicio {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.titulo-bienvenida {
+    font-size: 2rem;
+    color: #1a202c;
+    margin-bottom: 30px;
+}
+
+/* Layout de 2 columnas para escritorio */
+.layout-principal {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Izquierda un poco más ancha */
+    gap: 40px;
+    width: 100%;
+    align-items: start;
+}
+
+/* --- COLUMNA IZQUIERDA --- */
+.seccion-acciones {
+    margin-bottom: 0;
+}
+
+.subtitulo {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #2d3748;
+}
+
+.grid-acciones {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    width: 100%;
+}
+
+.btn-accion-rapida {
+    background-color: #1D6ADB;
+    color: white;
+    text-decoration: none;
+    padding: 20px 15px;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn-accion-rapida i {
+    font-size: 1.5rem;
+}
+
+.btn-accion-rapida:hover {
+    background-color: #1552a8;
+    transform: translateY(-2px);
+}
+
+/* Tarjeta blanca genérica */
+.tarjeta-blanco {
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    border: 1px solid #eef2f6;
+    margin-bottom: 30px;
+}
+
+/* Lista de Actividad Reciente */
+.lista-actividad {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.item-actividad-inicio {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.item-actividad-inicio:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.icono-act-inicio {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.9rem;
+}
+
+.icono-act-inicio.azul { background-color: #ebf4ff; color: #1D6ADB; }
+.icono-act-inicio.amarillo { background-color: #fffaf0; color: #d69e2e; }
+.icono-act-inicio.verde { background-color: #f0fff4; color: #38a169; }
+
+.info-act-inicio {
+    flex-grow: 1;
+}
+
+.info-act-inicio strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #2d3748;
+}
+
+.info-act-inicio span {
+    font-size: 0.75rem;
+    color: #a0aec0;
+}
+
+/* Estados (etiquetas de colores) */
+.estado {
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.estado-azul { background-color: #ebf4ff; color: #1D6ADB; }
+.estado-rojo { background-color: #fff5f5; color: #e53e3e; }
+.estado-verde { background-color: #f0fff4; color: #38a169; }
+
+/* --- COLUMNA DERECHA --- */
+.banner-ayuda {
+    background-color: #1D6ADB;
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.banner-ayuda h3 {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.banner-ayuda p {
+    font-size: 0.8rem;
+    opacity: 0.9;
+    line-height: 1.5;
+}
+
+/* Resumen de Actividad (Cuadrícula 2x2) */
+.grid-resumen-inicio {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.tarjeta-resumen-inicio {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eef2f6;
+}
+
+.tarjeta-resumen-inicio .numero-inicio {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #a0aec0;
+}
+
+.tarjeta-resumen-inicio .etiqueta-inicio {
+    font-size: 0.75rem;
+    color: #718096;
+}
+
+/* Colores de los bordes de resumen */
+.borde-gris { border-color: #e2e8f0; }
+.borde-azul { border-color: #cce0ff; background-color: #f0f6ff; }
+.borde-azul .numero-inicio { color: #1D6ADB; }
+.borde-amarillo { border-color: #fde6b3; background-color: #fffaf0; }
+.borde-amarillo .numero-inicio { color: #d69e2e; }
+.borde-verde { border-color: #c6f6d5; background-color: #f0fff4; }
+.borde-verde .numero-inicio { color: #38a169; }
+
+/* Tarjeta de Ayuda (¿Cómo reportar?) */
+.tarjeta-ayuda {
+    background-color: #eef5ff; /* Azul muy clarito */
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.icono-ayuda {
+    color: #1D6ADB;
+    font-size: 1.5rem;
+    margin-top: 2px;
+}
+
+.tarjeta-ayuda h4 {
+    font-size: 0.9rem;
+    color: #1a202c;
+    margin-bottom: 5px;
+}
+
+.tarjeta-ayuda p {
+    font-size: 0.75rem;
+    color: #4a5568;
+    line-height: 1.4;
+}
+
+
+/* =========================================
+   RESPONSIVE (VERSIÓN MÓVIL) 📱
+   ========================================= */
+@media (max-width: 900px) {
+    
+    /* El layout principal pasa de 2 columnas a 1 sola */
+    .layout-principal {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* El título de bienvenida se hace un poco más pequeño */
+    .titulo-bienvenida {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    /* Los botones de acción rápida pasan a estar en una sola columna o 2 */
+    .grid-acciones {
+        grid-template-columns: 1fr 1fr; /* 2 columnas en celular */
+    }
+
+    /* El último botón de acción ocupa todo el ancho si son 3 botones */
+    .grid-acciones .btn-accion-rapida:last-child {
+        grid-column: span 2;
+    }
+
+    /* Ajustes de padding para que no se vea apretado en celular */
+    .dashboard-inicio {
+        padding: 20px 15px;
+    }
+    
+    .tarjeta-blanco, .banner-ayuda, .tarjeta-ayuda {
+        padding: 20px;
+    }
+}
+
+/* Ajuste extra para celulares muy pequeños (ej. iPhone SE) */
+@media (max-width: 400px) {
+    .grid-acciones {
+        grid-template-columns: 1fr; /* 1 sola columna de botones */
+    }
+    .grid-acciones .btn-accion-rapida:last-child {
+        grid-column: span 1;
+    }
+}
+
+
+/* =========================================
+   ESTILOS ESPECÍFICOS DE PERFIL
+   ========================================= */
+
+/* Tarjeta de Perfil (Azul) */
+.tarjeta-perfil {
+    background-color: #1D6ADB;
+    color: white;
+    border-radius: 12px;
+    padding: 30px 20px;
+    text-align: center;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.perfil-avatar {
+    width: 70px;
+    height: 70px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.8rem;
+    margin: 0 auto 15px;
+}
+
+.tarjeta-perfil h3 {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+}
+
+.perfil-datos p {
+    font-size: 0.8rem;
+    margin-bottom: 8px;
+    opacity: 0.9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+/* Campos de formulario con icono dentro */
+.campo-formulario {
+    margin-bottom: 15px;
+}
+
+.campo-formulario label {
+    display: block;
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 5px;
+}
+
+.input-con-icono {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-con-icono i {
+    position: absolute;
+    left: 15px;
+    color: #a0aec0;
+    font-size: 0.9rem;
+}
+
+.input-con-icono input {
+    width: 100%;
+    padding: 12px 15px 12px 40px; /* Padding extra a la izquierda para el icono */
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    color: #414C65;
+    background-color: #f8fafc; /* Un fondo grisáceo muy sutil para indicar que es de solo lectura */
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-con-icono input:focus {
+    border-color: #1D6ADB;
+}
+
+/* Items de Configuración de cuenta */
+.item-configuracion {
+    display: flex;
+    align-items: center;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.item-configuracion:last-child {
+    border-bottom: none;
+}
+
+.item-configuracion:hover {
+    background-color: #f8fafc; /* Efecto hover sutil */
+    border-radius: 8px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-left: -10px;
+    margin-right: -10px;
+}
+
+.icono-config {
+    width: 35px;
+    height: 35px;
+    background-color: #f0f6ff;
+    color: #1D6ADB;
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+    font-size: 0.9rem;
+}
+
+.texto-config {
+    flex-grow: 1;
+}
+
+.texto-config strong {
+    display: block;
+    font-size: 0.85rem;
+    color: #2d3748;
+}
+
+.texto-config span {
+    font-size: 0.75rem;
+    color: #a0aec0;
+}
+
+.flecha {
+    color: #1D6ADB;
+    font-size: 0.9rem;
+}
+
+/* Botones de acción del perfil */
+.botones-perfil {
+    display: flex;
+    justify-content: center; /* Centrados como en tu diseño */
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap; /* Para que bajen si no caben */
+}
+
+.btn-perfil-primario, .btn-perfil-peligro {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-perfil-primario {
+    background-color: #1D6ADB;
+    color: white;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center; /* Centrado del contenido del botón */
+}
+
+.btn-perfil-primario:hover {
+    background-color: #1552a8;
+    transform: translateY(-2px);
+}
+
+.btn-perfil-peligro {
+    background-color: white;
+    color: #e53e3e;
+    border: 1px solid #e53e3e;
+}
+
+.btn-perfil-peligro:hover {
+    background-color: #e53e3e;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* RESPONSIVE (Ajustes para móvil) */
+@media (max-width: 900px) {
+    .botones-perfil {
+        flex-direction: column; /* Botones en columna en celular */
+    }
+    
+    .btn-perfil-primario, .btn-perfil-peligro {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* =========================================
+   ESTILOS ESPECÍFICOS DE CAMBIAR CONTRASEÑA
+   ========================================= */
+
+/* Cabecera de la página (Icono y Título) */
+.cabecera-pagina {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.icono-cabecera {
+    width: 50px;
+    height: 50px;
+    background-color: #1D6ADB;
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.texto-cabecera h1 {
+    font-size: 1.8rem;
+    color: #1a202c;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.texto-cabecera p {
+    font-size: 0.85rem;
+    color: #718096;
+    margin: 0;
+}
+
+/* Layout de 2 columnas específico para esta página */
+.layout-cambiar-contrasena {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr; /* Formulario más ancho que la info */
+    gap: 30px;
+    width: 100%;
+    align-items: start;
+}
+
+/* --- COLUMNA IZQUIERDA (Formulario) --- */
+.descripcion-formulario {
+    font-size: 0.8rem;
+    color: #718096;
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* Ajuste para el icono del ojo a la derecha */
+.input-con-icono {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-con-icono .toggle-password {
+    position: absolute;
+    right: 15px;
+    left: auto; /* Sobrescribe el left: 15px anterior */
+    color: #a0aec0;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.input-con-icono .toggle-password:hover {
+    color: #1D6ADB;
+}
+
+/* Botones del formulario */
+.botones-formulario {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-guardar {
+    flex-grow: 1; /* Ocupa todo el ancho disponible */
+    background-color: #1D6ADB;
+    color: white;
+    border: none;
+    text-decoration: none;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-guardar:hover {
+    background-color: #1552a8;
+}
+
+.btn-cancelar {
+    background-color: #e2e8f0;
+    color: #4a5568;
+    border: none;
+    text-decoration: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.btn-cancelar:hover {
+    background-color: #cbd5e0;
+    color: #1a202c;
+}
+
+/* --- COLUMNA DERECHA (Información) --- */
+.tarjeta-seguridad {
+    background-color: #eef5ff; /* Azul muy clarito */
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 30px;
+}
+
+.tarjeta-seguridad h4 {
+    font-size: 0.95rem;
+    color: #1a202c;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tarjeta-seguridad h4 i {
+    color: #1D6ADB;
+}
+
+.tarjeta-cuando-cambiar {
+    padding: 25px;
+}
+
+.tarjeta-cuando-cambiar h4 {
+    font-size: 0.95rem;
+    color: #1a202c;
+    margin-bottom: 20px;
+}
+
+/* Listas de recomendaciones */
+.lista-recomendaciones {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lista-recomendaciones li {
+    font-size: 0.8rem;
+    color: #4a5568;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.4;
+}
+
+/* Puntos de colores para las listas */
+.punto-azul, .punto-amarillo {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 5px; /* Alineación con el texto */
+    flex-shrink: 0;
+}
+
+.punto-azul {
+    background-color: #1D6ADB;
+}
+
+.punto-amarillo {
+    background-color: #f6ad55;
+}
+
+/* RESPONSIVE (Ajustes para móvil) */
+@media (max-width: 900px) {
+    .layout-cambiar-contrasena {
+        grid-template-columns: 1fr; /* Una sola columna en celular */
+        gap: 20px;
+    }
+
+    .cabecera-pagina {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    .botones-formulario {
+        flex-direction: column-reverse; /* Cancelar arriba, Guardar abajo */
+    }
+
+    .btn-guardar, .btn-cancelar {
+        width: 100%;
+    }
+}
+
+/*----------------------------------------------------------------------*/
+/* Estilo para la barra de scroll                                       */
+/*----------------------------------------------------------------------*/
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+    background: #1D6ADB;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #1552a8;
+}
+/*-----------------------------------------------------------------------*/
