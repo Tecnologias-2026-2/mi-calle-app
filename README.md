@@ -51,9 +51,29 @@ Diagrama de Casos de Uso
 
 Muestra las interacciones principales entre los actores (*Ciudadano* y *Administrador*) y las funcionalidades del sistema, abarcando desde la autenticación/registro hasta la creación, consulta, visualización en mapa y gestión del estado de reportes viales.
 
+<img width="791" height="269" alt="image" src="https://github.com/user-attachments/assets/69530d34-c1c2-40da-ae40-60589f52fba3" />
+
+<img width="791" height="206" alt="image" src="https://github.com/user-attachments/assets/5ac140f5-41ce-4011-8570-536f7dc6521b" />
+
+<img width="792" height="337" alt="image" src="https://github.com/user-attachments/assets/e738d019-cae4-4e25-bda7-50472ddca806" />
+
+<img width="792" height="228" alt="image" src="https://github.com/user-attachments/assets/038e8d15-6442-4f9e-a337-3553fb4a56df" />
+
+<img width="795" height="295" alt="image" src="https://github.com/user-attachments/assets/676c25f4-fab2-4e47-92fd-7ef184ff1f2f" />
+
+<img width="794" height="292" alt="image" src="https://github.com/user-attachments/assets/7be374b1-01c1-448a-aac6-5b6e071e64a6" />
+
+
 Diagrama de Secuencia
 
 Representa el flujo cronológico y el intercambio de mensajes entre la interfaz de usuario, el servidor y la base de datos para los procesos clave del sistema: inicio de sesión, registro de usuario, generación de reportes, consulta en el mapa comunitario, seguimiento de reportes y gestión de estado por parte del administrador.
+
+<img width="864" height="262" alt="image" src="https://github.com/user-attachments/assets/54159ba0-7ce7-4d09-a111-61f2b1cfe4db" />
+
+<img width="873" height="332" alt="image" src="https://github.com/user-attachments/assets/83890b21-6bc3-4e1b-8e77-b617f1b8ea1c" />
+
+<img width="898" height="374" alt="image" src="https://github.com/user-attachments/assets/f8af53f2-60e7-443d-a627-8946638a1bd6" />
+
 
 🎨 5. URL del Prototipo
 
