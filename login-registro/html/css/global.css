@@ -1,0 +1,111 @@
+:root {
+  color-scheme: light;
+  font-family: "Nunito Sans", sans-serif;
+  color: #1a2744;
+  background: #fff;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --color-primary: #3585f5;
+  --color-primary-dark: #2874f0;
+  --color-text: #1a2744;
+  --color-muted: #7a90b8;
+  --color-input: #f5f9ff;
+  --color-border: #ddeeff;
+
+  --landing-blue: #3585f5;
+  --landing-deep-blue: #2b7fff;
+  --landing-ink: #1e2939;
+  --landing-body: #4a5565;
+  --landing-muted: #6b7280;
+  --landing-line: rgb(53 133 245 / 12%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  background: #fff;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+a {
+  color: inherit;
+}
+
+.brand__icon,
+.site-footer__icon,
+.landing-brand__icon,
+.landing-footer__icon {
+  display: grid;
+  overflow: hidden;
+  place-items: center;
+}
+
+.brand__icon img,
+.landing-brand__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.site-footer__icon img,
+.landing-footer__icon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.site-footer__icon,
+.landing-footer__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+}
+
+.site-footer__brand,
+.landing-footer__brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+}
+
+.main-nav__link:focus-visible,
+.brand:focus-visible,
+.site-footer__brand:focus-visible,
+.landing-nav__link:focus-visible,
+.landing-brand:focus-visible,
+.landing-footer__brand:focus-visible,
+.text-link:focus-visible,
+.submit-button:focus-visible,
+.password-toggle:focus-visible,
+.access-button:focus-visible {
+  outline: 3px solid rgb(53 133 245 / 42%);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

@@ -1,0 +1,71 @@
+.recovery-layout {
+  align-items: center;
+}
+
+.recovery-panel {
+  display: flex;
+  width: 390px;
+  max-width: 100%;
+  min-height: 748px;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 32px;
+}
+
+.recovery-welcome {
+  max-width: 358px;
+  gap: 0;
+}
+
+.recovery-welcome .welcome__icon {
+  margin-bottom: 12px;
+}
+
+.recovery-welcome .welcome__description {
+  max-width: 265px;
+}
+
+.recovery-form {
+  display: flex;
+  width: 358px;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 27px;
+  padding: 24px 24px 37px;
+  border: 1px solid rgb(53 133 245 / 8%);
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(26 39 68 / 6%), 0 20px 60px rgb(53 133 245 / 12%);
+}
+
+.recovery-form .submit-button {
+  width: 300px;
+  max-width: 100%;
+}
+
+.recovery-form .form-field {
+  width: 300px;
+  max-width: 100%;
+}
+
+.recovery-form .form-field__control {
+  width: 100%;
+}
+
+.recovery-login-link {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+@media (max-width: 680px) {
+  .recovery-panel {
+    min-height: auto;
+    gap: 24px;
+  }
+
+  .recovery-form {
+    padding: 24px 16px 28px;
+  }
+}

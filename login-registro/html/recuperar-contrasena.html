@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Recupera tu contraseña de Mi Calle mediante el correo asociado a tu cuenta."
+    />
+    <title>Recuperar contraseña | Mi Calle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="css/recuperar-contrasena.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="brand__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span class="brand__copy">
+            <span class="brand__name">Mi Calle</span>
+            <span class="brand__tagline">Reportador Ciudadano</span>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a class="main-nav__link main-nav__link--active" href="bienvenida.html">Bienvenido</a>
+          <a class="main-nav__link" href="landing.html#sobre-nosotros">Sobre nosotros</a>
+        </nav>
+      </header>
+
+      <main class="main-content">
+        <section class="login-layout recovery-layout" aria-labelledby="recovery-title">
+          <div class="login-art">
+            <img
+              class="login-art__image"
+              src="assets/login-illustration.png"
+              alt="Ilustración de Mi Calle que representa una ciudad más amable y segura"
+            />
+          </div>
+
+          <div class="login-layout__divider" aria-hidden="true"></div>
+
+          <div class="recovery-panel">
+            <a class="back-button" href="login-usuario.html">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="m14.5 5-7 7 7 7M8 12h12"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>Volver</span>
+            </a>
+
+            <div class="welcome recovery-welcome">
+              <span class="welcome__icon" aria-hidden="true">
+                <img src="assets/brand-icon.png" alt="" />
+              </span>
+              <p class="welcome__eyebrow">Mi Calle</p>
+              <h1 class="welcome__title" id="recovery-title">Recuperar contraseña</h1>
+              <p class="welcome__description">
+                Ingresa el correo asociado a tu cuenta y te enviaremos las instrucciones para recuperarla.
+              </p>
+            </div>
+
+            <form class="recovery-form" id="recovery-form" action="#" method="post">
+              <div class="form-field">
+                <label class="form-field__label" for="recovery-email">Correo electrónico</label>
+                <div class="form-field__control">
+                  <svg class="form-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="3.5" y="5.5" width="17" height="13" rx="3" stroke="currentColor" stroke-width="1.7" />
+                    <path
+                      d="m5 7 7 5.5L19 7"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  <input
+                    id="recovery-email"
+                    name="email"
+                    type="email"
+                    placeholder="micalle@app.com"
+                    autocomplete="email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <button class="submit-button" type="submit">
+                <span>Enviar</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+
+              <a class="recovery-login-link text-link" href="login-usuario.html">
+                Volver al inicio de sesión
+              </a>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <a class="site-footer__brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="site-footer__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span>Mi Calle</span>
+        </a>
+        <p class="site-footer__caption">
+          © 2026 Mi Calle — Reportador Ciudadano. Bogotá, Colombia.
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const recoveryForm = document.querySelector("#recovery-form");
+
+      recoveryForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        window.location.href = "correo-enviado.html";
+      });
+    </script>
+  </body>
+</html>

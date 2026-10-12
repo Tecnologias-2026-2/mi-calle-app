@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Verifica tu cuenta de Mi Calle con el código enviado a tu correo electrónico."
+    />
+    <title>Verificación de código | Mi Calle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="css/verificacion-usuario.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="brand__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span class="brand__copy">
+            <span class="brand__name">Mi Calle</span>
+            <span class="brand__tagline">Reportador Ciudadano</span>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a class="main-nav__link main-nav__link--active" href="bienvenida.html">Bienvenido</a>
+          <a class="main-nav__link" href="landing.html#sobre-nosotros">Sobre nosotros</a>
+        </nav>
+      </header>
+
+      <main class="main-content">
+        <section class="login-layout verification-layout" aria-labelledby="verification-title">
+          <div class="login-art">
+            <img
+              class="login-art__image"
+              src="assets/login-illustration.png"
+              alt="Ilustración de Mi Calle que representa una ciudad más amable y segura"
+            />
+          </div>
+
+          <div class="login-layout__divider" aria-hidden="true"></div>
+
+          <div class="login-panel verification-panel">
+            <div class="welcome verification-welcome">
+              <span class="welcome__icon" aria-hidden="true">
+                <img src="assets/brand-icon.png" alt="" />
+              </span>
+              <p class="welcome__eyebrow">Mi Calle</p>
+              <h1 class="welcome__title" id="verification-title">Verificación de código</h1>
+              <p class="welcome__description">
+                Enviamos un código de 6 dígitos a tu correo electrónico. Ingrésalo a continuación.
+              </p>
+            </div>
+
+            <form class="verification-form" action="registro-exitoso.html" method="post">
+              <fieldset class="code-field">
+                <legend>Código de seguridad</legend>
+                <div class="code-inputs" role="group" aria-label="Código de seguridad de seis dígitos">
+                  <input class="code-input" name="digit-1" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Primer dígito" required />
+                  <input class="code-input" name="digit-2" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Segundo dígito" required />
+                  <input class="code-input" name="digit-3" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Tercer dígito" required />
+                  <input class="code-input" name="digit-4" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Cuarto dígito" required />
+                  <input class="code-input" name="digit-5" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Quinto dígito" required />
+                  <input class="code-input" name="digit-6" type="text" inputmode="numeric" maxlength="1" pattern="[0-9]" aria-label="Sexto dígito" required />
+                </div>
+              </fieldset>
+
+              <p class="resend-prompt">
+                ¿No recibiste el código?
+                <button class="text-link resend-button" type="button" disabled>
+                  Reenviar en <span class="resend-countdown">01:00</span>
+                </button>
+              </p>
+              <p class="resend-feedback" role="status" aria-live="polite"></p>
+
+              <button class="submit-button" type="submit">
+                <span>Verificar</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+
+              <p class="verification-note">
+                Este código es válido por 10 minutos. No lo compartas con nadie.
+              </p>
+            </form>
+
+            <p class="signup-prompt">
+              ¿Ya tienes una cuenta?
+              <a class="text-link" href="login-usuario.html">Inicia sesión</a>
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <a class="site-footer__brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="site-footer__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span>Mi Calle</span>
+        </a>
+        <p class="site-footer__caption">
+          © 2026 Mi Calle — Reportador Ciudadano. Bogotá, Colombia.
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const codeInputs = [...document.querySelectorAll(".code-input")];
+      const verificationForm = document.querySelector(".verification-form");
+      const resendButton = document.querySelector(".resend-button");
+      const resendCountdown = document.querySelector(".resend-countdown");
+      const resendFeedback = document.querySelector(".resend-feedback");
+      let remainingSeconds = 60;
+      let countdownTimer;
+
+      codeInputs.forEach((input, index) => {
+        input.addEventListener("input", () => {
+          input.value = input.value.replace(/\D/g, "").slice(0, 1);
+          if (input.value && codeInputs[index + 1]) {
+            codeInputs[index + 1].focus();
+          }
+        });
+
+        input.addEventListener("keydown", (event) => {
+          if (event.key === "Backspace" && !input.value && codeInputs[index - 1]) {
+            codeInputs[index - 1].focus();
+          }
+        });
+      });
+
+      const formatCountdown = (seconds) => {
+        const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
+        const remainder = String(seconds % 60).padStart(2, "0");
+        return `${minutes}:${remainder}`;
+      };
+
+      const startResendCountdown = () => {
+        window.clearInterval(countdownTimer);
+        remainingSeconds = 60;
+        resendButton.disabled = true;
+        resendButton.innerHTML = `Reenviar en <span class="resend-countdown">${formatCountdown(remainingSeconds)}</span>`;
+
+        countdownTimer = window.setInterval(() => {
+          remainingSeconds -= 1;
+
+          if (remainingSeconds <= 0) {
+            window.clearInterval(countdownTimer);
+            resendButton.disabled = false;
+            resendButton.textContent = "Reenviar";
+            return;
+          }
+
+          resendButton.querySelector(".resend-countdown").textContent =
+            formatCountdown(remainingSeconds);
+        }, 1000);
+      };
+
+      resendButton.addEventListener("click", () => {
+        resendFeedback.textContent = "Código reenviado. Revisa la bandeja de entrada de tu correo electrónico.";
+        startResendCountdown();
+      });
+
+      verificationForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        window.location.href = "registro-exitoso.html";
+      });
+
+      startResendCountdown();
+    </script>
+  </body>
+</html>

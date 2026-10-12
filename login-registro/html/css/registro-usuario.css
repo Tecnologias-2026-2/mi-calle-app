@@ -1,0 +1,63 @@
+.signup-layout {
+  align-items: start;
+}
+
+.signup-panel {
+  position: relative;
+  min-height: 780px;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.signup-welcome {
+  gap: 0;
+}
+
+.signup-welcome .welcome__icon {
+  margin-bottom: 12px;
+}
+
+.signup-welcome .welcome__description {
+  max-width: 265px;
+}
+
+.signup-form {
+  gap: 15px;
+  padding: 9px 24px 6px;
+}
+
+.signup-form .submit-button {
+  margin-top: 2px;
+}
+
+.signup-panel .signup-prompt {
+  min-height: 70px;
+  align-items: center;
+  margin: 0;
+}
+
+@media (max-width: 900px) {
+  .signup-panel {
+    min-height: 720px;
+  }
+}
+
+@media (max-width: 680px) {
+  .signup-layout {
+    gap: 20px;
+  }
+
+  .signup-panel {
+    min-height: auto;
+    gap: 18px;
+  }
+
+  .signup-form {
+    padding: 20px 16px;
+  }
+
+  .signup-panel .signup-prompt {
+    min-height: auto;
+  }
+}
