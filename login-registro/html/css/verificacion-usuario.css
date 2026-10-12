@@ -1,0 +1,160 @@
+.verification-layout {
+  align-items: center;
+}
+
+.verification-panel {
+  min-height: 748px;
+  justify-content: center;
+  gap: 38px;
+}
+
+.verification-welcome {
+  max-width: 329px;
+  gap: 0;
+}
+
+.verification-welcome .welcome__icon {
+  margin-bottom: 12px;
+}
+
+.verification-welcome .welcome__description {
+  max-width: 265px;
+}
+
+.verification-form {
+  display: flex;
+  width: 351px;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 19px;
+  padding: 24px 24px 37px;
+  border: 1px solid rgb(53 133 245 / 8%);
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(26 39 68 / 6%), 0 20px 60px rgb(53 133 245 / 12%);
+}
+
+.code-field {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.code-field legend {
+  margin-bottom: 8px;
+  color: #7a90b8;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+}
+
+.code-inputs {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.code-input {
+  width: 38px;
+  height: 48px;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  outline: 0;
+  background: var(--color-input);
+  color: var(--color-text);
+  font-size: 20px;
+  font-weight: 800;
+  text-align: center;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.code-input:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgb(53 133 245 / 12%);
+}
+
+.resend-prompt {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  margin: 0;
+  color: #7a90b8;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.resend-button {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  font: inherit;
+}
+
+.resend-button:disabled {
+  color: #9eb2d3;
+  cursor: not-allowed;
+  text-decoration: none;
+}
+
+.resend-button:not(:disabled):hover {
+  color: var(--color-primary-dark);
+}
+
+.resend-feedback {
+  min-height: 21px;
+  margin: -8px 0 0;
+  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.verification-form .submit-button {
+  width: 300px;
+  max-width: 100%;
+}
+
+.verification-note {
+  max-width: 290px;
+  margin: 0;
+  color: #7a90b8;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.verification-panel .signup-prompt {
+  margin: 0;
+}
+
+@media (max-width: 680px) {
+  .verification-panel {
+    min-height: auto;
+    gap: 24px;
+  }
+
+  .verification-form {
+    padding: 24px 16px 28px;
+  }
+
+  .code-input {
+    width: 36px;
+  }
+}
+
+@media (max-width: 390px) {
+  .code-inputs {
+    gap: 4px;
+  }
+
+  .code-input {
+    width: 34px;
+  }
+}

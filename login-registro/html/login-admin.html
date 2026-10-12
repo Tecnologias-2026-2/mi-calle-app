@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Accede al panel administrativo de Mi Calle para revisar y actualizar reportes ciudadanos."
+    />
+    <title>Panel administrativo | Mi Calle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="css/login-admin.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="bienvenida.html" aria-label="Mi Calle, volver a bienvenida">
+          <span class="brand__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span class="brand__copy">
+            <span class="brand__name">Mi Calle</span>
+            <span class="brand__tagline">Reportador Ciudadano</span>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a class="main-nav__link main-nav__link--active" href="bienvenida.html">Bienvenido</a>
+          <a class="main-nav__link" href="landing.html#sobre-nosotros">Sobre nosotros</a>
+        </nav>
+      </header>
+
+      <main class="main-content">
+        <section class="login-layout" aria-labelledby="admin-login-title">
+          <div class="login-art">
+            <img
+              class="login-art__image"
+              src="assets/login-illustration.png"
+              alt="Ilustración de Mi Calle que representa una ciudad más amable y segura"
+            />
+          </div>
+
+          <div class="login-layout__divider" aria-hidden="true"></div>
+
+          <div class="login-panel admin-login-panel">
+            <div class="welcome">
+              <span class="welcome__icon" aria-hidden="true">
+                <img src="assets/brand-icon.png" alt="" />
+              </span>
+              <p class="welcome__eyebrow">Mi Calle</p>
+              <h1 class="welcome__title" id="admin-login-title">Panel administrativo</h1>
+              <p class="welcome__description">
+                Ayuda a la comunidad, revisa y actualiza los reportes de los ciudadanos.
+              </p>
+            </div>
+
+            <form class="login-form" action="#" method="post">
+              <div class="form-field">
+                <label class="form-field__label" for="admin-email">Correo electrónico</label>
+                <div class="form-field__control">
+                  <svg class="form-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="3.5" y="5.5" width="17" height="13" rx="3" stroke="currentColor" stroke-width="1.7" />
+                    <path d="m5 7 7 5.5L19 7" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <input
+                    id="admin-email"
+                    name="email"
+                    type="email"
+                    placeholder="micalle@app.com"
+                    autocomplete="username"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-field__label" for="admin-password">Contraseña</label>
+                <div class="form-field__control">
+                  <svg class="form-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="4.5" y="10" width="15" height="11" rx="2.5" stroke="currentColor" stroke-width="1.7" />
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                    <circle cx="12" cy="15.5" r="1.2" fill="currentColor" />
+                  </svg>
+                  <input
+                    id="admin-password"
+                    name="password"
+                    type="password"
+                    placeholder="••••••••"
+                    autocomplete="current-password"
+                    required
+                  />
+                  <button
+                    class="password-toggle"
+                    type="button"
+                    aria-label="Mostrar contraseña"
+                    aria-pressed="false"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" stroke-width="1.7" />
+                      <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <button class="submit-button" type="submit">
+                <span>Ingresar</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </form>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <a class="site-footer__brand" href="bienvenida.html" aria-label="Mi Calle, volver a bienvenida">
+          <span class="site-footer__icon" aria-hidden="true">
+            <img src="assets/logo-flat.png" alt="" />
+          </span>
+          <span>Mi Calle</span>
+        </a>
+        <p class="site-footer__caption">
+          © 2026 Mi Calle — Reportador Ciudadano. Bogotá, Colombia.
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const passwordInput = document.querySelector("#admin-password");
+      const passwordToggle = document.querySelector(".password-toggle");
+
+      passwordToggle.addEventListener("click", () => {
+        const isPasswordHidden = passwordInput.type === "password";
+        passwordInput.type = isPasswordHidden ? "text" : "password";
+        passwordToggle.setAttribute("aria-pressed", String(isPasswordHidden));
+        passwordToggle.setAttribute(
+          "aria-label",
+          isPasswordHidden ? "Ocultar contraseña" : "Mostrar contraseña",
+        );
+      });
+    </script>
+  </body>
+</html>

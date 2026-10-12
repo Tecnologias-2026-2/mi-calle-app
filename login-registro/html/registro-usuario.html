@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Crea tu cuenta en Mi Calle para reportar y mejorar los daños viales de tu comunidad."
+    />
+    <title>Crear cuenta | Mi Calle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="css/registro-usuario.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="brand__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span class="brand__copy">
+            <span class="brand__name">Mi Calle</span>
+            <span class="brand__tagline">Reportador Ciudadano</span>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a class="main-nav__link main-nav__link--active" href="bienvenida.html">Bienvenido</a>
+          <a class="main-nav__link" href="landing.html#sobre-nosotros">Sobre nosotros</a>
+        </nav>
+      </header>
+
+      <main class="main-content">
+        <section class="login-layout signup-layout" aria-labelledby="signup-title">
+          <div class="login-art">
+            <img
+              class="login-art__image"
+              src="assets/login-illustration.png"
+              alt="Ilustración de Mi Calle que representa una ciudad más amable y segura"
+            />
+          </div>
+
+          <div class="login-layout__divider" aria-hidden="true"></div>
+
+          <div class="login-panel signup-panel">
+            <a class="back-button" href="bienvenida.html">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path
+                  d="m14.5 5-7 7 7 7M8 12h12"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+              <span>Volver</span>
+            </a>
+
+            <div class="welcome signup-welcome">
+              <span class="welcome__icon" aria-hidden="true">
+                <img src="assets/brand-icon.png" alt="" />
+              </span>
+              <p class="welcome__eyebrow">Mi Calle</p>
+              <h1 class="welcome__title" id="signup-title">Crear cuenta</h1>
+              <p class="welcome__description">
+                Únete a tu comunidad. Es rápido, gratuito y seguro.
+              </p>
+            </div>
+
+            <form class="login-form signup-form" action="verificacion-usuario.html" method="post">
+              <div class="form-field">
+                <label class="form-field__label" for="username">Nombre de usuario</label>
+                <div class="form-field__control">
+                  <svg class="form-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.7" />
+                    <path
+                      d="M5.5 19.5c.8-3.1 3-4.7 6.5-4.7s5.7 1.6 6.5 4.7"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                    />
+                  </svg>
+                  <input
+                    id="username"
+                    name="username"
+                    type="text"
+                    placeholder="Maria"
+                    autocomplete="username"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-field__label" for="email">Correo electrónico</label>
+                <div class="form-field__control">
+                  <svg class="form-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="3.5" y="5.5" width="17" height="13" rx="3" stroke="currentColor" stroke-width="1.7" />
+                    <path
+                      d="m5 7 7 5.5L19 7"
+                      stroke="currentColor"
+                      stroke-width="1.7"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="micalle@app.com"
+                    autocomplete="email"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-field__label" for="password">Contraseña</label>
+                <div class="form-field__control">
+                  <svg class="form-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="4.5" y="10" width="15" height="11" rx="2.5" stroke="currentColor" stroke-width="1.7" />
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                    <circle cx="12" cy="15.5" r="1.2" fill="currentColor" />
+                  </svg>
+                  <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    placeholder="Mínimo 8 caracteres"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                  />
+                  <button class="password-toggle" type="button" aria-label="Mostrar contraseña" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" stroke-width="1.7" />
+                      <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-field__label" for="confirm-password">Confirmar contraseña</label>
+                <div class="form-field__control">
+                  <svg class="form-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <rect x="4.5" y="10" width="15" height="11" rx="2.5" stroke="currentColor" stroke-width="1.7" />
+                    <path d="M8 10V7a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" />
+                    <circle cx="12" cy="15.5" r="1.2" fill="currentColor" />
+                  </svg>
+                  <input
+                    id="confirm-password"
+                    name="confirm-password"
+                    type="password"
+                    placeholder="Repite tu contraseña"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                  />
+                  <button class="password-toggle" type="button" aria-label="Mostrar contraseña" aria-pressed="false">
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6-9.5-6Z" stroke="currentColor" stroke-width="1.7" />
+                      <circle cx="12" cy="12" r="2.5" stroke="currentColor" stroke-width="1.7" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              <button class="submit-button" type="submit">
+                <span>Enviar</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M5 12h14m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </form>
+
+            <p class="signup-prompt">
+              ¿Ya tienes una cuenta?
+              <a class="text-link" href="login-usuario.html">Inicia sesión</a>
+            </p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer" id="sobre-nosotros">
+        <a class="site-footer__brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="site-footer__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span>Mi Calle</span>
+        </a>
+        <p class="site-footer__caption">
+          © 2026 Mi Calle — Reportador Ciudadano. Bogotá, Colombia.
+        </p>
+      </footer>
+    </div>
+
+    <script>
+      const signupForm = document.querySelector(".signup-form");
+      document.querySelectorAll(".password-toggle").forEach((passwordToggle) => {
+        passwordToggle.addEventListener("click", () => {
+          const passwordInput = passwordToggle.parentElement.querySelector("input");
+          const isPasswordHidden = passwordInput.type === "password";
+          passwordInput.type = isPasswordHidden ? "text" : "password";
+          passwordToggle.setAttribute("aria-pressed", String(isPasswordHidden));
+          passwordToggle.setAttribute(
+            "aria-label",
+            isPasswordHidden ? "Ocultar contraseña" : "Mostrar contraseña",
+          );
+        });
+      });
+
+      signupForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        window.location.href = "verificacion-usuario.html";
+      });
+    </script>
+  </body>
+</html>

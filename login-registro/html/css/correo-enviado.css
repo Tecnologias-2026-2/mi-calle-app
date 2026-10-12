@@ -1,0 +1,70 @@
+.recovery-message-layout {
+  align-items: center;
+}
+
+.recovery-message-panel {
+  display: flex;
+  width: 390px;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 32px;
+}
+
+.recovery-message-welcome {
+  max-width: 329px;
+  gap: 0;
+}
+
+.recovery-message-welcome .welcome__icon {
+  margin-bottom: 12px;
+}
+
+.recovery-message-welcome .welcome__description {
+  max-width: 265px;
+}
+
+.recovery-message-card {
+  display: flex;
+  width: 100%;
+  min-height: 155px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 19px;
+  padding: 24px 24px 37px;
+  border: 1px solid rgb(53 133 245 / 8%);
+  border-radius: 28px;
+  background: #fff;
+  box-shadow: 0 4px 16px rgb(26 39 68 / 6%), 0 20px 60px rgb(53 133 245 / 12%);
+}
+
+.recovery-message-button {
+  width: 300px;
+  max-width: 100%;
+  text-decoration: none;
+}
+
+.recovery-message-retry {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  align-self: stretch;
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+}
+
+@media (max-width: 680px) {
+  .recovery-message-panel {
+    gap: 24px;
+  }
+
+  .recovery-message-card {
+    padding: 24px 16px 28px;
+  }
+}

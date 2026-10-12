@@ -1,0 +1,11 @@
+.admin-login-panel {
+  gap: 5px;
+}
+
+.admin-login-panel .welcome__title {
+  max-width: 100%;
+}
+
+.admin-login-panel .welcome__description {
+  max-width: 300px;
+}

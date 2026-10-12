@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Elige cómo quieres acceder a Mi Calle: como usuario, administrador o creando una cuenta."
+    />
+    <title>Bienvenido | Mi Calle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/bienvenida.css" />
+  </head>
+  <body>
+    <div class="welcome-page">
+      <header class="site-header">
+        <a class="brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="brand__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span class="brand__copy">
+            <span class="brand__name">Mi Calle</span>
+            <span class="brand__tagline">Reportador Ciudadano</span>
+          </span>
+        </a>
+
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a class="main-nav__link" href="landing.html#sobre-nosotros">Sobre nosotros</a>
+        </nav>
+      </header>
+
+      <main class="main-content">
+        <section class="welcome-layout" aria-labelledby="welcome-title">
+          <div class="welcome-art">
+            <img
+              class="welcome-art__image"
+              src="assets/welcome-illustration.png"
+              alt="Ilustración de Mi Calle"
+            />
+          </div>
+
+          <div class="welcome-layout__divider" aria-hidden="true"></div>
+
+          <div class="welcome-panel">
+            <div class="welcome-intro">
+              <span class="welcome-intro__icon" aria-hidden="true">
+                <img src="assets/brand-icon.png" alt="" />
+              </span>
+              <div class="welcome-intro__headings">
+                <p class="welcome-intro__brand">Mi Calle</p>
+                <h1 class="welcome-intro__title" id="welcome-title">¡Bienvenido!</h1>
+              </div>
+              <p class="welcome-intro__description">
+                Reporta y mejora tu ciudad, conectando con tu comunidad.
+              </p>
+            </div>
+
+            <nav class="access-options" aria-label="Elige cómo acceder">
+              <a class="access-button access-button--user" href="login-usuario.html">
+                Iniciar sesión como usuario
+              </a>
+              <a class="access-button access-button--admin" href="login-admin.html">
+                Iniciar sesión como admin
+              </a>
+              <a class="access-button access-button--register" href="registro-usuario.html">
+                Registrarse
+              </a>
+            </nav>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <a class="site-footer__brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="site-footer__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span>Mi Calle</span>
+        </a>
+        <p class="site-footer__caption">
+          © 2026 Mi Calle — Reportador Ciudadano. Bogotá, Colombia.
+        </p>
+      </footer>
+    </div>
+  </body>
+</html>
