@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" 
     content="width=device-width, initial-scale=1.0">
-    <title>usuario</title>
+    <title>Editar perfil</title>
     
     <!-- CSS global -->
     <link rel="stylesheet" href="../../css/styles.css">
@@ -50,5 +50,77 @@
         </a>
     </div>
  </header>
+
+ <main class="dashboard-inicio">
+    
+    <!-- Layout de 2 columnas específico para editar perfil -->
+    <div class="layout-editar-perfil">
+        
+        <!-- COLUMNA IZQUIERDA: Formulario de Información Personal -->
+        <div class="columna-formulario-perfil">
+            <section class="tarjeta-blanco">
+                <h3 class="subtitulo">Información personal</h3>
+                
+                <form action="#" method="POST">
+                    <div class="campo-formulario">
+                        <label>Nombre completo</label>
+                        <div class="input-con-icono">
+                            <i class="fa-regular fa-user"></i>
+                            <input type="text" value="María González" required>
+                        </div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label>Nombre de usuario</label>
+                        <div class="input-con-icono">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <input type="text" value="Maria" required>
+                        </div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label>Correo electrónico</label>
+                        <div class="input-con-icono">
+                            <i class="fa-regular fa-envelope"></i>
+                            <input type="email" value="maria.gomez@correo.com" required>
+                        </div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label>Número de contacto</label>
+                        <div class="input-con-icono">
+                            <i class="fa-solid fa-phone"></i>
+                            <input type="text" value="+57 300 456 1237" required>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <!-- COLUMNA DERECHA: Tarjeta de Perfil y Botones -->
+        <div class="columna-perfil-acciones">
+            
+            <!-- Tarjeta de Perfil (Azul) -->
+            <div class="tarjeta-perfil tarjeta-perfil-edicion">
+                <div class="perfil-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h3>María</h3>
+                <div class="perfil-datos">
+                    <p><i class="fa-regular fa-envelope"></i> maria.gomez@correo.com</p>
+                    <p><i class="fa-regular fa-calendar"></i> Miembro desde enero 2025</p>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="botones-perfil-edicion">
+                <a href="perfil.html" class="btn-perfil-primario btn-guardar-perfil">
+                    <i class="fa-regular fa-floppy-disk"></i> Guardar cambios</a>
+                <a href="perfil.html" class="btn-perfil-secundario btn-cancelar"> Cancelar</a>
+            </div>
+
+        </div>
+    </div>
+</main>
 </body>
 </html>
