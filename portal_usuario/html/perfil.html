@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" 
+    content="width=device-width, initial-scale=1.0">
+    <title>usuario</title>
+    
+    <!-- CSS global -->
+    <link rel="stylesheet" href="../../css/styles.css">
+    
+    <!-- CSS de mi portal usuario-->
+    <link rel="stylesheet" href="../usuario.css/usuario.css">
+
+    <!-- Font Awesome (Librería de iconos) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+      <!-- Fuente Poppins-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
+
+</head>
+<body>
+    <!-- HEADER  --> 
+ <header class="header-usuario">
+    <div class="logo">
+         <!-- Aquí irá la imagen del logo. Por ahora un texto de prueba -->
+        <div class="logo-icono">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="logo-texto">
+            <h2>Mi Calle</h2>
+            <span>Portal Ciudadano</span>
+        </div>
+
+    </div>
+
+    
+    <nav class="menu-navegacion">
+        <a href="index.html">Inicio</a>
+        <a href="reportar.html">Reportar un problema</a>
+        <a href="mis_reportes.html">Mis reportes</a>
+        <a href="mapa.html">Mapa de reportes</a>
+    </nav>
+
+    <div class="acciones-header">
+        <a href="perfil.html" class="avatar-usuario activo">
+            <i class="fa-solid fa-user"></i>
+        </a>
+    </div>
+ </header>
+
+ <main class="dashboard-inicio">
+    
+    <div class="layout-principal">
+        
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="columna-izquierda-inicio">
+            
+            <!-- Tarjeta de Perfil -->
+            <div class="tarjeta-perfil">
+                <div class="perfil-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h3>María</h3>
+                <div class="perfil-datos">
+                    <p><i class="fa-regular fa-envelope"></i> maria.gomez@correo.com</p>
+                    <p><i class="fa-regular fa-calendar"></i> Miembro desde enero 2025</p>
+                </div>
+            </div>
+
+            <!-- Resumen de Actividad (Misma que en Inicio) -->
+            <section class="tarjeta-blanco">
+                <h3 class="subtitulo">Resumen de actividad</h3>
+                <div class="grid-resumen-inicio">
+                    <div class="tarjeta-resumen-inicio borde-gris">
+                        <span class="numero-inicio">6</span>
+                        <span class="etiqueta-inicio">Total reportes</span>
+                    </div>
+                    <div class="tarjeta-resumen-inicio borde-azul">
+                        <span class="numero-inicio azul">3</span>
+                        <span class="etiqueta-inicio">Reportados</span>
+                    </div>
+                    <div class="tarjeta-resumen-inicio borde-amarillo">
+                        <span class="numero-inicio amarillo">1</span>
+                        <span class="etiqueta-inicio">En proceso</span>
+                    </div>
+                    <div class="tarjeta-resumen-inicio borde-verde">
+                        <span class="numero-inicio verde">2</span>
+                        <span class="etiqueta-inicio">Resueltos</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Información Personal -->
+            <section class="tarjeta-blanco">
+                <h3 class="subtitulo">Información personal</h3>
+                
+                <div class="campo-formulario">
+                    <label>Nombre completo</label>
+                    <div class="input-con-icono">
+                        <i class="fa-regular fa-user"></i>
+                        <input type="text" value="María González" readonly>
+                    </div>
+                </div>
+
+                <div class="campo-formulario">
+                    <label>Correo electrónico</label>
+                    <div class="input-con-icono">
+                        <i class="fa-regular fa-envelope"></i>
+                        <input type="email" value="maria.gomez@correo.com" readonly>
+                    </div>
+                </div>
+
+                <div class="campo-formulario">
+                    <label>Número de contacto</label>
+                    <div class="input-con-icono">
+                        <i class="fa-solid fa-phone"></i>
+                        <input type="text" value="+57 300 456 1237" readonly>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="columna-derecha-inicio">
+            
+            <!-- Configuración de cuenta -->
+            <section class="tarjeta-blanco">
+                <h3 class="subtitulo">Configuración de cuenta</h3>
+                
+                <div class="item-configuracion">
+                    <div class="icono-config"><i class="fa-solid fa-key"></i></div>
+                    <div class="texto-config">
+                        <strong>Cambiar contraseña</strong>
+                        <span>Actualiza tu contraseña de acceso</span>
+                    </div>
+                    <i class="fa-solid fa-arrow-right flecha"></i>
+                </div>
+                
+                <div class="item-configuracion">
+                    <div class="icono-config"><i class="fa-regular fa-bell"></i></div>
+                    <div class="texto-config">
+                        <strong>Notificaciones</strong>
+                        <span>Administra alertas de estado de tus reportes</span>
+                    </div>
+                    <i class="fa-solid fa-arrow-right flecha"></i>
+                </div>
+            </section>
+
+            <!-- Actividad Reciente (Misma que en Inicio) -->
+            <section class="tarjeta-blanco">
+                <h3 class="subtitulo">Actividad reciente</h3>
+                <div class="lista-actividad">
+                    
+                    <div class="item-actividad-inicio">
+                        <div class="icono-act-inicio azul"><i class="fa-solid fa-trash"></i></div>
+                        <div class="info-act-inicio">
+                            <strong>Basura en calzada</strong>
+                            <span>3 ago 2025</span>
+                        </div>
+                        <span class="estado estado-azul">Reportado</span>
+                    </div>
+
+                    <div class="item-actividad-inicio">
+                        <div class="icono-act-inicio amarillo"><i class="fa-solid fa-lightbulb"></i></div>
+                        <div class="info-act-inicio">
+                            <strong>Alumbrado público dañado</strong>
+                            <span>25 jul 2025</span>
+                        </div>
+                        <span class="estado estado-rojo">En revisión</span>
+                    </div>
+
+                    <div class="item-actividad-inicio">
+                        <div class="icono-act-inicio verde"><i class="fa-solid fa-car"></i></div>
+                        <div class="info-act-inicio">
+                            <strong>Semáforo en mal estado</strong>
+                            <span>2 mar 2025</span>
+                        </div>
+                        <span class="estado estado-verde">Resuelto</span>
+                    </div>
+
+                    <div class="item-actividad-inicio">
+                        <div class="icono-act-inicio azul"><i class="fa-solid fa-road"></i></div>
+                        <div class="info-act-inicio">
+                            <strong>Hueco en la vía</strong>
+                            <span>18 nov 2024</span>
+                        </div>
+                        <span class="estado estado-azul">Reportado</span>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- Botones de acción -->
+            <div class="botones-perfil">
+                <button class="btn-perfil-primario">Editar perfil</button>
+                <a href="contraseña.html" class="btn-perfil-primario">Cambiar contraseña</a>
+                <button class="btn-perfil-peligro"><i class="fa-regular fa-trash-can"></i> Cerrar sesión</button>
+            </div>
+
+        </div>
+    </div>
+</main>
+</body>
+</html>
