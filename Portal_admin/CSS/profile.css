@@ -1,0 +1,490 @@
+.profile-content {
+  max-width: 1320px;
+}
+
+.profile-content > .page-heading {
+  margin-bottom: 24px;
+}
+
+.profile-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 0.68fr) minmax(450px, 1.65fr);
+  align-items: start;
+  gap: 18px;
+}
+
+.identity-card {
+  overflow: hidden;
+  padding: 0;
+}
+
+.identity-cover {
+  position: relative;
+  height: 92px;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse at 78% 5%, rgba(255, 255, 255, 0.82), transparent 39%),
+    linear-gradient(125deg, #dcecff 0%, #edf5ff 54%, #e0efff 100%);
+}
+
+.identity-cover::before,
+.identity-cover::after,
+.identity-cover span {
+  position: absolute;
+  display: block;
+  border: 1px solid rgba(96, 153, 225, 0.11);
+  border-radius: 50%;
+  content: "";
+}
+
+.identity-cover::before {
+  top: 26px;
+  left: 48%;
+  width: 175px;
+  height: 175px;
+}
+
+.identity-cover::after {
+  top: 48px;
+  left: 62%;
+  width: 130px;
+  height: 130px;
+}
+
+.identity-cover span:first-child {
+  top: -76px;
+  left: 65%;
+  width: 215px;
+  height: 215px;
+  background: rgba(255, 255, 255, 0.23);
+}
+
+.identity-cover span:last-child {
+  top: -88px;
+  left: 34%;
+  width: 160px;
+  height: 160px;
+  background: rgba(255, 255, 255, 0.21);
+}
+
+.identity-body {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 20px 19px;
+  text-align: center;
+}
+
+.profile-avatar {
+  display: grid;
+  width: 67px;
+  height: 67px;
+  margin-top: -34px;
+  place-items: center;
+  border: 4px solid #fff;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #d7e8ff, #aecdf8);
+  box-shadow: 0 3px 12px rgba(47, 101, 173, 0.12);
+  color: #3471cc;
+  font-size: 19px;
+  font-weight: 750;
+  letter-spacing: -0.5px;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  padding: 5px 8px;
+  border: 1px solid #e4efff;
+  border-radius: 20px;
+  background: #f3f8ff;
+  color: #5384cc;
+  font-size: 8px;
+  font-weight: 650;
+}
+
+.role-badge > span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #4d91ec;
+}
+
+.identity-body h2 {
+  margin: 12px 0 4px;
+  color: #35445a;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.identity-email {
+  max-width: 100%;
+  margin: 0;
+  overflow-wrap: anywhere;
+  color: #929daf;
+  font-size: 9px;
+}
+
+.identity-divider {
+  width: 100%;
+  height: 1px;
+  margin: 17px 0 14px;
+  background: #edf1f6;
+}
+
+.identity-meta {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 13px;
+  text-align: left;
+}
+
+.meta-icon {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 8px;
+  background: #eff5ff;
+  color: #5b8ddd;
+}
+
+.meta-icon-green {
+  background: #edf9f4;
+  color: #52b48c;
+}
+
+.meta-icon svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.identity-meta > span:last-child {
+  display: grid;
+  gap: 3px;
+}
+
+.identity-meta small {
+  color: #99a4b3;
+  font-size: 8px;
+}
+
+.identity-meta strong {
+  color: #58667c;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.identity-edit {
+  display: flex;
+  width: 100%;
+  min-height: 33px;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  margin-top: 4px;
+  border: 1px solid #347ff0;
+  border-radius: 7px;
+  background: #347ff0;
+  box-shadow: 0 4px 9px rgba(52, 127, 240, 0.13);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 650;
+  transition: background 150ms ease;
+}
+
+.identity-edit:hover {
+  background: #2467d7;
+}
+
+.identity-edit svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.profile-forms {
+  display: grid;
+  gap: 15px;
+}
+
+.profile-form-card {
+  padding: 18px 20px 16px;
+  scroll-margin-top: 90px;
+}
+
+.profile-section-heading {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid #edf1f6;
+}
+
+.section-icon {
+  display: grid;
+  width: 33px;
+  height: 33px;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 9px;
+}
+
+.section-icon-blue {
+  background: #eef5ff;
+  color: #4b87e7;
+}
+
+.section-icon-violet {
+  background: #f1efff;
+  color: #7974da;
+}
+
+.section-icon svg {
+  width: 17px;
+  height: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.profile-section-heading h2 {
+  margin: 0;
+  color: #35445a;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-section-heading p {
+  margin: 4px 0 0;
+  color: #98a3b2;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.profile-form {
+  padding-top: 14px;
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 13px 14px;
+}
+
+.profile-field {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+  color: #68768b;
+  font-size: 9px;
+  font-weight: 600;
+}
+
+.profile-field input {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 34px;
+  padding: 0 10px;
+  border: 1px solid #e7edf5;
+  border-radius: 7px;
+  outline: none;
+  background: #fff;
+  color: #536177;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 450;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.profile-field input::placeholder {
+  color: #aab3c0;
+  font-weight: 400;
+}
+
+.profile-field input:focus {
+  border-color: #8db6f4;
+  box-shadow: 0 0 0 3px rgba(52, 127, 240, 0.12);
+}
+
+.input-with-icon {
+  position: relative;
+  display: block;
+}
+
+.input-with-icon svg {
+  position: absolute;
+  top: 10px;
+  left: 9px;
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: #8494aa;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+  pointer-events: none;
+}
+
+.input-with-icon input {
+  padding-left: 29px;
+}
+
+.profile-form-footer {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 13px;
+}
+
+.profile-save-button {
+  display: inline-flex;
+  min-height: 33px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 12px;
+  border: 1px solid #347ff0;
+  border-radius: 7px;
+  background: #347ff0;
+  box-shadow: 0 4px 9px rgba(52, 127, 240, 0.13);
+  color: #fff;
+  font: inherit;
+  font-size: 9px;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.profile-save-button:hover {
+  border-color: #2467d7;
+  background: #2467d7;
+}
+
+.profile-save-button svg {
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.form-feedback {
+  margin: 0;
+  color: #75849a;
+  font-size: 8px;
+  line-height: 1.5;
+}
+
+.form-feedback:not([hidden]) {
+  display: block;
+}
+
+.password-fields {
+  align-items: end;
+}
+
+.field-spacer {
+  display: block;
+}
+
+.security-save-button {
+  margin-left: auto;
+}
+
+@media (max-width: 900px) {
+  .profile-layout {
+    grid-template-columns: minmax(190px, 0.58fr) minmax(0, 1.42fr);
+    gap: 13px;
+  }
+
+  .identity-body {
+    padding-right: 14px;
+    padding-left: 14px;
+  }
+
+  .profile-form-card {
+    padding-right: 15px;
+    padding-left: 15px;
+  }
+
+  .profile-field input {
+    font-size: 8px;
+  }
+}
+
+@media (max-width: 760px) {
+  .profile-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .identity-card {
+    order: 2;
+  }
+
+  .profile-forms {
+    order: 1;
+  }
+
+  .identity-body {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .identity-meta,
+  .identity-edit {
+    max-width: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .profile-form-card {
+    padding: 15px 13px;
+  }
+
+  .field-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 11px;
+  }
+
+  .field-spacer {
+    display: none;
+  }
+
+  .profile-form-footer {
+    align-items: flex-start;
+    flex-direction: column-reverse;
+  }
+
+  .security-save-button {
+    margin-left: 0;
+  }
+
+  .form-feedback {
+    align-self: stretch;
+  }
+}
