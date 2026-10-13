@@ -60,7 +60,7 @@
               </p>
             </div>
 
-            <form class="login-form" action="#" method="post">
+            <form class="login-form" id="login-form" action="#" method="post">
               <div class="form-field">
                 <label class="form-field__label" for="email">Correo electrónico</label>
                 <div class="form-field__control">
@@ -147,6 +147,7 @@
     <script>
       const passwordInput = document.querySelector("#password");
       const passwordToggle = document.querySelector(".password-toggle");
+      const loginForm = document.querySelector("#login-form");
 
       passwordToggle.addEventListener("click", () => {
         const isPasswordHidden = passwordInput.type === "password";
@@ -156,6 +157,11 @@
           "aria-label",
           isPasswordHidden ? "Ocultar contraseña" : "Mostrar contraseña",
         );
+      });
+
+      loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        window.location.href = "../../portal_usuario/html/index.html";
       });
     </script>
   </body>

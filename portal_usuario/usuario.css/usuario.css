@@ -252,6 +252,7 @@ body {
 }
 
 .estado-azul { background-color: #ebf4ff; color: #1D6ADB; }
+.estado-amarillo { background-color: #fffaf0; color: #d69e2e; }
 .estado-rojo { background-color: #fff5f5; color: #e53e3e; }
 .estado-verde { background-color: #f0fff4; color: #38a169; }
 
@@ -1422,6 +1423,11 @@ textarea::placeholder {
     z-index: 2;
 }
 
+.pin-seleccionado {
+    transform: translate(-50%, -100%) scale(1.2);
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+}
+
 .pin:hover {
     transform: translate(-50%, -100%) scale(1.2);
     filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
@@ -1480,6 +1486,8 @@ textarea::placeholder {
     display: flex;
     gap: 25px;
     max-width: 450px;
+    width: 100%;
+    min-height: 217px;
     margin: 0 auto;
     align-items: flex-start;
 }
