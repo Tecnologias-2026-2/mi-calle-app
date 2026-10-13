@@ -24,7 +24,7 @@
           <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="15" width="7" height="6" rx="1.5"/></svg>
           <span>Dashboard</span>
         </a>
-        <a class="nav-link is-active" href="reports.html" aria-current="page">
+        <a class="nav-link is-active" href="reports-list.html" aria-current="page">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.75h9l5 5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4.75a1 1 0 0 1 1-1Z"/><path d="M14 4v5h5M8 13h8M8 17h8"/></svg>
           <span>Reportes</span><span class="nav-count">24</span>
         </a>
@@ -51,17 +51,31 @@
           </span>
           <strong>Mi Calle</strong>
         </div>
-        <div class="breadcrumb"><a href="index.html">Panel</a><span class="breadcrumb-separator">/</span><strong>Reportes</strong></div>
+        <div class="breadcrumb"><a href="index.html">Panel</a><span class="breadcrumb-separator">/</span><a href="reports-list.html">Reportes</a><span class="breadcrumb-separator">/</span><strong>Actualizar</strong></div>
         <div class="topbar-actions">
-          <button class="icon-button notification-button" type="button" aria-label="Notificaciones, 3 sin leer">
+          <div class="topbar-menu">
+          <button class="icon-button notification-button" type="button" aria-label="Notificaciones, 3 sin leer" aria-expanded="false" aria-controls="notifications-menu">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-dot"></span>
           </button>
+          <div class="topbar-popover notifications-menu" id="notifications-menu" hidden>
+            <div class="popover-heading"><strong>Notificaciones</strong><small>Preferencias de aviso</small></div>
+            <label class="switch-row"><span><strong>Recibir nuevos reportes al correo</strong><small>Te avisaremos cuando llegue un reporte.</small></span><input class="switch-input" type="checkbox" checked><span class="switch-control" aria-hidden="true"></span></label>
+            <fieldset class="preference-group"><legend>Recordarme reportes en proceso</legend><label><input type="radio" name="process-reminder" value="daily" checked>Todos los días</label><label><input type="radio" name="process-reminder" value="weekly">Una vez a la semana</label><label><input type="radio" name="process-reminder" value="monthly">Una vez al mes</label></fieldset>
+            <fieldset class="preference-group"><legend>Recordarme reportes pendientes</legend><label><input type="radio" name="pending-reminder" value="daily" checked>Todos los días</label><label><input type="radio" name="pending-reminder" value="weekly">Una vez a la semana</label><label><input type="radio" name="pending-reminder" value="monthly">Una vez al mes</label></fieldset>
+          </div>
+          </div>
           <span class="topbar-divider" aria-hidden="true"></span>
+          <div class="topbar-menu">
           <button class="user-menu" type="button" aria-label="Cuenta de Administrador">
             <span class="avatar">AD</span>
             <span class="user-copy"><strong>Administrador</strong><small>Super admin</small></span>
             <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
           </button>
+          <div class="topbar-popover account-menu" hidden>
+            <a href="profile.html">Ir al perfil</a>
+            <a href="../../login-registro/html/bienvenida.html">Cerrar sesión</a>
+          </div>
+          </div>
         </div>
       </header>
 
@@ -151,10 +165,21 @@
                 <span class="option-copy"><strong>Resuelto</strong><small>La incidencia fue atendida y solucionada.</small></span>
                 <span class="option-color option-green" aria-hidden="true"></span>
               </label>
+              <label class="status-option status-option--discard">
+                <input type="radio" name="report-status" value="descartado">
+                <span class="option-check" aria-hidden="true"></span>
+                <span class="option-copy"><strong>Descartar reporte</strong><small>El caso no puede continuar por información insuficiente o inválida.</small></span>
+                <span class="option-color option-red" aria-hidden="true"></span>
+              </label>
             </fieldset>
 
             <label class="update-note-label" for="status-note">Nota de actualización <span>(opcional)</span></label>
             <textarea class="update-note" id="status-note" rows="3" placeholder="Agrega información sobre el avance del reporte..."></textarea>
+
+            <div class="discard-reason" hidden>
+              <label class="update-note-label" for="discard-reason">Razón del descarte <span>(obligatoria)</span></label>
+              <textarea class="update-note" id="discard-reason" rows="3" placeholder="Explica por qué se descarta este reporte..."></textarea>
+            </div>
 
             <div class="update-feedback" role="status" aria-live="polite" hidden></div>
             <div class="update-actions">
@@ -172,5 +197,6 @@
     </main>
   </div>
   <script src="reports.js"></script>
+  <script src="admin-ui.js"></script>
 </body>
 </html>
