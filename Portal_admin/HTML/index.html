@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f9ff">
+  <meta name="description" content="Panel de administración de Mi Calle: resumen y seguimiento de reportes viales.">
+  <title>Panel de Administración | Mi Calle</title>
+  <link rel="stylesheet" href="../CSS/dashboard.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="#dashboard" aria-label="Mi Calle, ir al inicio">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="ASSETS/mi-calle-logo.png" alt="">
+        </span>
+        <span class="brand-copy"><strong>Mi Calle</strong><small>Admin panel</small></span>
+      </a>
+
+      <p class="nav-caption">MENÚ PRINCIPAL</p>
+      <nav class="main-nav">
+        <a class="nav-link is-active" href="#dashboard" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="15" width="7" height="6" rx="1.5"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-link" href="reports.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.75h9l5 5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4.75a1 1 0 0 1 1-1Z"/><path d="M14 4v5h5M8 13h8M8 17h8"/></svg>
+          <span>Reportes</span><span class="nav-count">24</span>
+        </a>
+        <a class="nav-link" href="profile.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+          <span>Perfil</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a class="logout-button" href="#cerrar-sesion">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5M14 16l4-4-4-4M18 12H9"/></svg>
+          <span>Cerrar sesión</span>
+        </a>
+        <div class="sidebar-footer">Mi Calle <span>v1.0</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content" id="dashboard">
+      <header class="topbar">
+        <div class="mobile-brand">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="ASSETS/mi-calle-logo.png" alt="">
+          </span>
+          <strong>Mi Calle</strong>
+        </div>
+        <div class="breadcrumb"><span>Panel</span><span class="breadcrumb-separator">/</span><strong>Dashboard</strong></div>
+        <div class="topbar-actions">
+          <button class="icon-button notification-button" type="button" aria-label="Notificaciones, 3 sin leer">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-dot"></span>
+          </button>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <button class="user-menu" type="button" aria-label="Cuenta de Administrador">
+            <span class="avatar">AD</span>
+            <span class="user-copy"><strong>Administrador</strong><small>Super admin</small></span>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <div class="dashboard-content">
+        <section class="page-heading">
+          <div>
+            <p class="eyebrow">VISTA GENERAL</p>
+            <h1>Panel de Administración</h1>
+            <p class="page-description">Resumen de reportes y estado de la infraestructura vial.</p>
+          </div>
+          <label class="date-pill">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+            <select aria-label="Período de reportes">
+              <option value="7">Últimos 7 días</option>
+              <option value="30" selected>Últimos 30 días</option>
+              <option value="90">Últimos 3 meses</option>
+            </select>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+          </label>
+        </section>
+
+        <section class="stats-grid" aria-label="Indicadores de reportes">
+          <article class="stat-card">
+            <div class="stat-top"><span class="stat-icon icon-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5"/></svg></span><span class="stat-change positive">+12.5%</span></div>
+            <p class="stat-label">Total de reportes</p><div class="stat-value">24</div><p class="stat-note"><span class="trend-up">↗</span> vs. mes anterior</p>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span class="stat-icon icon-indigo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="stat-change neutral">En seguimiento</span></div>
+            <p class="stat-label">En proceso</p><div class="stat-value">10</div><p class="stat-note">Casos en atención</p>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span class="stat-icon icon-amber"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.8 19h18.4L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg></span><span class="stat-change warning">Requieren atención</span></div>
+            <p class="stat-label">Pendientes</p><div class="stat-value">7</div><p class="stat-note">Por revisar</p>
+          </article>
+          <article class="stat-card">
+            <div class="stat-top"><span class="stat-icon icon-green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span class="stat-change positive">+8.2%</span></div>
+            <p class="stat-label">Resueltos</p><div class="stat-value">7</div><p class="stat-note"><span class="trend-up">↗</span> vs. mes anterior</p>
+          </article>
+        </section>
+
+        <section class="charts-grid" aria-label="Estadísticas de reportes">
+          <article class="panel period-panel">
+            <div class="panel-heading">
+              <div><h2>Reportes por período</h2><p>Actividad de reportes durante el último mes</p></div>
+              <button class="select-button" type="button">Mensual <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg></button>
+            </div>
+            <div class="chart-area" role="img" aria-label="Gráfica de barras de reportes: semana 1, 6; semana 2, 9; semana 3, 5; semana 4, 4.">
+              <div class="y-axis"><span>10</span><span>8</span><span>6</span><span>4</span><span>2</span><span>0</span></div>
+              <div class="bar-chart">
+                <div class="chart-gridlines"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="bar-column"><span class="bar" style="--bar-height:60%"></span><span class="bar-label">Sem. 1</span></div>
+                <div class="bar-column"><span class="bar" style="--bar-height:90%"></span><span class="bar-label">Sem. 2</span></div>
+                <div class="bar-column"><span class="bar" style="--bar-height:50%"></span><span class="bar-label">Sem. 3</span></div>
+                <div class="bar-column"><span class="bar" style="--bar-height:40%"></span><span class="bar-label">Sem. 4</span></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel status-panel">
+            <div class="panel-heading"><div><h2>Reportes por estado</h2><p>Distribución actual de los casos</p></div><button class="more-button" type="button" aria-label="Más opciones">···</button></div>
+            <div class="status-chart-wrap">
+              <div class="donut-chart" role="img" aria-label="24 reportes: 10 en proceso, 7 pendientes y 7 resueltos."><div class="donut-center"><strong>24</strong><span>Reportes</span></div></div>
+              <ul class="legend">
+                <li><span class="legend-label"><i class="legend-dot dot-blue"></i>En proceso</span><strong>10</strong></li>
+                <li><span class="legend-label"><i class="legend-dot dot-green"></i>Resueltos</span><strong>7</strong></li>
+                <li><span class="legend-label"><i class="legend-dot dot-amber"></i>Pendientes</span><strong>7</strong></li>
+              </ul>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel types-panel" id="reportes">
+          <div class="panel-heading"><div><h2>Tipos de anomalías</h2><p>Incidencias reportadas por la comunidad</p></div><a class="text-link" href="#reportes">Ver todos <span aria-hidden="true">→</span></a></div>
+          <div class="type-list">
+            <div class="type-row"><span class="type-name">Baches</span><div class="type-track"><span class="type-fill fill-blue" style="--fill-width:100%"></span></div><strong>8</strong></div>
+            <div class="type-row"><span class="type-name">Alcantarillas sin tapa</span><div class="type-track"><span class="type-fill fill-indigo" style="--fill-width:62.5%"></span></div><strong>5</strong></div>
+            <div class="type-row"><span class="type-name">Grietas en la vía</span><div class="type-track"><span class="type-fill fill-sky" style="--fill-width:50%"></span></div><strong>4</strong></div>
+            <div class="type-row"><span class="type-name">Señalización dañada</span><div class="type-track"><span class="type-fill fill-pale" style="--fill-width:37.5%"></span></div><strong>3</strong></div>
+          </div>
+        </section>
+        <footer class="content-footer"><span>© 2024 Mi Calle</span><span>Construyendo calles más seguras, juntos.</span></footer>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

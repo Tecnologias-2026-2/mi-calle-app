@@ -92,7 +92,6 @@ Estructura de Carpetas
 /css
 /assets
 
-Explicar brevemente qué contiene cada carpeta.
 
 🚀 8. Instalación y Ejecución
 
