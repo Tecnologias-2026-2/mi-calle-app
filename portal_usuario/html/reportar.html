@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" 
     content="width=device-width, initial-scale=1.0">
-    <title>usuario</title>
+    <title>Reportar un problema</title>
     
     <!-- CSS global -->
     <link rel="stylesheet" href="../../css/styles.css">
@@ -50,5 +50,83 @@
         </a>
     </div>
  </header>
+
+<main class="dashboard-inicio">
+    
+    <!-- Cabecera de la página -->
+    <div class="cabecera-pagina">
+        <div class="icono-cabecera">
+            <i class="fa-solid fa-file-circle-plus"></i>
+        </div>
+        <div class="texto-cabecera">
+            <h1>Reportar un problema</h1>
+            <p>Informa sobre un problema que afecta a tu comunidad.</p>
+        </div>
+    </div>
+
+    <!-- Contenedor centrado del formulario -->
+    <div class="contenedor-formulario-reporte">
+        <section class="tarjeta-blanco">
+            <h3 class="subtitulo">Reportar un problema</h3>
+            <p class="descripcion-formulario">Informa sobre un problema que afecta a tu comunidad.</p>
+
+            <form action="#" method="POST" enctype="multipart/form-data">
+                
+                <!-- Tipo de Problema -->
+                <div class="campo-formulario">
+                    <label><i class="fa-solid fa-circle-info"></i> Tipo de problema</label>
+                    <div class="select-con-flecha">
+                        <select required>
+                            <option value="" disabled selected>Seleccione el tipo de problema</option>
+                            <option value="huecos">Hueco en la vía</option>
+                            <option value="semaforo">Semáforo en mal estado</option>
+                            <option value="alcantarilla">Alcantarilla sin tapa</option>
+                            <option value="senalizacion">Señalizacion dañada</option>
+                            <option value="alumbrado">Alumbrado público dañado</option>
+                            <option value="basura">Acumulación de basura</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Fotografía -->
+                <div class="campo-formulario">
+                    <label><i class="fa-regular fa-image"></i> Fotografía</label>
+                    <label for="input-foto" class="zona-subir-archivo">
+                        <i class="fa-solid fa-camera"></i>
+                        <strong>Agregar fotografía</strong>
+                        <span>Tamaño máximo 5MB. Formato JPG o PNG.</span>
+                        <input type="file" id="input-foto" accept="image/png, image/jpeg" hidden>
+                    </label>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="campo-formulario">
+                    <label><i class="fa-solid fa-location-dot"></i> Ubicación</label>
+                    <div class="input-con-icono">
+                        <i class="fa-solid fa-map-pin"></i>
+                        <input type="text" placeholder="Seleccionar ubicación" required>
+                    </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="campo-formulario">
+                    <label><i class="fa-solid fa-list"></i> Descripción</label>
+                    <textarea rows="4" placeholder="Describe el daño observado, riesgos o información adicional." required></textarea>
+                </div>
+
+                <!-- Botones -->
+                <div class="botones-formulario">
+                    <a href="mis_reportes.html" class="btn-guardar">
+                        <i class="fa-solid fa-arrow-right"></i> Enviar reporte
+                    </a>
+                    <a href="index.html" class="btn-cancelar">Cancelar</a>
+                </div>
+
+            </form>
+        </section>
+    </div>
+</main>
+
 </body>
 </html>
