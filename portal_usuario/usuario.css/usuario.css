@@ -1,120 +1,85 @@
-*{
+/* ==========================================================================
+   MI CALLE · PORTAL CIUDADANO · usuario.css
+   --------------------------------------------------------------------------
+   ÍNDICE
+   1.  Variables (colores)
+   2.  Reset y base
+   3.  Header y navegación
+   4.  Layouts (estructuras de 2 columnas)
+   5.  Componentes reutilizables
+       5.1 Títulos y cabeceras
+       5.2 Tarjetas
+       5.3 Estados (etiquetas)
+       5.4 Tarjetas de resumen
+       5.5 Formularios
+       5.6 Botones
+       5.7 Listas con puntos
+       5.8 Tarjetas informativas
+   6.  Páginas
+       6.1 Inicio
+       6.2 Perfil
+       6.3 Editar perfil
+       6.4 Cambiar contraseña
+       6.5 Reportar problema
+       6.6 Mis reportes
+       6.7 Notificaciones
+       6.8 Mapa de reportes
+   7.  Barra de scroll
+   8.  Responsive (móvil)
+   ========================================================================== */
+
+
+/* ==========================================================================
+   1. VARIABLES
+   ========================================================================== */
+:root {
+    /* Azules */
+    --azul: #1D6ADB;
+    --azul-hover: #1552a8;
+    --azul-claro: #ebf4ff;
+    --azul-fondo: #f0f6ff;
+    --azul-suave: #eef5ff;
+
+    /* Textos */
+    --texto: #414C65;
+    --texto-titulo: #1a202c;
+    --texto-subtitulo: #2d3748;
+    --texto-medio: #4a5568;
+    --texto-gris: #718096;
+    --texto-claro: #a0aec0;
+
+    /* Estados */
+    --rojo: #e53e3e;
+    --verde: #38a169;
+    --amarillo: #d69e2e;
+    --naranja: #f6ad55;
+
+    /* Fondos y bordes */
+    --fondo-pagina: #f4f7fc;
+    --fondo-input: #f8fafc;
+    --borde: #e2e8f0;
+    --borde-suave: #f0f0f0;
+}
+
+
+/* ==========================================================================
+   2. RESET Y BASE
+   ========================================================================== */
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
+body {
     width: 100%;
     overflow-x: hidden;
     font-family: 'Poppins', sans-serif;
-    color: #414C65;
+    color: var(--texto);
+    background-color: var(--fondo-pagina);
 }
 
-.header-usuario{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 40px;
-    background-color: white;
-    
-}
-
-.logo{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.logo-icono{
-    width: 40px;
-    height: 40px;
-    background-color: #1D6ADB;
-    color: white;
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-}
-
-.logo-texto h2{
-    font-size: 1rem;
-    color: #414C65;
-    margin: 0%;
-    line-height: 1;
-}
-
-.logo-texto span{
-    font-size: 0.7rem;
-    color: #1D6ADB;
-}
-
-.menu-navegacion{
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.menu-navegacion a{
-    text-decoration: none;
-    color: #1D6ADB;
-    font-weight: 500;
-    font-size: 0.9rem;
-    padding: 10px 18px;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-}
-
-.menu-navegacion a:hover{
-    background-color: #1D6ADB;
-    color: white;
-}
-
-.menu-navegacion a.activo{
-    background-color: #1D6ADB;
-    color: white;
-}
-
-.acciones-header{
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.avatar-usuario{
-    width: 40px;
-    height: 40px;
-    background-color: transparent;
-    color: #1D6ADB;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-.avatar-usuario:hover{
-    background-color: #1D6ADB;
-    color: white;
-}
-.avatar-usuario.activo {
-    background-color: #1D6ADB;
-    color: white;
-}
-
-/* =========================================
-   ESTILOS ESPECÍFICOS DEL INICIO (DASHBOARD)
-   ========================================= */
-
-/* Fondo general de la página */
-body {
-    background-color: #f4f7fc; /* Azul muy clarito de fondo */
-    font-family: 'Poppins', sans-serif;
-    color: #414C65;
-}
-
+/* Contenedor principal de todas las páginas */
 .dashboard-inicio {
     max-width: 1200px;
     margin: 0 auto;
@@ -124,33 +89,761 @@ body {
     flex-direction: column;
 }
 
-.titulo-bienvenida {
-    font-size: 2rem;
-    color: #1a202c;
-    margin-bottom: 30px;
+
+/* ==========================================================================
+   3. HEADER Y NAVEGACIÓN
+   ========================================================================== */
+.header-usuario {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 40px;
+    background-color: white;
 }
 
-/* Layout de 2 columnas para escritorio */
-.layout-principal {
+/* --- Logo --- */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+}
+
+.logo-icono {
+    width: 40px;
+    height: 40px;
+    background-color: var(--azul);
+    color: white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+}
+
+.logo-texto h2 {
+    font-size: 1rem;
+    color: var(--texto);
+    margin: 0;
+    line-height: 1;
+}
+
+.logo-texto span {
+    font-size: 0.7rem;
+    color: var(--azul);
+}
+
+/* --- Menú --- */
+.menu-navegacion {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.menu-navegacion a {
+    text-decoration: none;
+    color: var(--azul);
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 10px 18px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.menu-navegacion a:hover,
+.menu-navegacion a.activo {
+    background-color: var(--azul);
+    color: white;
+}
+
+/* --- Avatar --- */
+.acciones-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.avatar-usuario {
+    width: 40px;
+    height: 40px;
+    background-color: transparent;
+    color: var(--azul);
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.avatar-usuario:hover,
+.avatar-usuario.activo {
+    background-color: var(--azul);
+    color: white;
+}
+
+/* --- Botón hamburguesa (oculto en escritorio) --- */
+.btn-hamburguesa {
+    display: none;
+    width: 40px;
+    height: 40px;
+    background: transparent;
+    border: none;
+    color: var(--azul);
+    font-size: 1.4rem;
+    cursor: pointer;
+    border-radius: 8px;
+    justify-content: center;
+    align-items: center;
+    transition: background-color 0.3s ease;
+}
+
+.btn-hamburguesa:hover {
+    background-color: var(--azul-claro);
+}
+
+/* ==========================================================================
+   4. LAYOUTS (estructuras de 2 columnas)
+   ========================================================================== */
+
+/* Propiedades comunes a todos los layouts */
+.layout-principal,
+.layout-cambiar-contrasena,
+.layout-editar-perfil,
+.layout-notificaciones {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Izquierda un poco más ancha */
-    gap: 40px;
     width: 100%;
     align-items: start;
 }
 
-/* --- COLUMNA IZQUIERDA --- */
-.seccion-acciones {
-    margin-bottom: 0;
+/* Inicio y Perfil: dos columnas iguales */
+.layout-principal {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+/* Editar perfil: izquierda más ancha */
+.layout-editar-perfil {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 40px;
+}
+
+/* Cambiar contraseña y Notificaciones: izquierda más ancha */
+.layout-cambiar-contrasena,
+.layout-notificaciones {
+    grid-template-columns: 1.5fr 1fr;
+    gap: 30px;
+}
+
+
+/* ==========================================================================
+   5. COMPONENTES REUTILIZABLES
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   5.1 Títulos y cabeceras
+   -------------------------------------------------------------------------- */
+.titulo-bienvenida {
+    font-size: 2rem;
+    color: var(--texto-titulo);
+    margin-bottom: 30px;
 }
 
 .subtitulo {
     font-size: 1rem;
     font-weight: 600;
     margin-bottom: 15px;
-    color: #2d3748;
+    color: var(--texto-subtitulo);
 }
 
+/* Cabecera de página (icono + título + descripción) */
+.cabecera-pagina {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.icono-cabecera {
+    width: 50px;
+    height: 50px;
+    background-color: var(--azul);
+    color: white;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.texto-cabecera h1 {
+    font-size: 1.8rem;
+    color: var(--texto-titulo);
+    margin: 0;
+    line-height: 1.2;
+}
+
+.texto-cabecera p {
+    font-size: 0.85rem;
+    color: var(--texto-gris);
+    margin: 0;
+}
+
+/* Cabecera interna de una tarjeta (icono + título + descripción) */
+.cabecera-tarjeta {
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--borde-suave);
+}
+
+.cabecera-tarjeta .subtitulo {
+    margin-bottom: 3px;
+}
+
+.icono-tarjeta {
+    width: 40px;
+    height: 40px;
+    background-color: var(--azul-claro);
+    color: var(--azul);
+    border-radius: 8px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+.descripcion-tarjeta {
+    font-size: 0.75rem;
+    color: var(--texto-claro);
+    line-height: 1.4;
+}
+
+/* --------------------------------------------------------------------------
+   5.2 Tarjetas
+   -------------------------------------------------------------------------- */
+.tarjeta-blanco {
+    background-color: white;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
+    border: 1px solid #eef2f6;
+    margin-bottom: 30px;
+}
+
+/* --------------------------------------------------------------------------
+   5.3 Estados (etiquetas de colores)
+   -------------------------------------------------------------------------- */
+.estado {
+    font-size: 0.7rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.estado-azul  { background-color: var(--azul-claro); color: var(--azul); }
+.estado-rojo  { background-color: #fff5f5;           color: var(--rojo); }
+.estado-verde { background-color: #f0fff4;           color: var(--verde); }
+
+/* --------------------------------------------------------------------------
+   5.4 Tarjetas de resumen (Total, Reportados, En proceso, Resueltos)
+   -------------------------------------------------------------------------- */
+.grid-resumen-inicio {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.tarjeta-resumen-inicio {
+    background-color: white;
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #eef2f6;
+}
+
+.tarjeta-resumen-inicio .numero-inicio {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--texto-claro);
+}
+
+.tarjeta-resumen-inicio .etiqueta-inicio {
+    font-size: 0.75rem;
+    color: var(--texto-gris);
+}
+
+/* Variantes de color */
+.borde-gris     { border-color: var(--borde); }
+
+.borde-azul     { border-color: #cce0ff; background-color: var(--azul-fondo); }
+.borde-azul .numero-inicio     { color: var(--azul); }
+
+.borde-amarillo { border-color: #fde6b3; background-color: #fffaf0; }
+.borde-amarillo .numero-inicio { color: var(--amarillo); }
+
+.borde-verde    { border-color: #c6f6d5; background-color: #f0fff4; }
+.borde-verde .numero-inicio    { color: var(--verde); }
+
+/* --------------------------------------------------------------------------
+   5.5 Formularios
+   -------------------------------------------------------------------------- */
+.campo-formulario {
+    margin-bottom: 15px;
+}
+
+.campo-formulario label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: var(--texto-gris);
+    margin-bottom: 8px;
+}
+
+.campo-formulario label i {
+    color: var(--texto-gris);
+    font-size: 0.85rem;
+    width: 15px;            /* Ancho fijo para alinear los textos */
+    text-align: center;
+}
+
+.descripcion-formulario {
+    font-size: 0.8rem;
+    color: var(--texto-gris);
+    margin-bottom: 25px;
+    line-height: 1.5;
+}
+
+/* --- Input con icono a la izquierda --- */
+.input-con-icono {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-con-icono i {
+    position: absolute;
+    left: 15px;
+    color: var(--texto-claro);
+    font-size: 0.9rem;
+}
+
+.input-con-icono input {
+    width: 100%;
+    padding: 12px 15px 12px 40px;   /* Espacio extra a la izquierda para el icono */
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    color: var(--texto);
+    background-color: var(--fondo-input);
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.input-con-icono input:focus {
+    border-color: var(--azul);
+}
+
+/* Icono del ojo (mostrar/ocultar contraseña) a la derecha */
+.input-con-icono .toggle-password {
+    right: 15px;
+    left: auto;             /* Sobrescribe el left: 15px de arriba */
+    color: var(--texto-claro);
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.input-con-icono .toggle-password:hover {
+    color: var(--azul);
+}
+
+/* --- Select con flecha personalizada --- */
+.select-con-flecha {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.select-con-flecha::after {
+    content: '\f107';                       /* Flecha hacia abajo de Font Awesome */
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 18px;
+    color: var(--texto-gris);
+    pointer-events: none;                   /* Permite hacer clic en el select */
+    font-size: 0.9rem;
+}
+
+.select-con-flecha select {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    color: var(--texto);
+    background-color: var(--fondo-input);
+    appearance: none;
+    -webkit-appearance: none;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.3s ease;
+}
+
+.select-con-flecha select:focus {
+    border-color: var(--azul);
+    background-color: white;
+}
+
+/* --- Textarea --- */
+textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    color: var(--texto);
+    background-color: var(--fondo-input);
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+    min-height: 100px;
+}
+
+textarea:focus {
+    border-color: var(--azul);
+    background-color: white;
+}
+
+textarea::placeholder {
+    color: var(--texto-claro);
+}
+
+/* --- Zona para subir archivo (fotografía) --- */
+.zona-subir-archivo {
+    border: 2px dashed #cbd5e0;
+    border-radius: 10px;
+    padding: 30px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    background-color: #fafbfc;
+}
+
+.zona-subir-archivo:hover {
+    border-color: var(--azul);
+    background-color: var(--azul-fondo);
+}
+
+.zona-subir-archivo i {
+    font-size: 1.8rem;
+    color: var(--azul);
+    margin-bottom: 5px;
+}
+
+.zona-subir-archivo strong {
+    font-size: 0.9rem;
+    color: var(--azul);
+    font-weight: 500;
+}
+
+.zona-subir-archivo span {
+    font-size: 0.75rem;
+    color: var(--texto-claro);
+}
+
+/* --- Interruptor (toggle switch) --- */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 46px;
+    height: 24px;
+    flex-shrink: 0;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #cbd5e0;      /* Gris cuando está apagado */
+    transition: 0.3s;
+    border-radius: 24px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    transition: 0.3s;
+    border-radius: 50%;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.switch input:checked + .slider {
+    background-color: var(--azul);
+}
+
+.switch input:checked + .slider:before {
+    transform: translateX(22px);
+}
+
+/* --------------------------------------------------------------------------
+   5.6 Botones
+   -------------------------------------------------------------------------- */
+
+/* --- Contenedores de botones --- */
+.botones-formulario {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.botones-perfil {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+}
+
+.botones-perfil-edicion {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.botones-notificaciones {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* --- Guardar / Enviar (azul, ocupa el ancho disponible) --- */
+.btn-guardar {
+    flex-grow: 1;
+    background-color: var(--azul);
+    color: white;
+    border: none;
+    text-decoration: none;
+    padding: 14px 20px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-guardar:hover {
+    background-color: var(--azul-hover);
+}
+
+.botones-notificaciones .btn-guardar {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+/* --- Cancelar (gris, más pequeño) --- */
+.btn-cancelar {
+    background-color: var(--borde);
+    color: var(--texto-medio);
+    border: none;
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;            /* Evita que el texto se rompa en dos líneas */
+}
+
+.btn-cancelar:hover {
+    background-color: #cbd5e0;
+    color: var(--texto-titulo);
+}
+
+/* --- Botones del perfil (primario y peligro) --- */
+.btn-perfil-primario,
+.btn-perfil-peligro {
+    text-decoration: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-perfil-primario {
+    background-color: var(--azul);
+    color: white;
+    text-decoration: none;
+    justify-content: center;
+}
+
+.btn-perfil-primario:hover {
+    background-color: var(--azul-hover);
+    transform: translateY(-2px);
+}
+
+.btn-perfil-peligro {
+    background-color: white;
+    color: var(--rojo);
+    border: 1px solid var(--rojo);
+}
+
+.btn-perfil-peligro:hover {
+    background-color: var(--rojo);
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* Guardar cambios en Editar perfil (se estira) */
+.btn-guardar-perfil {
+    flex-grow: 1;
+    justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   5.7 Listas con puntos de colores
+   -------------------------------------------------------------------------- */
+.lista-recomendaciones,
+.lista-sabias-que {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.lista-recomendaciones li,
+.lista-sabias-que li {
+    font-size: 0.8rem;
+    color: var(--texto-medio);
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    line-height: 1.4;
+}
+
+.punto-azul,
+.punto-amarillo {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-top: 5px;                /* Alineación con el texto */
+    flex-shrink: 0;
+}
+
+.punto-azul     { background-color: var(--azul); }
+.punto-amarillo { background-color: var(--naranja); }
+
+/* --------------------------------------------------------------------------
+   5.8 Tarjetas informativas (fondo azul claro)
+   -------------------------------------------------------------------------- */
+.tarjeta-seguridad,
+.tarjeta-sabias-que {
+    background-color: var(--azul-suave);
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.tarjeta-seguridad    { margin-bottom: 30px; }
+.tarjeta-sabias-que   { margin-bottom: 25px; }
+
+.tarjeta-seguridad h4,
+.tarjeta-sabias-que h4 {
+    font-size: 0.95rem;
+    color: var(--texto-titulo);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tarjeta-seguridad h4 i,
+.tarjeta-sabias-que h4 i {
+    color: var(--azul);
+}
+
+.tarjeta-ayuda {
+    background-color: var(--azul-suave);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.icono-ayuda {
+    color: var(--azul);
+    font-size: 1.5rem;
+    margin-top: 2px;
+}
+
+.tarjeta-ayuda h4 {
+    font-size: 0.9rem;
+    color: var(--texto-titulo);
+    margin-bottom: 5px;
+}
+
+.tarjeta-ayuda p {
+    font-size: 0.75rem;
+    color: var(--texto-medio);
+    line-height: 1.4;
+}
+
+
+/* ==========================================================================
+   6. PÁGINAS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   6.1 Inicio
+   -------------------------------------------------------------------------- */
+
+/* Acciones rápidas */
 .grid-acciones {
     display: flex;
     justify-content: center;
@@ -159,7 +852,7 @@ body {
 }
 
 .btn-accion-rapida {
-    background-color: #1D6ADB;
+    background-color: var(--azul);
     color: white;
     text-decoration: none;
     padding: 20px 15px;
@@ -180,21 +873,11 @@ body {
 }
 
 .btn-accion-rapida:hover {
-    background-color: #1552a8;
+    background-color: var(--azul-hover);
     transform: translateY(-2px);
 }
 
-/* Tarjeta blanca genérica */
-.tarjeta-blanco {
-    background-color: white;
-    border-radius: 12px;
-    padding: 25px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
-    border: 1px solid #eef2f6;
-    margin-bottom: 30px;
-}
-
-/* Lista de Actividad Reciente */
+/* Actividad reciente */
 .lista-actividad {
     display: flex;
     flex-direction: column;
@@ -206,7 +889,7 @@ body {
     align-items: center;
     gap: 15px;
     padding-bottom: 15px;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--borde-suave);
 }
 
 .item-actividad-inicio:last-child {
@@ -224,9 +907,9 @@ body {
     font-size: 0.9rem;
 }
 
-.icono-act-inicio.azul { background-color: #ebf4ff; color: #1D6ADB; }
-.icono-act-inicio.amarillo { background-color: #fffaf0; color: #d69e2e; }
-.icono-act-inicio.verde { background-color: #f0fff4; color: #38a169; }
+.icono-act-inicio.azul     { background-color: var(--azul-claro); color: var(--azul); }
+.icono-act-inicio.amarillo { background-color: #fffaf0;           color: var(--amarillo); }
+.icono-act-inicio.verde    { background-color: #f0fff4;           color: var(--verde); }
 
 .info-act-inicio {
     flex-grow: 1;
@@ -235,30 +918,17 @@ body {
 .info-act-inicio strong {
     display: block;
     font-size: 0.85rem;
-    color: #2d3748;
+    color: var(--texto-subtitulo);
 }
 
 .info-act-inicio span {
     font-size: 0.75rem;
-    color: #a0aec0;
+    color: var(--texto-claro);
 }
 
-/* Estados (etiquetas de colores) */
-.estado {
-    font-size: 0.7rem;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-weight: 500;
-}
-
-.estado-azul { background-color: #ebf4ff; color: #1D6ADB; }
-.estado-amarillo { background-color: #fffaf0; color: #d69e2e; }
-.estado-rojo { background-color: #fff5f5; color: #e53e3e; }
-.estado-verde { background-color: #f0fff4; color: #38a169; }
-
-/* --- COLUMNA DERECHA --- */
+/* Banner de ayuda (columna derecha) */
 .banner-ayuda {
-    background-color: #1D6ADB;
+    background-color: var(--azul);
     color: white;
     padding: 30px;
     border-radius: 12px;
@@ -276,132 +946,17 @@ body {
     line-height: 1.5;
 }
 
-/* Resumen de Actividad (Cuadrícula 2x2) */
-.grid-resumen-inicio {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.tarjeta-resumen-inicio {
-    background-color: white;
-    border-radius: 10px;
-    padding: 15px;
-    display: flex;
-    flex-direction: column;
-    border: 1px solid #eef2f6;
-}
-
-.tarjeta-resumen-inicio .numero-inicio {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #a0aec0;
-}
-
-.tarjeta-resumen-inicio .etiqueta-inicio {
-    font-size: 0.75rem;
-    color: #718096;
-}
-
-/* Colores de los bordes de resumen */
-.borde-gris { border-color: #e2e8f0; }
-.borde-azul { border-color: #cce0ff; background-color: #f0f6ff; }
-.borde-azul .numero-inicio { color: #1D6ADB; }
-.borde-amarillo { border-color: #fde6b3; background-color: #fffaf0; }
-.borde-amarillo .numero-inicio { color: #d69e2e; }
-.borde-verde { border-color: #c6f6d5; background-color: #f0fff4; }
-.borde-verde .numero-inicio { color: #38a169; }
-
-/* Tarjeta de Ayuda (¿Cómo reportar?) */
-.tarjeta-ayuda {
-    background-color: #eef5ff; /* Azul muy clarito */
-    border-radius: 12px;
-    padding: 20px;
-    display: flex;
-    gap: 15px;
-    align-items: flex-start;
-}
-
-.icono-ayuda {
-    color: #1D6ADB;
-    font-size: 1.5rem;
-    margin-top: 2px;
-}
-
-.tarjeta-ayuda h4 {
-    font-size: 0.9rem;
-    color: #1a202c;
-    margin-bottom: 5px;
-}
-
-.tarjeta-ayuda p {
-    font-size: 0.75rem;
-    color: #4a5568;
-    line-height: 1.4;
-}
-
-
-/* =========================================
-   RESPONSIVE (VERSIÓN MÓVIL) 📱
-   ========================================= */
-@media (max-width: 900px) {
-    
-    /* El layout principal pasa de 2 columnas a 1 sola */
-    .layout-principal {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    /* El título de bienvenida se hace un poco más pequeño */
-    .titulo-bienvenida {
-        font-size: 1.6rem;
-        margin-bottom: 20px;
-    }
-
-    /* Los botones de acción rápida pasan a estar en una sola columna o 2 */
-    .grid-acciones {
-        grid-template-columns: 1fr 1fr; /* 2 columnas en celular */
-    }
-
-    /* El último botón de acción ocupa todo el ancho si son 3 botones */
-    .grid-acciones .btn-accion-rapida:last-child {
-        grid-column: span 2;
-    }
-
-    /* Ajustes de padding para que no se vea apretado en celular */
-    .dashboard-inicio {
-        padding: 20px 15px;
-    }
-    
-    .tarjeta-blanco, .banner-ayuda, .tarjeta-ayuda {
-        padding: 20px;
-    }
-}
-
-/* Ajuste extra para celulares muy pequeños (ej. iPhone SE) */
-@media (max-width: 400px) {
-    .grid-acciones {
-        grid-template-columns: 1fr; /* 1 sola columna de botones */
-    }
-    .grid-acciones .btn-accion-rapida:last-child {
-        grid-column: span 1;
-    }
-}
-
-
-/* =========================================
-   ESTILOS ESPECÍFICOS DE PERFIL
-   ========================================= */
-
-/* Tarjeta de Perfil (Azul) */
+/* --------------------------------------------------------------------------
+   6.2 Perfil
+   -------------------------------------------------------------------------- */
 .tarjeta-perfil {
-    background-color: #1D6ADB;
+    background-color: var(--azul);
     color: white;
     border-radius: 12px;
     padding: 30px 20px;
     text-align: center;
     margin-bottom: 30px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
 }
 
 .perfil-avatar {
@@ -431,55 +986,13 @@ body {
     gap: 8px;
 }
 
-/* Campos de formulario con icono dentro */
-.campo-formulario {
-    margin-bottom: 15px;
-}
-
-.campo-formulario label {
-    display: block;
-    font-size: 0.8rem;
-    color: #718096;
-    margin-bottom: 5px;
-}
-
-.input-con-icono {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.input-con-icono i {
-    position: absolute;
-    left: 15px;
-    color: #a0aec0;
-    font-size: 0.9rem;
-}
-
-.input-con-icono input {
-    width: 100%;
-    padding: 12px 15px 12px 40px; /* Padding extra a la izquierda para el icono */
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    color: #414C65;
-    background-color: #f8fafc; /* Un fondo grisáceo muy sutil para indicar que es de solo lectura */
-    outline: none;
-    transition: border-color 0.3s ease;
-}
-
-.input-con-icono input:focus {
-    border-color: #1D6ADB;
-}
-
-/* Items de Configuración de cuenta */
+/* Items de configuración de cuenta */
 .item-configuracion {
     text-decoration: none;
     display: flex;
     align-items: center;
     padding: 15px 0;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--borde-suave);
     cursor: pointer;
     transition: background-color 0.2s ease;
 }
@@ -489,7 +1002,7 @@ body {
 }
 
 .item-configuracion:hover {
-    background-color: #f8fafc; /* Efecto hover sutil */
+    background-color: var(--fondo-input);
     border-radius: 8px;
     padding-left: 10px;
     padding-right: 10px;
@@ -500,8 +1013,8 @@ body {
 .icono-config {
     width: 35px;
     height: 35px;
-    background-color: #f0f6ff;
-    color: #1D6ADB;
+    background-color: var(--azul-fondo);
+    color: var(--azul);
     border-radius: 8px;
     display: flex;
     justify-content: center;
@@ -517,552 +1030,52 @@ body {
 .texto-config strong {
     display: block;
     font-size: 0.85rem;
-    color: #2d3748;
+    color: var(--texto-subtitulo);
 }
 
 .texto-config span {
     font-size: 0.75rem;
-    color: #a0aec0;
+    color: var(--texto-claro);
 }
 
 .flecha {
-    color: #1D6ADB;
+    color: var(--azul);
     font-size: 0.9rem;
 }
 
-/* Botones de acción del perfil */
-.botones-perfil {
-    display: flex;
-    justify-content: center; /* Centrados como en tu diseño */
-    gap: 15px;
-    margin-top: 10px;
-    flex-wrap: wrap; /* Para que bajen si no caben */
-}
-
-.btn-perfil-primario, .btn-perfil-peligro {
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.btn-perfil-primario {
-    background-color: #1D6ADB;
-    color: white;
-    text-decoration: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    border: none;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    justify-content: center; /* Centrado del contenido del botón */
-}
-
-.btn-perfil-primario:hover {
-    background-color: #1552a8;
-    transform: translateY(-2px);
-}
-
-.btn-perfil-peligro {
-    background-color: white;
-    color: #e53e3e;
-    border: 1px solid #e53e3e;
-}
-
-.btn-perfil-peligro:hover {
-    background-color: #e53e3e;
-    color: white;
-    transform: translateY(-2px);
-}
-
-/* RESPONSIVE (Ajustes para móvil) */
-@media (max-width: 900px) {
-    .botones-perfil {
-        flex-direction: column; /* Botones en columna en celular */
-    }
-    
-    .btn-perfil-primario, .btn-perfil-peligro {
-        width: 100%;
-        justify-content: center;
-    }
-}
-
-/* =========================================
-   ESTILOS ESPECÍFICOS DE CAMBIAR CONTRASEÑA
-   ========================================= */
-
-/* Cabecera de la página (Icono y Título) */
-.cabecera-pagina {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 30px;
-}
-
-.icono-cabecera {
-    width: 50px;
-    height: 50px;
-    background-color: #1D6ADB;
-    color: white;
-    border-radius: 12px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.5rem;
-}
-
-.texto-cabecera h1 {
-    font-size: 1.8rem;
-    color: #1a202c;
-    margin: 0;
-    line-height: 1.2;
-}
-
-.texto-cabecera p {
-    font-size: 0.85rem;
-    color: #718096;
-    margin: 0;
-}
-
-/* Layout de 2 columnas específico para esta página */
-.layout-cambiar-contrasena {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr; /* Formulario más ancho que la info */
-    gap: 30px;
-    width: 100%;
-    align-items: start;
-}
-
-/* --- COLUMNA IZQUIERDA (Formulario) --- */
-.descripcion-formulario {
-    font-size: 0.8rem;
-    color: #718096;
+/* --------------------------------------------------------------------------
+   6.3 Editar perfil
+   -------------------------------------------------------------------------- */
+.tarjeta-perfil-edicion {
+    padding: 40px 20px;
     margin-bottom: 25px;
-    line-height: 1.5;
 }
 
-/* Ajuste para el icono del ojo a la derecha */
-.input-con-icono {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.input-con-icono .toggle-password {
-    position: absolute;
-    right: 15px;
-    left: auto; /* Sobrescribe el left: 15px anterior */
-    color: #a0aec0;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.input-con-icono .toggle-password:hover {
-    color: #1D6ADB;
-}
-
-/* Botones del formulario */
-.botones-formulario {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.btn-guardar {
-    text-decoration: none;
-    flex-grow: 1; /* Ocupa todo el ancho disponible */
-    background-color: #1D6ADB;
-    color: white;
-    border: none;
-    text-decoration: none;
-    padding: 14px 20px;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-guardar:hover {
-    background-color: #1552a8;
-}
-
-.btn-cancelar {
-    background-color: #e2e8f0;
-    color: #4a5568;
-    border: none;
-    text-decoration: none;
-    padding: 14px 24px;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.btn-cancelar:hover {
-    background-color: #cbd5e0;
-    color: #1a202c;
-}
-
-/* --- COLUMNA DERECHA (Información) --- */
-.tarjeta-seguridad {
-    background-color: #eef5ff; /* Azul muy clarito */
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 30px;
-}
-
-.tarjeta-seguridad h4 {
-    font-size: 0.95rem;
-    color: #1a202c;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.tarjeta-seguridad h4 i {
-    color: #1D6ADB;
-}
-
+/* --------------------------------------------------------------------------
+   6.4 Cambiar contraseña
+   -------------------------------------------------------------------------- */
 .tarjeta-cuando-cambiar {
     padding: 25px;
 }
 
 .tarjeta-cuando-cambiar h4 {
     font-size: 0.95rem;
-    color: #1a202c;
+    color: var(--texto-titulo);
     margin-bottom: 20px;
 }
 
-/* Listas de recomendaciones */
-.lista-recomendaciones {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.lista-recomendaciones li {
-    font-size: 0.8rem;
-    color: #4a5568;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    line-height: 1.4;
-}
-
-/* Puntos de colores para las listas */
-.punto-azul, .punto-amarillo {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-top: 5px; /* Alineación con el texto */
-    flex-shrink: 0;
-}
-
-.punto-azul {
-    background-color: #1D6ADB;
-}
-
-.punto-amarillo {
-    background-color: #f6ad55;
-}
-
-/* RESPONSIVE (Ajustes para móvil) */
-@media (max-width: 900px) {
-    .layout-cambiar-contrasena {
-        grid-template-columns: 1fr; /* Una sola columna en celular */
-        gap: 20px;
-    }
-
-    .cabecera-pagina {
-        flex-direction: column;
-        text-align: center;
-        gap: 10px;
-    }
-
-    .botones-formulario {
-        flex-direction: column-reverse; /* Cancelar arriba, Guardar abajo */
-    }
-
-    .btn-guardar, .btn-cancelar {
-        width: 100%;
-    }
-}
-
-/* =========================================
-   ESTILOS ESPECÍFICOS DE EDITAR PERFIL
-   ========================================= */
-
-/* Layout de 2 columnas con proporciones específicas (1.5 a 1) */
-.layout-editar-perfil {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr; /* Izquierda más ancha */
-    gap: 40px;
-    width: 100%;
-    align-items: start;
-}
-
-/* Ajuste de la tarjeta de perfil en esta página */
-.tarjeta-perfil-edicion {
-    padding: 40px 20px; /* Un poco más de espacio vertical */
-    margin-bottom: 25px;
-}
-
-/* Contenedor de los botones inferiores */
-.botones-perfil-edicion {
-    display: flex;
-    gap: 15px;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Botón Guardar Cambios (Ocupa más espacio) */
-.btn-guardar-perfil {
-    flex-grow: 1; /* Se estira para ocupar el espacio disponible */
-    justify-content: center;
-}
-
-/* Botón Cancelar (Más pequeño) */
-.btn-cancelar {
-    background-color: #e2e8f0;
-    color: #4a5568;
-    border: none;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    white-space: nowrap; /* Evita que el texto se rompa en dos líneas */
-}
-
-.btn-cancelar:hover {
-    background-color: #cbd5e0;
-    color: #1a202c;
-}
-
-/* RESPONSIVE (Ajustes para móvil) */
-@media (max-width: 900px) {
-    .layout-editar-perfil {
-        grid-template-columns: 1fr; /* Una sola columna en celular */
-        gap: 20px;
-    }
-    
-    .botones-perfil-edicion {
-        flex-direction: column-reverse; /* Cancelar arriba, Guardar abajo */
-    }
-
-    .btn-guardar-perfil, .btn-cancelar {
-        width: 100%;
-    }
-}
-
-
-/* =========================================
-   ESTILOS ESPECÍFICOS DE REPORTAR PROBLEMA
-   ========================================= */
-
-/* Contenedor del formulario (centrado y con ancho máximo) */
+/* --------------------------------------------------------------------------
+   6.5 Reportar problema
+   -------------------------------------------------------------------------- */
 .contenedor-formulario-reporte {
     max-width: 850px;
     margin: 0 auto;
     width: 100%;
 }
 
-/* Zona de subir archivo (Fotografía) */
-.zona-subir-archivo {
-    border: 2px dashed #cbd5e0;
-    border-radius: 10px;
-    padding: 30px 20px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    background-color: #fafbfc;
-}
-
-.zona-subir-archivo:hover {
-    border-color: #1D6ADB;
-    background-color: #f0f6ff;
-}
-
-.zona-subir-archivo i {
-    font-size: 1.8rem;
-    color: #1D6ADB;
-    margin-bottom: 5px;
-}
-
-.zona-subir-archivo strong {
-    font-size: 0.9rem;
-    color: #1D6ADB;
-    font-weight: 500;
-}
-
-.zona-subir-archivo span {
-    font-size: 0.75rem;
-    color: #a0aec0;
-}
-
-/* Select con flecha personalizada */
-.select-con-flecha {
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.select-con-flecha::after {
-    content: '\f107'; /* Icono de flecha hacia abajo de Font Awesome */
-    font-family: 'Font Awesome 6 Free';
-    font-weight: 900;
-    position: absolute;
-    right: 18px;
-    color: #718096;
-    pointer-events: none; /* Permite hacer clic en el select a través de la flecha */
-    font-size: 0.9rem;
-}
-
-.select-con-flecha select {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    color: #414C65;
-    background-color: #f8fafc;
-    appearance: none; /* Quita la flecha por defecto del navegador */
-    -webkit-appearance: none;
-    outline: none;
-    cursor: pointer;
-    transition: border-color 0.3s ease;
-}
-
-.select-con-flecha select:focus {
-    border-color: #1D6ADB;
-    background-color: white;
-}
-
-/* Área de texto (Textarea) */
-textarea {
-    width: 100%;
-    padding: 12px 15px;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.85rem;
-    color: #414C65;
-    background-color: #f8fafc;
-    outline: none;
-    resize: vertical; /* Permite redimensionar solo verticalmente */
-    transition: border-color 0.3s ease;
-    min-height: 100px;
-}
-
-textarea:focus {
-    border-color: #1D6ADB;
-    background-color: white;
-}
-
-textarea::placeholder {
-    color: #a0aec0;
-}
-
-/* Ajustes a los labels de los campos (para que los iconos se alineen) */
-.campo-formulario label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.8rem;
-    color: #718096;
-    margin-bottom: 8px;
-}
-
-.campo-formulario label i {
-    color: #718096;
-    font-size: 0.85rem;
-    width: 15px; /* Ancho fijo para alinear los textos */
-    text-align: center;
-}
-
-/* Botones del formulario */
-.botones-formulario {
-    display: flex;
-    gap: 15px;
-    margin-top: 30px;
-}
-
-.btn-guardar {
-    flex-grow: 1;
-    background-color: #1D6ADB;
-    color: white;
-    border: none;
-    padding: 14px 20px;
-    border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-guardar:hover {
-    background-color: #1552a8;
-}
-
-/* RESPONSIVE (Ajustes para móvil) */
-@media (max-width: 900px) {
-    .contenedor-formulario-reporte {
-        max-width: 100%;
-    }
-    
-    .botones-formulario {
-        flex-direction: column-reverse;
-    }
-
-    .btn-guardar, .btn-cancelar {
-        width: 100%;
-    }
-}
-
-
-/* =========================================
-   ESTILOS ESPECÍFICOS DE MIS REPORTES
-   ========================================= */
-
-/* Fila de 4 tarjetas de resumen */
+/* --------------------------------------------------------------------------
+   6.6 Mis reportes
+   -------------------------------------------------------------------------- */
 .grid-resumen-reportes {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1071,45 +1084,43 @@ textarea::placeholder {
     width: 100%;
 }
 
-/* Contenedor de la tabla (para que no se desborde en móvil) */
 .contenedor-tabla {
     padding: 20px;
     overflow: hidden;
 }
 
 .tabla-responsive {
-    overflow-x: auto; /* Scroll horizontal si la pantalla es muy pequeña */
+    overflow-x: auto;               /* Scroll horizontal en pantallas pequeñas */
     width: 100%;
 }
 
-/* Tabla de reportes */
 .tabla-reportes {
     width: 100%;
-    border-collapse: collapse; /* Une los bordes de las celdas */
+    border-collapse: collapse;
     text-align: left;
     font-size: 0.85rem;
 }
 
 .tabla-reportes thead tr {
-    border-bottom: 2px solid #f0f0f0; /* Línea gruesa debajo de los títulos */
+    border-bottom: 2px solid var(--borde-suave);
 }
 
 .tabla-reportes th {
     padding: 15px 10px;
     font-weight: 600;
-    color: #2d3748;
+    color: var(--texto-subtitulo);
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
 
 .tabla-reportes tbody tr {
-    border-bottom: 1px solid #f7fafc; /* Línea sutil entre filas */
+    border-bottom: 1px solid #f7fafc;
     transition: background-color 0.2s ease;
 }
 
 .tabla-reportes tbody tr:hover {
-    background-color: #f8fafc; /* Efecto hover en las filas */
+    background-color: var(--fondo-input);
 }
 
 .tabla-reportes tbody tr:last-child {
@@ -1118,11 +1129,10 @@ textarea::placeholder {
 
 .tabla-reportes td {
     padding: 15px 10px;
-    color: #4a5568;
+    color: var(--texto-medio);
     vertical-align: middle;
 }
 
-/* Celda con icono (para la primera columna) */
 .celda-con-icono {
     display: flex;
     align-items: center;
@@ -1137,79 +1147,14 @@ textarea::placeholder {
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #718096;
+    color: var(--texto-gris);
     font-size: 0.8rem;
     flex-shrink: 0;
 }
 
-/* RESPONSIVE (Ajustes para móvil) */
-@media (max-width: 900px) {
-    /* Las 4 tarjetas se convierten en 2 columnas */
-    .grid-resumen-reportes {
-        grid-template-columns: 1fr 1fr;
-        gap: 15px;
-    }
-
-    /* La tabla se puede desplazar horizontalmente */
-    .tabla-reportes {
-        min-width: 600px; /* Ancho mínimo para que la tabla no se aplaste */
-    }
-}
-
-@media (max-width: 500px) {
-    /* En celulares muy pequeños, 1 sola columna de tarjetas */
-    .grid-resumen-reportes {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* =========================================
-   ESTILOS ESPECÍFICOS DE NOTIFICACIONES
-   ========================================= */
-
-/* Layout de 2 columnas (Izquierda más ancha) */
-.layout-notificaciones {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 30px;
-    width: 100%;
-    align-items: start;
-}
-
-/* Cabecera interna de cada tarjeta (icono + título + descripción) */
-.cabecera-tarjeta {
-    display: flex;
-    align-items: flex-start;
-    gap: 15px;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 1px solid #f0f0f0;
-}
-
-.icono-tarjeta {
-    width: 40px;
-    height: 40px;
-    background-color: #ebf4ff;
-    color: #1D6ADB;
-    border-radius: 8px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-    flex-shrink: 0;
-}
-
-.cabecera-tarjeta .subtitulo {
-    margin-bottom: 3px;
-}
-
-.descripcion-tarjeta {
-    font-size: 0.75rem;
-    color: #a0aec0;
-    line-height: 1.4;
-}
-
-/* Lista de opciones con toggles */
+/* --------------------------------------------------------------------------
+   6.7 Notificaciones
+   -------------------------------------------------------------------------- */
 .lista-opciones {
     display: flex;
     flex-direction: column;
@@ -1226,151 +1171,28 @@ textarea::placeholder {
 .texto-opcion strong {
     display: block;
     font-size: 0.85rem;
-    color: #2d3748;
+    color: var(--texto-subtitulo);
     margin-bottom: 3px;
 }
 
 .texto-opcion span {
     font-size: 0.75rem;
-    color: #a0aec0;
+    color: var(--texto-claro);
     line-height: 1.4;
 }
 
-/* =========================================
-   TOGGLE SWITCH (Interruptor)
-   ========================================= */
-.switch {
-    position: relative;
-    display: inline-block;
-    width: 46px;
-    height: 24px;
-    flex-shrink: 0;
-}
-
-.switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-}
-
-.slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #cbd5e0; /* Gris cuando está apagado */
-    transition: .3s;
-    border-radius: 24px;
-}
-
-.slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .3s;
-    border-radius: 50%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
-}
-
-/* Estado activo (cuando el checkbox está marcado) */
-.switch input:checked + .slider {
-    background-color: #1D6ADB;
-}
-
-.switch input:checked + .slider:before {
-    transform: translateX(22px);
-}
-
-/* Tarjeta ¿Sabías qué? (Azul claro) */
-.tarjeta-sabias-que {
-    background-color: #eef5ff;
-    border-radius: 12px;
-    padding: 25px;
-    margin-bottom: 25px;
-}
-
-.tarjeta-sabias-que h4 {
-    font-size: 0.95rem;
-    color: #1a202c;
-    margin-bottom: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.tarjeta-sabias-que h4 i {
-    color: #1D6ADB;
-}
-
-.lista-sabias-que {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.lista-sabias-que li {
-    font-size: 0.8rem;
-    color: #4a5568;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    line-height: 1.4;
-}
-
-/* Botones de acción */
-.botones-notificaciones {
-    text-decoration: none;
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-.botones-notificaciones .btn-guardar {
-    flex-grow: 1; /* Ocupa el espacio disponible */
-    justify-content: center;
-}
-
-/* RESPONSIVE (Ajustes para móvil) */
-@media (max-width: 900px) {
-    .layout-notificaciones {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
-    .botones-notificaciones {
-        flex-direction: column-reverse;
-    }
-
-    .botones-notificaciones .btn-guardar,
-    .botones-notificaciones .btn-cancelar {
-        width: 100%;
-    }
-}
-
-/* =========================================
-   ESTILOS ESPECÍFICOS DEL MAPA DE REPORTES
-   ========================================= */
-
-/* Contenedor principal del mapa */
+/* --------------------------------------------------------------------------
+   6.8 Mapa de reportes
+   -------------------------------------------------------------------------- */
 .contenedor-mapa {
     background-color: white;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
     border: 1px solid #eef2f6;
     margin-bottom: 30px;
 }
 
-/* Cabecera del mapa */
 .cabecera-mapa {
     display: flex;
     justify-content: space-between;
@@ -1380,13 +1202,13 @@ textarea::placeholder {
 
 .cabecera-mapa h1 {
     font-size: 1.6rem;
-    color: #1a202c;
+    color: var(--texto-titulo);
     margin: 0;
 }
 
 .contador-reportes {
-    background-color: #f0f6ff;
-    color: #1D6ADB;
+    background-color: var(--azul-fondo);
+    color: var(--azul);
     padding: 8px 16px;
     border-radius: 20px;
     font-size: 0.8rem;
@@ -1396,46 +1218,40 @@ textarea::placeholder {
     gap: 6px;
 }
 
-/* Área del mapa (simulación con CSS) */
+/* Área del mapa (simulada con CSS) */
 .area-mapa {
     position: relative;
     width: 100%;
     height: 400px;
     border-radius: 10px;
-    /* Fondo simulando calles (patrón de cuadrícula) */
     background-color: #eef2f7;
-    background-image: 
+    background-image:
         linear-gradient(#e0e6ed 2px, transparent 2px),
         linear-gradient(90deg, #e0e6ed 2px, transparent 2px);
-    background-size: 60px 60px;
+    background-size: 60px 60px;     /* Cuadrícula que simula las calles */
     overflow: hidden;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--borde);
 }
 
-/* Pines del mapa */
+/* Pines */
 .pin {
     position: absolute;
     font-size: 1.8rem;
     cursor: pointer;
-    transform: translate(-50%, -100%); /* Ajusta el punto del pin */
+    transform: translate(-50%, -100%);
     transition: transform 0.2s ease, filter 0.2s ease;
-    filter: drop-shadow(0 2px 3px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.2));
     z-index: 2;
-}
-
-.pin-seleccionado {
-    transform: translate(-50%, -100%) scale(1.2);
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
 }
 
 .pin:hover {
     transform: translate(-50%, -100%) scale(1.2);
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+    filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.3));
 }
 
-.pin-naranja { color: #f6ad55; }
-.pin-verde { color: #38a169; }
-.pin-azul { color: #1D6ADB; }
+.pin-naranja { color: var(--naranja); }
+.pin-verde   { color: var(--verde); }
+.pin-azul    { color: var(--azul); }
 
 /* Zonas resaltadas (rectángulos verdes semitransparentes) */
 .zona-resaltada {
@@ -1447,14 +1263,14 @@ textarea::placeholder {
     z-index: 1;
 }
 
-/* Leyenda del mapa */
+/* Leyenda */
 .leyenda-mapa {
     display: flex;
     justify-content: center;
     gap: 30px;
     margin-top: 15px;
     padding-top: 15px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--borde-suave);
 }
 
 .item-leyenda {
@@ -1462,7 +1278,7 @@ textarea::placeholder {
     align-items: center;
     gap: 8px;
     font-size: 0.8rem;
-    color: #4a5568;
+    color: var(--texto-medio);
 }
 
 .punto-leyenda {
@@ -1472,22 +1288,20 @@ textarea::placeholder {
     display: inline-block;
 }
 
-.punto-reportado { background-color: #1D6ADB; }
-.punto-revision { background-color: #f6ad55; }
-.punto-reparado { background-color: #38a169; }
+.punto-reportado { background-color: var(--azul); }
+.punto-revision  { background-color: var(--naranja); }
+.punto-reparado  { background-color: var(--verde); }
 
 /* Tarjeta de detalle del reporte */
 .tarjeta-detalle-reporte {
     background-color: white;
     border-radius: 12px;
     padding: 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
     border: 1px solid #eef2f6;
     display: flex;
     gap: 25px;
     max-width: 450px;
-    width: 100%;
-    min-height: 217px;
     margin: 0 auto;
     align-items: flex-start;
 }
@@ -1496,12 +1310,12 @@ textarea::placeholder {
     width: 130px;
     height: 130px;
     background-color: #f7fafc;
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--borde);
     border-radius: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #1D6ADB;
+    color: var(--azul);
     font-size: 2rem;
     flex-shrink: 0;
 }
@@ -1521,18 +1335,129 @@ textarea::placeholder {
 
 .label-detalle {
     font-size: 0.75rem;
-    color: #a0aec0;
+    color: var(--texto-claro);
     font-weight: 500;
 }
 
 .fila-detalle strong {
     font-size: 0.85rem;
-    color: #2d3748;
+    color: var(--texto-subtitulo);
     font-weight: 500;
 }
 
-/* RESPONSIVE (Ajustes para móvil) */
+
+/* ==========================================================================
+   7. BARRA DE SCROLL
+   ========================================================================== */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--azul);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--azul-hover);
+}
+
+
+/* ==========================================================================
+   8. RESPONSIVE (MÓVIL)
+   --------------------------------------------------------------------------
+   Orden: de pantalla más grande a más pequeña (max-width descendente)
+   ========================================================================== */
+
+/* ---------- Tablet / móvil (hasta 900px) ---------- */
 @media (max-width: 900px) {
+
+    /* Layouts: pasan a 1 sola columna */
+    .layout-principal,
+    .layout-cambiar-contrasena,
+    .layout-editar-perfil,
+    .layout-notificaciones {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* Inicio */
+    .dashboard-inicio {
+        padding: 20px 15px;
+    }
+
+    .titulo-bienvenida {
+        font-size: 1.6rem;
+        margin-bottom: 20px;
+    }
+
+    .grid-acciones {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .grid-acciones .btn-accion-rapida:last-child {
+        grid-column: span 2;
+    }
+
+    .tarjeta-blanco,
+    .banner-ayuda,
+    .tarjeta-ayuda {
+        padding: 20px;
+    }
+
+    /* Cabecera de página */
+    .cabecera-pagina {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+    }
+
+    /* Botones: Cancelar arriba, Guardar abajo */
+    .botones-formulario,
+    .botones-perfil-edicion,
+    .botones-notificaciones {
+        flex-direction: column-reverse;
+    }
+
+    .btn-guardar,
+    .btn-guardar-perfil,
+    .btn-cancelar,
+    .botones-notificaciones .btn-guardar,
+    .botones-notificaciones .btn-cancelar {
+        width: 100%;
+    }
+
+    /* Perfil: botones en columna */
+    .botones-perfil {
+        flex-direction: column;
+    }
+
+    .btn-perfil-primario,
+    .btn-perfil-peligro {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Reportar problema */
+    .contenedor-formulario-reporte {
+        max-width: 100%;
+    }
+
+    /* Mis reportes */
+    .grid-resumen-reportes {
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .tabla-reportes {
+        min-width: 600px;           /* Para que la tabla no se aplaste */
+    }
+
+    /* Mapa */
     .cabecera-mapa {
         flex-direction: column;
         align-items: flex-start;
@@ -1558,23 +1483,53 @@ textarea::placeholder {
     .fila-detalle {
         align-items: center;
     }
+
+        /* Header en móvil */
+    .header-usuario {
+        flex-wrap: wrap;
+        padding: 12px 20px;
+    }
+
+    .btn-hamburguesa {
+        display: flex;
+    }
+
+    /* El menú se oculta y baja a una fila completa cuando se abre */
+    .menu-navegacion {
+        display: none;
+        order: 3;
+        width: 100%;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 5px;
+        margin-top: 12px;
+        padding-top: 12px;
+        border-top: 1px solid var(--borde-suave);
+    }
+
+    .menu-navegacion.abierto {
+        display: flex;
+    }
+
+    .menu-navegacion a {
+        padding: 12px 18px;
+    }
 }
 
+/* ---------- Móvil pequeño (hasta 500px) ---------- */
+@media (max-width: 500px) {
+    .grid-resumen-reportes {
+        grid-template-columns: 1fr;
+    }
+}
 
-/*----------------------------------------------------------------------*/
-/* Estilo para la barra de scroll                                       */
-/*----------------------------------------------------------------------*/
-::-webkit-scrollbar {
-    width: 8px;
+/* ---------- Móvil muy pequeño (hasta 400px, ej. iPhone SE) ---------- */
+@media (max-width: 400px) {
+    .grid-acciones {
+        grid-template-columns: 1fr;
+    }
+
+    .grid-acciones .btn-accion-rapida:last-child {
+        grid-column: span 1;
+    }
 }
-::-webkit-scrollbar-track {
-    background: #f1f1f1;
-}
-::-webkit-scrollbar-thumb {
-    background: #1D6ADB;
-    border-radius: 4px;
-}
-::-webkit-scrollbar-thumb:hover {
-    background: #1552a8;
-}
-/*-----------------------------------------------------------------------*/
