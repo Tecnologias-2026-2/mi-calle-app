@@ -24,7 +24,7 @@
 <body>
     <!-- HEADER  --> 
  <header class="header-usuario">
-    <div class="logo">
+    <a  href="index.html" class="logo">
          <!-- Aquí irá la imagen del logo. Por ahora un texto de prueba -->
         <div class="logo-icono">
             <i class="fa-solid fa-house"></i>
@@ -33,9 +33,9 @@
             <h2>Mi Calle</h2>
             <span>Portal Ciudadano</span>
         </div>
-    </div>
+    </a>
 
-    <nav class="menu-navegacion">
+    <nav class="menu-navegacion" id="menu-navegacion">
         <a href="index.html">Inicio</a>
         <a href="reportar.html">Reportar un problema</a>
         <a href="mis_reportes.html">Mis reportes</a>
@@ -46,6 +46,9 @@
         <a href="perfil.html" class="avatar-usuario">
             <i class="fa-solid fa-user"></i>
         </a>
+        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
     </div>
  </header>
 
@@ -143,5 +146,33 @@
         </div>
     </div>
 </main>
+<script src="../menu.js"></script>
+
+<script>
+    // Seleccionamos todos los elementos que tengan la clase 'toggle-password'
+    const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+
+    // Recorremos cada ojito
+    togglePasswordIcons.forEach(icon => {
+        icon.addEventListener('click', function () {
+            // Encontramos el input que está dentro del mismo contenedor
+            const input = this.parentElement.querySelector('input');
+
+            // Verificamos si el input actualmente oculta la contraseña
+            if (input.type === 'password') {
+                input.type = 'text'; // La mostramos
+                // Cambiamos el icono a ojo tachado
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password'; // La volvemos a ocultar
+                // Cambiamos el icono a ojo normal
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            }
+        });
+    });
+</script>
+
 </body>
 </html>
