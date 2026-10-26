@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" 
+    content="width=device-width, initial-scale=1.0">
+    <title>Notificaciones</title>
+    
+    <!-- CSS global -->
+    <link rel="stylesheet" href="../../css/styles.css">
+    
+    <!-- CSS de mi portal usuario-->
+    <link rel="stylesheet" href="../usuario.css/usuario.css">
+
+    <!-- Font Awesome (Librería de iconos) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+      <!-- Fuente Poppins-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
+
+</head>
+<body>
+    <!-- HEADER  --> 
+ <header class="header-usuario">
+    <a  href="index.html" class="logo">
+         <!-- Aquí irá la imagen del logo. Por ahora un texto de prueba -->
+        <div class="logo-icono">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="logo-texto">
+            <h2>Mi Calle</h2>
+            <span>Portal Ciudadano</span>
+        </div>
+    </a>
+
+    </div>
+
+    
+    <nav class="menu-navegacion" id="menu-navegacion">
+        <a href="index.html" >Inicio</a>
+        <a href="reportar.html">Reportar un problema</a>
+        <a href="mis_reportes.html">Mis reportes</a>
+        <a href="mapa.html">Mapa de reportes</a>
+    </nav>
+
+    <div class="acciones-header">
+        <a href="perfil.html" class="avatar-usuario">
+            <i class="fa-solid fa-user"></i>
+        </a>
+        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+ </header>
+
+ <main class="dashboard-inicio">
+    
+    <!-- Cabecera de la página -->
+    <div class="cabecera-pagina">
+        <div class="icono-cabecera">
+            <i class="fa-regular fa-bell"></i>
+        </div>
+        <div class="texto-cabecera">
+            <h1>Notificaciones</h1>
+            <p>Elige qué alertas quieres recibir y cómo. Puedes cambiar estas preferencias en cualquier momento.</p>
+        </div>
+    </div>
+
+    <!-- Layout de 2 columnas -->
+    <div class="layout-notificaciones">
+        
+        <!-- COLUMNA IZQUIERDA -->
+        <div class="columna-izquierda-notificaciones">
+            
+            <!-- Tarjeta: Actividad de reportes -->
+            <section class="tarjeta-blanco">
+                <div class="cabecera-tarjeta">
+                    <div class="icono-tarjeta"><i class="fa-regular fa-file-lines"></i></div>
+                    <div>
+                        <h3 class="subtitulo">Actividad de reportes</h3>
+                        <p class="descripcion-tarjeta">Recibe notificaciones relacionadas con el estado de tus reportes ciudadanos.</p>
+                    </div>
+                </div>
+
+                <div class="lista-opciones">
+                    <div class="item-opcion">
+                        <div class="texto-opcion">
+                            <strong>Cambios de estado</strong>
+                            <span>Cuando tu reporte pasa a revisión, en proceso o a resuelto.</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="item-opcion">
+                        <div class="texto-opcion">
+                            <strong>Reporte reparado</strong>
+                            <span>Recibe una notificación especial cuando tu reporte quede resuelto.</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="item-opcion">
+                        <div class="texto-opcion">
+                            <strong>Reportes cercanos</strong>
+                            <span>Entérate de nuevos reportes en tu zona de residencia.</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tarjeta: Canales de notificación -->
+            <section class="tarjeta-blanco">
+                <div class="cabecera-tarjeta">
+                    <div class="icono-tarjeta"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <div>
+                        <h3 class="subtitulo">Canales de notificación</h3>
+                        <p class="descripcion-tarjeta">Elige cómo quieres recibir las notificaciones de la plataforma.</p>
+                    </div>
+                </div>
+
+                <div class="lista-opciones">
+                    <div class="item-opcion">
+                        <div class="texto-opcion">
+                            <strong>Correo electrónico</strong>
+                            <span>Recibirás alertas enviadas a maria.gomez@correo.com</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <div class="item-opcion">
+                        <div class="texto-opcion">
+                            <strong>Notificaciones en plataforma</strong>
+                            <span>Verás las alertas dentro del portal ciudadano Mi Calle.</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" checked>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- COLUMNA DERECHA -->
+        <div class="columna-derecha-notificaciones">
+            
+            <!-- Tarjeta: ¿Sabías qué? -->
+            <div class="tarjeta-sabias-que">
+                <h4><i class="fa-regular fa-circle-question"></i> ¿Sabías qué...?</h4>
+                <ul class="lista-sabias-que">
+                    <li><span class="punto-azul"></span> Los reportes con más seguimiento reciben atención más rápida.</li>
+                    <li><span class="punto-azul"></span> Activar las notificaciones cercanas te ayuda a colaborar con tu comunidad.</li>
+                    <li><span class="punto-azul"></span> Los correos incluyen un resumen semanal de la actividad en tu zona.</li>
+                </ul>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="botones-notificaciones">
+                <a href="perfil.html" class="btn-guardar">
+                    <i class="fa-regular fa-floppy-disk"></i> Guardar preferencias
+                </a>
+                <a href="perfil.html" class="btn-cancelar">Cancelar</a>
+            </div>
+        </div>
+    </div>
+</main>
+<script src="../menu.js"></script>
+</body>
+</html>

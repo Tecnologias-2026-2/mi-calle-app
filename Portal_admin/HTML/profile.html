@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f9ff">
+  <meta name="description" content="Administra la información y la seguridad de tu perfil en Mi Calle.">
+  <title>Mi perfil | Mi Calle</title>
+  <link rel="stylesheet" href="../CSS/dashboard.css">
+  <link rel="stylesheet" href="../CSS/profile.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="index.html" aria-label="Mi Calle, ir al dashboard">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="ASSETS/mi-calle-logo.png" alt="">
+        </span>
+        <span class="brand-copy"><strong>Mi Calle</strong><small>Admin panel</small></span>
+      </a>
+
+      <p class="nav-caption">MENÚ PRINCIPAL</p>
+      <nav class="main-nav">
+        <a class="nav-link" href="index.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="15" width="7" height="6" rx="1.5"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-link" href="reports-list.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.75h9l5 5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4.75a1 1 0 0 1 1-1Z"/><path d="M14 4v5h5M8 13h8M8 17h8"/></svg>
+          <span>Reportes</span><span class="nav-count">24</span>
+        </a>
+        <a class="nav-link is-active" href="profile.html" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+          <span>Perfil</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a class="logout-button" href="../../login-registro/html/bienvenida.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5M14 16l4-4-4-4M18 12H9"/></svg>
+          <span>Cerrar sesión</span>
+        </a>
+        <div class="sidebar-footer">Mi Calle <span>v1.0</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="ASSETS/mi-calle-logo.png" alt="">
+          </span>
+          <strong>Mi Calle</strong>
+        </div>
+        <div class="breadcrumb"><a href="index.html">Panel</a><span class="breadcrumb-separator">/</span><strong>Perfil</strong></div>
+        <div class="topbar-actions">
+          <div class="topbar-menu">
+          <button class="icon-button notification-button" type="button" aria-label="Notificaciones, 3 sin leer" aria-expanded="false" aria-controls="notifications-menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-dot"></span>
+          </button>
+          <div class="topbar-popover notifications-menu" id="notifications-menu" hidden>
+            <div class="popover-heading"><strong>Notificaciones</strong><small>Preferencias de aviso</small></div>
+            <label class="switch-row"><span><strong>Recibir nuevos reportes al correo</strong><small>Te avisaremos cuando llegue un reporte.</small></span><input class="switch-input" type="checkbox" checked><span class="switch-control" aria-hidden="true"></span></label>
+            <fieldset class="preference-group"><legend>Recordarme reportes en proceso</legend><label><input type="radio" name="process-reminder" value="daily" checked>Todos los días</label><label><input type="radio" name="process-reminder" value="weekly">Una vez a la semana</label><label><input type="radio" name="process-reminder" value="monthly">Una vez al mes</label></fieldset>
+            <fieldset class="preference-group"><legend>Recordarme reportes pendientes</legend><label><input type="radio" name="pending-reminder" value="daily" checked>Todos los días</label><label><input type="radio" name="pending-reminder" value="weekly">Una vez a la semana</label><label><input type="radio" name="pending-reminder" value="monthly">Una vez al mes</label></fieldset>
+          </div>
+          </div>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <div class="topbar-menu">
+          <button class="user-menu" type="button" aria-label="Cuenta de Administrador">
+            <span class="avatar">CA</span>
+            <span class="user-copy"><strong>Carmen Administrador</strong><small>Super admin</small></span>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+          </button>
+          <div class="topbar-popover account-menu" hidden>
+            <a href="profile.html">Ir al perfil</a>
+            <a href="../../login-registro/html/bienvenida.html">Cerrar sesión</a>
+          </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="dashboard-content profile-content">
+        <section class="page-heading">
+          <div>
+            <p class="eyebrow">CUENTA DE ADMINISTRADOR</p>
+            <h1>Mi perfil</h1>
+            <p class="page-description">Administra tu información personal y la seguridad de tu cuenta.</p>
+          </div>
+        </section>
+
+        <section class="profile-layout" aria-label="Configuración del perfil">
+          <aside class="panel identity-card">
+            <div class="identity-cover" aria-hidden="true"><span></span><span></span></div>
+            <div class="identity-body">
+              <div class="profile-avatar" aria-label="Iniciales de Carmen Administrador">CA</div>
+              <span class="role-badge"><span aria-hidden="true"></span> Administrador</span>
+              <h2>Carmen Administrador</h2>
+              <p class="identity-email">carmen.administrador@miccalle.co</p>
+              <div class="identity-divider"></div>
+              <div class="identity-meta">
+                <span class="meta-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+                </span>
+                <span><small>Miembro desde</small><strong>Septiembre de 2024</strong></span>
+              </div>
+              <div class="identity-meta">
+                <span class="meta-icon meta-icon-green" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                </span>
+                <span><small>Ubicación</small><strong>Bogotá, Colombia</strong></span>
+              </div>
+              <a class="identity-edit" href="#informacion-personal">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-.8L19 8a2.1 2.1 0 0 0-3-3L5 16l-1 4Z"/></svg>
+                Editar perfil
+              </a>
+            </div>
+          </aside>
+
+          <div class="profile-forms">
+            <section class="panel profile-form-card" id="informacion-personal">
+              <div class="profile-section-heading">
+                <span class="section-icon section-icon-blue" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+                </span>
+                <div><h2>Información personal</h2><p>Actualiza tus datos de contacto y perfil.</p></div>
+              </div>
+
+              <form class="profile-form" id="personal-form">
+                <div class="field-grid">
+                  <label class="profile-field" for="full-name">
+                    <span>Nombre completo</span>
+                    <input id="full-name" name="name" type="text" value="Carmen Administrador" autocomplete="name" required>
+                  </label>
+                  <label class="profile-field" for="email">
+                    <span>Correo electrónico</span>
+                    <input id="email" name="email" type="email" value="carmen.administrador@miccalle.co" autocomplete="email" required>
+                  </label>
+                  <label class="profile-field" for="phone">
+                    <span>Teléfono</span>
+                    <input id="phone" name="phone" type="tel" value="+57 300 123 4567" autocomplete="tel">
+                  </label>
+                  <label class="profile-field" for="location">
+                    <span>Ubicación</span>
+                    <span class="input-with-icon">
+                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                      <input id="location" name="location" type="text" value="Bogotá, Colombia" autocomplete="address-level2">
+                    </span>
+                  </label>
+                </div>
+                <div class="profile-form-footer">
+                  <p class="form-feedback" id="personal-feedback" role="status" aria-live="polite" hidden></p>
+                  <button class="profile-save-button" type="submit">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h12l4 4v14H3V3h2ZM7 3v6h10V3M7 21v-8h10v8"/></svg>
+                    Guardar cambios
+                  </button>
+                </div>
+              </form>
+            </section>
+
+            <section class="panel profile-form-card security-card">
+              <div class="profile-section-heading">
+                <span class="section-icon section-icon-violet" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg>
+                </span>
+                <div><h2>Seguridad</h2><p>Mantén tu cuenta protegida con una contraseña segura.</p></div>
+              </div>
+
+              <form class="profile-form" id="password-form">
+                <div class="field-grid password-fields">
+                  <label class="profile-field" for="current-password">
+                    <span>Contraseña actual</span>
+                    <input id="current-password" name="currentPassword" type="password" placeholder="Ingresa tu contraseña actual" autocomplete="current-password" required>
+                  </label>
+                  <span class="field-spacer" aria-hidden="true"></span>
+                  <label class="profile-field" for="new-password">
+                    <span>Nueva contraseña</span>
+                    <input id="new-password" name="newPassword" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" minlength="8" required>
+                  </label>
+                  <label class="profile-field" for="confirm-password">
+                    <span>Confirmar nueva contraseña</span>
+                    <input id="confirm-password" name="confirmPassword" type="password" placeholder="Repite la nueva contraseña" autocomplete="new-password" minlength="8" required>
+                  </label>
+                </div>
+                <div class="profile-form-footer">
+                  <p class="form-feedback" id="password-feedback" role="status" aria-live="polite" hidden></p>
+                  <button class="profile-save-button security-save-button" type="submit">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
+                    Actualizar contraseña
+                  </button>
+                </div>
+              </form>
+            </section>
+          </div>
+        </section>
+        <footer class="content-footer"><span>© 2024 Mi Calle</span><span>Construyendo calles más seguras, juntos.</span></footer>
+      </div>
+    </main>
+  </div>
+  <script src="profile.js"></script>
+  <script src="admin-ui.js"></script>
+</body>
+</html>

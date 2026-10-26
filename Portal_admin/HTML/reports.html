@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f9ff">
+  <meta name="description" content="Consulta y actualiza el estado de los reportes de daños viales en Mi Calle.">
+  <title>Actualizar reporte | Mi Calle</title>
+  <link rel="stylesheet" href="../CSS/dashboard.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="index.html" aria-label="Mi Calle, ir al dashboard">
+        <span class="brand-mark" aria-hidden="true">
+          <img src="ASSETS/mi-calle-logo.png" alt="">
+        </span>
+        <span class="brand-copy"><strong>Mi Calle</strong><small>Admin panel</small></span>
+      </a>
+
+      <p class="nav-caption">MENÚ PRINCIPAL</p>
+      <nav class="main-nav">
+        <a class="nav-link" href="index.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="15" width="7" height="6" rx="1.5"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-link is-active" href="reports-list.html" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.75h9l5 5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4.75a1 1 0 0 1 1-1Z"/><path d="M14 4v5h5M8 13h8M8 17h8"/></svg>
+          <span>Reportes</span><span class="nav-count">24</span>
+        </a>
+        <a class="nav-link" href="profile.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+          <span>Perfil</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a class="logout-button" href="../../login-registro/html/bienvenida.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5M14 16l4-4-4-4M18 12H9"/></svg>
+          <span>Cerrar sesión</span>
+        </a>
+        <div class="sidebar-footer">Mi Calle <span>v1.0</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand">
+          <span class="brand-mark" aria-hidden="true">
+            <img src="ASSETS/mi-calle-logo.png" alt="">
+          </span>
+          <strong>Mi Calle</strong>
+        </div>
+        <div class="breadcrumb"><a href="index.html">Panel</a><span class="breadcrumb-separator">/</span><a href="reports-list.html">Reportes</a><span class="breadcrumb-separator">/</span><strong>Actualizar</strong></div>
+        <div class="topbar-actions">
+          <div class="topbar-menu">
+          <button class="icon-button notification-button" type="button" aria-label="Notificaciones, 3 sin leer" aria-expanded="false" aria-controls="notifications-menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-dot"></span>
+          </button>
+          <div class="topbar-popover notifications-menu" id="notifications-menu" hidden>
+            <div class="popover-heading"><strong>Notificaciones</strong><small>Preferencias de aviso</small></div>
+            <label class="switch-row"><span><strong>Recibir nuevos reportes al correo</strong><small>Te avisaremos cuando llegue un reporte.</small></span><input class="switch-input" type="checkbox" checked><span class="switch-control" aria-hidden="true"></span></label>
+            <fieldset class="preference-group"><legend>Recordarme reportes en proceso</legend><label><input type="radio" name="process-reminder" value="daily" checked>Todos los días</label><label><input type="radio" name="process-reminder" value="weekly">Una vez a la semana</label><label><input type="radio" name="process-reminder" value="monthly">Una vez al mes</label></fieldset>
+            <fieldset class="preference-group"><legend>Recordarme reportes pendientes</legend><label><input type="radio" name="pending-reminder" value="daily" checked>Todos los días</label><label><input type="radio" name="pending-reminder" value="weekly">Una vez a la semana</label><label><input type="radio" name="pending-reminder" value="monthly">Una vez al mes</label></fieldset>
+          </div>
+          </div>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <div class="topbar-menu">
+          <button class="user-menu" type="button" aria-label="Cuenta de Administrador">
+            <span class="avatar">AD</span>
+            <span class="user-copy"><strong>Administrador</strong><small>Super admin</small></span>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+          </button>
+          <div class="topbar-popover account-menu" hidden>
+            <a href="profile.html">Ir al perfil</a>
+            <a href="../../login-registro/html/bienvenida.html">Cerrar sesión</a>
+          </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="dashboard-content report-content">
+        <section class="page-heading report-heading">
+          <div>
+            <p class="eyebrow">GESTIÓN DE INCIDENCIAS</p>
+            <h1>Actualizar estado del reporte</h1>
+            <p class="page-description">Revisa la información y comunica el avance del caso a la comunidad.</p>
+          </div>
+        </section>
+
+        <section class="report-layout" aria-label="Información y actualización del reporte">
+          <article class="panel report-details">
+            <div class="report-card-heading">
+              <span class="report-type-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 3 2.8 19h18.4L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg>
+              </span>
+              <div><p class="report-kicker">REPORTE</p><h2>Información del reporte</h2></div>
+              <span class="report-id">#MC-024</span>
+            </div>
+
+            <div class="current-status"><span class="status-indicator"></span><span>Estado actual</span><strong>En proceso</strong></div>
+
+            <dl class="report-facts">
+              <div><dt>Tipo de incidencia</dt><dd>Bache en la vía</dd></div>
+              <div><dt>Fecha del reporte</dt><dd>12 de septiembre de 2024</dd></div>
+              <div><dt>Ubicación</dt><dd><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>Calle 45 # 12-30, Bogotá</dd></div>
+              <div><dt>Reportado por</dt><dd>María Rodríguez</dd></div>
+            </dl>
+
+            <div class="report-description">
+              <h3>Descripción</h3>
+              <p>Hay un bache grande en medio de la vía que dificulta el paso de los vehículos y puede causar accidentes.</p>
+            </div>
+
+            <div class="evidence-photo" role="img" aria-label="Fotografía de evidencia del bache en la vía">
+              <div class="road-scene">
+                <div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
+                <div class="road-skyline"><i></i><i></i><i></i><i></i><i></i></div>
+                <div class="road-surface"></div><div class="road-crack"></div>
+              </div>
+              <span class="photo-caption"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="9" r="1.5"/><path d="m21 15-5-5L5 20"/></svg>Foto adjunta al reporte</span>
+            </div>
+          </article>
+
+          <article class="panel update-panel">
+            <div class="update-title">
+              <span class="update-title-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/></svg></span>
+              <div><h2>Seleccionar nuevo estado</h2><p>Actualiza el progreso de atención de este reporte.</p></div>
+            </div>
+
+            <ol class="status-steps" aria-label="Progreso del reporte">
+              <li class="step-item" data-step="pendiente">
+                <span class="step-marker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span>
+                <span class="step-label">Pendiente</span>
+              </li>
+              <li class="step-item is-current" data-step="proceso">
+                <span class="step-marker">2</span>
+                <span class="step-label">En proceso</span>
+              </li>
+              <li class="step-item" data-step="resuelto">
+                <span class="step-marker">3</span>
+                <span class="step-label">Resuelto</span>
+              </li>
+            </ol>
+
+            <div class="step-connector" aria-hidden="true"><span></span><span></span></div>
+
+            <fieldset class="status-options">
+              <legend>Elige el estado para este reporte</legend>
+              <label class="status-option">
+                <input type="radio" name="report-status" value="pendiente">
+                <span class="option-check" aria-hidden="true"></span>
+                <span class="option-copy"><strong>Pendiente</strong><small>El reporte está recibido y espera revisión.</small></span>
+                <span class="option-color option-amber" aria-hidden="true"></span>
+              </label>
+              <label class="status-option is-selected">
+                <input type="radio" name="report-status" value="proceso" checked>
+                <span class="option-check" aria-hidden="true"></span>
+                <span class="option-copy"><strong>En proceso</strong><small>El equipo está trabajando en la solución.</small></span>
+                <span class="option-color option-blue" aria-hidden="true"></span>
+              </label>
+              <label class="status-option">
+                <input type="radio" name="report-status" value="resuelto">
+                <span class="option-check" aria-hidden="true"></span>
+                <span class="option-copy"><strong>Resuelto</strong><small>La incidencia fue atendida y solucionada.</small></span>
+                <span class="option-color option-green" aria-hidden="true"></span>
+              </label>
+              <label class="status-option status-option--discard">
+                <input type="radio" name="report-status" value="descartado">
+                <span class="option-check" aria-hidden="true"></span>
+                <span class="option-copy"><strong>Descartar reporte</strong><small>El caso no puede continuar por información insuficiente o inválida.</small></span>
+                <span class="option-color option-red" aria-hidden="true"></span>
+              </label>
+            </fieldset>
+
+            <label class="update-note-label" for="status-note">Nota de actualización <span>(opcional)</span></label>
+            <textarea class="update-note" id="status-note" rows="3" placeholder="Agrega información sobre el avance del reporte..."></textarea>
+
+            <div class="discard-reason" hidden>
+              <label class="update-note-label" for="discard-reason">Razón del descarte <span>(obligatoria)</span></label>
+              <textarea class="update-note" id="discard-reason" rows="3" placeholder="Explica por qué se descarta este reporte..."></textarea>
+            </div>
+
+            <div class="update-feedback" role="status" aria-live="polite" hidden></div>
+            <div class="update-actions">
+              <button class="confirm-button" type="button">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                Confirmar cambio
+              </button>
+              <a class="cancel-button" href="index.html">Cancelar</a>
+            </div>
+            <p class="notify-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>Con el servicio conectado, el ciudadano recibirá una notificación sobre el cambio.</p>
+          </article>
+        </section>
+        <footer class="content-footer"><span>© 2024 Mi Calle</span><span>Construyendo calles más seguras, juntos.</span></footer>
+      </div>
+    </main>
+  </div>
+  <script src="reports.js"></script>
+  <script src="admin-ui.js"></script>
+</body>
+</html>

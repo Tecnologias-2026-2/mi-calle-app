@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" 
+    content="width=device-width, initial-scale=1.0">
+    <title>Editar perfil</title>
+    
+    <!-- CSS global -->
+    <link rel="stylesheet" href="../../css/styles.css">
+    
+    <!-- CSS de mi portal usuario-->
+    <link rel="stylesheet" href="../usuario.css/usuario.css">
+
+    <!-- Font Awesome (Librería de iconos) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+      <!-- Fuente Poppins-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
+
+</head>
+<body>
+    <!-- HEADER  --> 
+ <header class="header-usuario">
+    <a  href="index.html" class="logo">
+         <!-- Aquí irá la imagen del logo. Por ahora un texto de prueba -->
+        <div class="logo-icono">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="logo-texto">
+            <h2>Mi Calle</h2>
+            <span>Portal Ciudadano</span>
+        </div>
+    </a>
+
+    
+    <nav class="menu-navegacion" id="menu-navegacion">
+        <a href="index.html">Inicio</a>
+        <a href="reportar.html">Reportar un problema</a>
+        <a href="mis_reportes.html">Mis reportes</a>
+        <a href="mapa.html">Mapa de reportes</a>
+    </nav>
+
+    <div class="acciones-header">
+        <a href="perfil.html" class="avatar-usuario">
+            <i class="fa-solid fa-user"></i>
+        </a>
+        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+ </header>
+
+ <main class="dashboard-inicio">
+    
+    <!-- Layout de 2 columnas específico para editar perfil -->
+    <div class="layout-editar-perfil">
+        
+        <!-- COLUMNA IZQUIERDA: Formulario de Información Personal -->
+        <div class="columna-formulario-perfil">
+            <section class="tarjeta-blanco">
+                <h3 class="subtitulo">Información personal</h3>
+                
+                <form action="#" method="POST">
+                    <div class="campo-formulario">
+                        <label>Nombre completo</label>
+                        <div class="input-con-icono">
+                            <i class="fa-regular fa-user"></i>
+                            <input type="text" value="María González" required>
+                        </div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label>Nombre de usuario</label>
+                        <div class="input-con-icono">
+                            <i class="fa-regular fa-pen-to-square"></i>
+                            <input type="text" value="Maria" required>
+                        </div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label>Correo electrónico</label>
+                        <div class="input-con-icono">
+                            <i class="fa-regular fa-envelope"></i>
+                            <input type="email" value="maria.gomez@correo.com" required>
+                        </div>
+                    </div>
+
+                    <div class="campo-formulario">
+                        <label>Número de contacto</label>
+                        <div class="input-con-icono">
+                            <i class="fa-solid fa-phone"></i>
+                            <input type="text" value="+57 300 456 1237" required>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <!-- COLUMNA DERECHA: Tarjeta de Perfil y Botones -->
+        <div class="columna-perfil-acciones">
+            
+            <!-- Tarjeta de Perfil (Azul) -->
+            <div class="tarjeta-perfil tarjeta-perfil-edicion">
+                <div class="perfil-avatar">
+                    <i class="fa-solid fa-user"></i>
+                </div>
+                <h3>María</h3>
+                <div class="perfil-datos">
+                    <p><i class="fa-regular fa-envelope"></i> maria.gomez@correo.com</p>
+                    <p><i class="fa-regular fa-calendar"></i> Miembro desde enero 2025</p>
+                </div>
+            </div>
+
+            <!-- Botones de acción -->
+            <div class="botones-perfil-edicion">
+                <a href="perfil.html" class="btn-perfil-primario btn-guardar-perfil">
+                    <i class="fa-regular fa-floppy-disk"></i> Guardar cambios</a>
+                <a href="perfil.html" class="btn-perfil-secundario btn-cancelar"> Cancelar</a>
+            </div>
+
+        </div>
+    </div>
+</main>
+</body>
+<script src="../menu.js"></script>
+</html>

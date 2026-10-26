@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" 
+    content="width=device-width, initial-scale=1.0">
+    <title>Mis reportes</title>
+    
+    <!-- CSS global -->
+    <link rel="stylesheet" href="../../css/styles.css">
+    
+    <!-- CSS de mi portal usuario-->
+    <link rel="stylesheet" href="../usuario.css/usuario.css">
+
+    <!-- Font Awesome (Librería de iconos) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+      <!-- Fuente Poppins-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
+
+</head>
+<body>
+    <!-- HEADER  --> 
+ <header class="header-usuario">
+    <a  href="index.html" class="logo">
+         <!-- Aquí irá la imagen del logo. Por ahora un texto de prueba -->
+        <div class="logo-icono">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="logo-texto">
+            <h2>Mi Calle</h2>
+            <span>Portal Ciudadano</span>
+        </div>
+    </a>
+
+    
+    <nav class="menu-navegacion" id="menu-navegacion">
+        <a href="index.html">Inicio</a>
+        <a href="reportar.html">Reportar un problema</a>
+        <a href="mis_reportes.html" class="activo">Mis reportes</a>
+        <a href="mapa.html">Mapa de reportes</a>
+    </nav>
+
+    <div class="acciones-header">
+        <a href="perfil.html" class="avatar-usuario">
+            <i class="fa-solid fa-user"></i>
+        </a>
+        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+ </header>
+
+<main class="dashboard-inicio">
+    
+    <!-- Cabecera de la página -->
+    <div class="cabecera-pagina">
+        <div class="texto-cabecera">
+            <h1>Mis reportes</h1>
+            <p>Consulta el estado y seguimiento de los reportes que has realizado.</p>
+        </div>
+    </div>
+
+    <!-- Fila de tarjetas de resumen (4 columnas) -->
+    <div class="grid-resumen-reportes">
+        <div class="tarjeta-resumen-inicio borde-gris">
+            <span class="numero-inicio">6</span>
+            <span class="etiqueta-inicio">Total reportes</span>
+        </div>
+        <div class="tarjeta-resumen-inicio borde-azul">
+            <span class="numero-inicio azul">3</span>
+            <span class="etiqueta-inicio">Reportados</span>
+        </div>
+        <div class="tarjeta-resumen-inicio borde-amarillo">
+            <span class="numero-inicio amarillo">1</span>
+            <span class="etiqueta-inicio">En reparación</span>
+        </div>
+        <div class="tarjeta-resumen-inicio borde-verde">
+            <span class="numero-inicio verde">2</span>
+            <span class="etiqueta-inicio">Reparados</span>
+        </div>
+    </div>
+
+    <!-- Tabla de Reportes -->
+    <div class="tarjeta-blanco contenedor-tabla">
+        <div class="tabla-responsive">
+            <table class="tabla-reportes">
+                <thead>
+                    <tr>
+                        <th>Tipo de reporte</th>
+                        <th>Ubicación</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="celda-con-icono">
+                                <div class="icono-tabla"><i class="fa-solid fa-trash"></i></div>
+                                <span>Tipo de daño</span>
+                            </div>
+                        </td>
+                        <td>Ubicación</td>
+                        <td>Fecha</td>
+                        <td><span class="estado estado-verde">Reparado</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="celda-con-icono">
+                                <div class="icono-tabla"><i class="fa-solid fa-lightbulb"></i></div>
+                                <span>Tipo de daño</span>
+                            </div>
+                        </td>
+                        <td>Ubicación</td>
+                        <td>Fecha</td>
+                        <td><span class="estado estado-rojo">En revisión</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="celda-con-icono">
+                                <div class="icono-tabla"><i class="fa-solid fa-road"></i></div>
+                                <span>Tipo de daño</span>
+                            </div>
+                        </td>
+                        <td>Ubicación</td>
+                        <td>Fecha</td>
+                        <td><span class="estado estado-azul">Reportado</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="celda-con-icono">
+                                <div class="icono-tabla"><i class="fa-solid fa-car"></i></div>
+                                <span>Tipo de daño</span>
+                            </div>
+                        </td>
+                        <td>Ubicación</td>
+                        <td>Fecha</td>
+                        <td><span class="estado estado-verde">Reparado</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="celda-con-icono">
+                                <div class="icono-tabla"><i class="fa-solid fa-tree"></i></div>
+                                <span>Tipo de daño</span>
+                            </div>
+                        </td>
+                        <td>Ubicación</td>
+                        <td>Fecha</td>
+                        <td><span class="estado estado-azul">Reportado</span></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="celda-con-icono">
+                                <div class="icono-tabla"><i class="fa-solid fa-droplet"></i></div>
+                                <span>Tipo de daño</span>
+                            </div>
+                        </td>
+                        <td>Ubicación</td>
+                        <td>Fecha</td>
+                        <td><span class="estado estado-azul">Reportado</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>
+<script src="../menu.js"></script>
+</body>
+</html>

@@ -61,7 +61,7 @@
               </p>
             </div>
 
-            <form class="login-form" action="#" method="post">
+            <form class="login-form" id="admin-login-form" action="#" method="post">
               <div class="form-field">
                 <label class="form-field__label" for="admin-email">Correo electrónico</label>
                 <div class="form-field__control">
@@ -137,6 +137,7 @@
     <script>
       const passwordInput = document.querySelector("#admin-password");
       const passwordToggle = document.querySelector(".password-toggle");
+      const adminLoginForm = document.querySelector("#admin-login-form");
 
       passwordToggle.addEventListener("click", () => {
         const isPasswordHidden = passwordInput.type === "password";
@@ -146,6 +147,11 @@
           "aria-label",
           isPasswordHidden ? "Ocultar contraseña" : "Mostrar contraseña",
         );
+      });
+
+      adminLoginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+        window.location.href = "../../Portal_admin/HTML/index.html";
       });
     </script>
   </body>

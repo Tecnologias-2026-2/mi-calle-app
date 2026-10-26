@@ -1,0 +1,25 @@
+/* =========================================
+   FONDO AZUL DIFUMINADO
+   ========================================= */
+
+body {
+    /* 1. Color base (por si acaso) */
+    background-color: #F0F4FF; 
+    
+    /* 2. Altura mínima para cubrir toda la pantalla */
+    min-height: 100vh;
+    
+    /* 3. Degradado Lineal: De arriba (oscuro) a abajo (claro) */
+    background-image: linear-gradient(
+        to bottom,          /* Dirección: hacia abajo */
+        #C7D2FE 0%,         /* Arriba: Azul más oscuro */
+        #E0E7FF 30%,        /* Transición */
+        #F0F4FF 100%        /* Abajo: Azul muy clarito (casi blanco) */
+    );
+    
+    /* 4. Fijar el fondo para que no se mueva al hacer scroll */
+    background-attachment: fixed;
+    
+    /* 5. Asegurar que el fondo cubra todo */
+    background-size: cover; 
+}

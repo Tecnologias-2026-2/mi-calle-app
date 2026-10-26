@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f4f9ff">
+  <meta name="description" content="Lista de reportes recibidos por Mi Calle para su gestión administrativa.">
+  <title>Reportes | Mi Calle</title>
+  <link rel="stylesheet" href="../CSS/dashboard.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" aria-label="Navegación principal">
+      <a class="brand" href="index.html" aria-label="Mi Calle, ir al dashboard">
+        <span class="brand-mark" aria-hidden="true"><img src="ASSETS/mi-calle-logo.png" alt=""></span>
+        <span class="brand-copy"><strong>Mi Calle</strong><small>Admin panel</small></span>
+      </a>
+
+      <p class="nav-caption">MENÚ PRINCIPAL</p>
+      <nav class="main-nav">
+        <a class="nav-link" href="index.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="15" width="7" height="6" rx="1.5"/></svg>
+          <span>Dashboard</span>
+        </a>
+        <a class="nav-link is-active" href="reports-list.html" aria-current="page">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.75h9l5 5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4.75a1 1 0 0 1 1-1Z"/><path d="M14 4v5h5M8 13h8M8 17h8"/></svg>
+          <span>Reportes</span><span class="nav-count">24</span>
+        </a>
+        <a class="nav-link" href="profile.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
+          <span>Perfil</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-bottom">
+        <a class="logout-button" href="../../login-registro/html/bienvenida.html">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 4H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h5M14 16l4-4-4-4M18 12H9"/></svg>
+          <span>Cerrar sesión</span>
+        </a>
+        <div class="sidebar-footer">Mi Calle <span>v1.0</span></div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div class="mobile-brand">
+          <span class="brand-mark" aria-hidden="true"><img src="ASSETS/mi-calle-logo.png" alt=""></span>
+          <strong>Mi Calle</strong>
+        </div>
+        <div class="breadcrumb"><a href="index.html">Panel</a><span class="breadcrumb-separator">/</span><strong>Reportes</strong></div>
+        <div class="topbar-actions">
+          <div class="topbar-menu">
+          <button class="icon-button notification-button" type="button" aria-label="Notificaciones, 3 sin leer" aria-expanded="false" aria-controls="notifications-menu">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg><span class="notification-dot"></span>
+          </button>
+          <div class="topbar-popover notifications-menu" id="notifications-menu" hidden>
+            <div class="popover-heading"><strong>Notificaciones</strong><small>Preferencias de aviso</small></div>
+            <label class="switch-row"><span><strong>Recibir nuevos reportes al correo</strong><small>Te avisaremos cuando llegue un reporte.</small></span><input class="switch-input" type="checkbox" checked><span class="switch-control" aria-hidden="true"></span></label>
+            <fieldset class="preference-group"><legend>Recordarme reportes en proceso</legend><label><input type="radio" name="process-reminder" value="daily" checked>Todos los días</label><label><input type="radio" name="process-reminder" value="weekly">Una vez a la semana</label><label><input type="radio" name="process-reminder" value="monthly">Una vez al mes</label></fieldset>
+            <fieldset class="preference-group"><legend>Recordarme reportes pendientes</legend><label><input type="radio" name="pending-reminder" value="daily" checked>Todos los días</label><label><input type="radio" name="pending-reminder" value="weekly">Una vez a la semana</label><label><input type="radio" name="pending-reminder" value="monthly">Una vez al mes</label></fieldset>
+          </div>
+          </div>
+          <span class="topbar-divider" aria-hidden="true"></span>
+          <div class="topbar-menu">
+          <button class="user-menu" type="button" aria-label="Cuenta de Administrador">
+            <span class="avatar">AD</span><span class="user-copy"><strong>Administrador</strong><small>Super admin</small></span>
+            <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
+          </button>
+          <div class="topbar-popover account-menu" hidden>
+            <a href="profile.html">Ir al perfil</a>
+            <a href="../../login-registro/html/bienvenida.html">Cerrar sesión</a>
+          </div>
+          </div>
+        </div>
+      </header>
+
+      <div class="dashboard-content reports-list-content">
+        <section class="page-heading">
+          <div>
+            <p class="eyebrow">GESTIÓN DE INCIDENCIAS</p>
+            <h1>Reportes recibidos</h1>
+            <p class="page-description">Selecciona un reporte para revisar su información y actualizar su estado.</p>
+          </div>
+          <span class="reports-total"><strong>24</strong> reportes recibidos</span>
+        </section>
+
+        <section class="reports-toolbar panel" aria-label="Filtros de reportes">
+          <label for="report-search">Buscar reporte</label>
+          <input id="report-search" type="search" placeholder="Buscar por número, tipo o ubicación..." aria-label="Buscar por número, tipo o ubicación">
+          <span class="reports-toolbar-note">Mostrando 6 reportes recientes</span>
+        </section>
+
+        <section class="reports-list" aria-label="Lista de reportes">
+          <a class="report-list-card panel" href="reports.html">
+            <span class="report-list-icon report-list-icon--blue" aria-hidden="true">#</span>
+            <span class="report-list-main"><strong>#MC-024 · Bache en la vía</strong><small>Calle 45 # 12-30, Bogotá · María Rodríguez</small></span>
+            <span class="report-list-status report-list-status--blue">En proceso</span>
+            <span class="report-list-date">12 sep 2024</span>
+            <span class="report-list-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="report-list-card panel" href="reports.html">
+            <span class="report-list-icon report-list-icon--amber" aria-hidden="true">#</span>
+            <span class="report-list-main"><strong>#MC-023 · Semáforo averiado</strong><small>Carrera 15 con Calle 82 · Juan Pérez</small></span>
+            <span class="report-list-status report-list-status--amber">Pendiente</span>
+            <span class="report-list-date">11 sep 2024</span>
+            <span class="report-list-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="report-list-card panel" href="reports.html">
+            <span class="report-list-icon report-list-icon--green" aria-hidden="true">#</span>
+            <span class="report-list-main"><strong>#MC-022 · Alumbrado público</strong><small>Calle 63 con Carrera 24 · Laura Gómez</small></span>
+            <span class="report-list-status report-list-status--green">Resuelto</span>
+            <span class="report-list-date">10 sep 2024</span>
+            <span class="report-list-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="report-list-card panel" href="reports.html">
+            <span class="report-list-icon report-list-icon--blue" aria-hidden="true">#</span>
+            <span class="report-list-main"><strong>#MC-021 · Señal de tránsito dañada</strong><small>Avenida 7 con Calle 116 · Carlos Ruiz</small></span>
+            <span class="report-list-status report-list-status--blue">En proceso</span>
+            <span class="report-list-date">9 sep 2024</span>
+            <span class="report-list-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="report-list-card panel" href="reports.html">
+            <span class="report-list-icon report-list-icon--amber" aria-hidden="true">#</span>
+            <span class="report-list-main"><strong>#MC-020 · Basura acumulada</strong><small>Calle 45 con Carrera 13 · Ana Torres</small></span>
+            <span class="report-list-status report-list-status--amber">Pendiente</span>
+            <span class="report-list-date">8 sep 2024</span>
+            <span class="report-list-arrow" aria-hidden="true">→</span>
+          </a>
+          <a class="report-list-card panel" href="reports.html">
+            <span class="report-list-icon report-list-icon--green" aria-hidden="true">#</span>
+            <span class="report-list-main"><strong>#MC-019 · Andén deteriorado</strong><small>Carrera 30 con Calle 26 · Diego Castro</small></span>
+            <span class="report-list-status report-list-status--green">Resuelto</span>
+            <span class="report-list-date">7 sep 2024</span>
+            <span class="report-list-arrow" aria-hidden="true">→</span>
+          </a>
+        </section>
+        <footer class="content-footer"><span>© 2024 Mi Calle</span><span>Construyendo calles más seguras, juntos.</span></footer>
+      </div>
+    </main>
+  </div>
+  <script src="admin-ui.js"></script>
+</body>
+</html>

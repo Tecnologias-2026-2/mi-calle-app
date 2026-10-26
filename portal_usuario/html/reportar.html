@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" 
+    content="width=device-width, initial-scale=1.0">
+    <title>Reportar un problema</title>
+    
+    <!-- CSS global -->
+    <link rel="stylesheet" href="../../css/styles.css">
+    
+    <!-- CSS de mi portal usuario-->
+    <link rel="stylesheet" href="../usuario.css/usuario.css">
+
+    <!-- Font Awesome (Librería de iconos) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+      <!-- Fuente Poppins-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
+
+</head>
+<body>
+    <!-- HEADER  --> 
+ <header class="header-usuario">
+    <a  href="index.html" class="logo">
+         <!-- Aquí irá la imagen del logo. Por ahora un texto de prueba -->
+        <div class="logo-icono">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="logo-texto">
+            <h2>Mi Calle</h2>
+            <span>Portal Ciudadano</span>
+        </div>
+    </a>
+
+    
+    <nav class="menu-navegacion" id="menu-navegacion">
+        <a href="index.html">Inicio</a>
+        <a href="reportar.html" class="activo">Reportar un problema</a>
+        <a href="mis_reportes.html">Mis reportes</a>
+        <a href="mapa.html">Mapa de reportes</a>
+    </nav>
+
+    <div class="acciones-header">
+        <a href="perfil.html" class="avatar-usuario">
+            <i class="fa-solid fa-user"></i>
+        </a>
+        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+ </header>
+
+<main class="dashboard-inicio">
+    
+    <!-- Cabecera de la página -->
+    <div class="cabecera-pagina">
+        <div class="icono-cabecera">
+            <i class="fa-solid fa-file-circle-plus"></i>
+        </div>
+        <div class="texto-cabecera">
+            <h1>Reportar un problema</h1>
+            <p>Informa sobre un problema que afecta a tu comunidad.</p>
+        </div>
+    </div>
+
+    <!-- Contenedor centrado del formulario -->
+    <div class="contenedor-formulario-reporte">
+        <section class="tarjeta-blanco">
+            <h3 class="subtitulo">Reportar un problema</h3>
+            <p class="descripcion-formulario">Informa sobre un problema que afecta a tu comunidad.</p>
+
+            <form action="#" method="POST" enctype="multipart/form-data">
+                
+                <!-- Tipo de Problema -->
+                <div class="campo-formulario">
+                    <label><i class="fa-solid fa-circle-info"></i> Tipo de problema</label>
+                    <div class="select-con-flecha">
+                        <select required>
+                            <option value="" disabled selected>Seleccione el tipo de problema</option>
+                            <option value="huecos">Hueco en la vía</option>
+                            <option value="semaforo">Semáforo en mal estado</option>
+                            <option value="alcantarilla">Alcantarilla sin tapa</option>
+                            <option value="senalizacion">Señalizacion dañada</option>
+                            <option value="alumbrado">Alumbrado público dañado</option>
+                            <option value="basura">Acumulación de basura</option>
+                            <option value="otros">Otros</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Fotografía -->
+                <div class="campo-formulario">
+                    <label><i class="fa-regular fa-image"></i> Fotografía</label>
+                    <label for="input-foto" class="zona-subir-archivo">
+                        <i class="fa-solid fa-camera"></i>
+                        <strong>Agregar fotografía</strong>
+                        <span>Tamaño máximo 5MB. Formato JPG o PNG.</span>
+                        <input type="file" id="input-foto" accept="image/png, image/jpeg" hidden>
+                    </label>
+                </div>
+
+                <!-- Ubicación -->
+                <div class="campo-formulario">
+                    <label><i class="fa-solid fa-location-dot"></i> Ubicación</label>
+                    <div class="input-con-icono">
+                        <i class="fa-solid fa-map-pin"></i>
+                        <input type="text" placeholder="Seleccionar ubicación" required>
+                    </div>
+                </div>
+
+                <!-- Descripción -->
+                <div class="campo-formulario">
+                    <label><i class="fa-solid fa-list"></i> Descripción</label>
+                    <textarea rows="4" placeholder="Describe el daño observado, riesgos o información adicional." required></textarea>
+                </div>
+
+                <!-- Botones -->
+                <div class="botones-formulario">
+                    <a href="mis_reportes.html" class="btn-guardar">
+                        <i class="fa-solid fa-arrow-right"></i> Enviar reporte
+                    </a>
+                    <a href="index.html" class="btn-cancelar">Cancelar</a>
+                </div>
+
+            </form>
+        </section>
+    </div>
+</main>
+<script src="../menu.js"></script>
+</body>
+</html>

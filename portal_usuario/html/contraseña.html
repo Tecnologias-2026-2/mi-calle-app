@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" 
+    content="width=device-width, initial-scale=1.0">
+    <title>Contraseña</title>
+    
+    <!-- CSS global -->
+    <link rel="stylesheet" href="../../css/styles.css">
+    
+    <!-- CSS de mi portal usuario-->
+    <link rel="stylesheet" href="../usuario.css/usuario.css">
+
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Fuente Poppins-->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+ 
+
+</head>
+<body>
+    <!-- HEADER  --> 
+ <header class="header-usuario">
+    <a  href="index.html" class="logo">
+         <!-- Aquí irá la imagen del logo. Por ahora un texto de prueba -->
+        <div class="logo-icono">
+            <i class="fa-solid fa-house"></i>
+        </div>
+        <div class="logo-texto">
+            <h2>Mi Calle</h2>
+            <span>Portal Ciudadano</span>
+        </div>
+    </a>
+
+    <nav class="menu-navegacion" id="menu-navegacion">
+        <a href="index.html">Inicio</a>
+        <a href="reportar.html">Reportar un problema</a>
+        <a href="mis_reportes.html">Mis reportes</a>
+        <a href="mapa.html">Mapa de reportes</a>
+    </nav>
+
+    <div class="acciones-header">
+        <a href="perfil.html" class="avatar-usuario">
+            <i class="fa-solid fa-user"></i>
+        </a>
+        <button class="btn-hamburguesa" id="btn-menu" aria-label="Abrir menú" aria-expanded="false">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+ </header>
+
+ <main class="dashboard-inicio">
+    
+    <!-- Cabecera de la página -->
+    <div class="cabecera-pagina">
+        <div class="icono-cabecera">
+            <i class="fa-solid fa-lock"></i>
+        </div>
+        <div class="texto-cabecera">
+            <h1>Cambiar contraseña</h1>
+            <p>Actualiza tu contraseña de forma segura.</p>
+        </div>
+    </div>
+
+    <!-- Layout de 2 columnas -->
+    <div class="layout-cambiar-contrasena">
+        
+        <!-- COLUMNA IZQUIERDA: Formulario -->
+        <div class="columna-formulario">
+            <div class="tarjeta-blanco">
+                <h3 class="subtitulo">Actualiza tu contraseña</h3>
+                <p class="descripcion-formulario">Ingresa tu contraseña actual y define una nueva para proteger tu acceso.</p>
+
+                <form action="#" method="POST">
+                    
+                    <!-- Contraseña Actual -->
+                    <div class="campo-formulario">
+                        <label>Contraseña actual</label>
+                        <div class="input-con-icono">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" placeholder="Contraseña" required>
+                            <i class="fa-regular fa-eye toggle-password"></i>
+                        </div>
+                    </div>
+
+                    <!-- Nueva Contraseña -->
+                    <div class="campo-formulario">
+                        <label>Nueva contraseña</label>
+                        <div class="input-con-icono">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" placeholder="Contraseña" required>
+                            <i class="fa-regular fa-eye toggle-password"></i>
+                        </div>
+                    </div>
+
+                    <!-- Confirmación Nueva Contraseña -->
+                    <div class="campo-formulario">
+                        <label>Confirmación Nueva contraseña</label>
+                        <div class="input-con-icono">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" placeholder="Contraseña" required>
+                            <i class="fa-regular fa-eye toggle-password"></i>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="botones-formulario">
+                        <a href="perfil.html" class="btn-guardar">
+                            <i class="fa-regular fa-floppy-disk"></i>Guardar cambios</a>
+                        <a href="perfil.html" class="btn-cancelar">Cancelar</a>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <!-- COLUMNA DERECHA: Información de Seguridad -->
+        <div class="columna-informacion">
+            
+            <!-- Tarjeta de Buenas Prácticas (Azul clarito) -->
+            <div class="tarjeta-seguridad">
+                <h4><i class="fa-solid fa-circle-info"></i> Buenas prácticas de seguridad</h4>
+                <ul class="lista-recomendaciones">
+                    <li><span class="punto-azul"></span> Mínimo 8 caracteres</li>
+                    <li><span class="punto-azul"></span> Al menos una letra mayúscula</li>
+                    <li><span class="punto-azul"></span> Al menos un número</li>
+                    <li><span class="punto-azul"></span> Al menos un carácter especial (! @ # $ %)</li>
+                    <li><span class="punto-amarillo"></span> No uses datos personales como tu nombre o fecha de nacimiento</li>
+                    <li><span class="punto-amarillo"></span> Evita contraseñas que ya usaste anteriormente</li>
+                </ul>
+            </div>
+
+            <!-- Tarjeta de ¿Cuándo cambiar? (Blanca) -->
+            <div class="tarjeta-blanco tarjeta-cuando-cambiar">
+                <h4>¿Cuándo cambiar tu contraseña?</h4>
+                <ul class="lista-recomendaciones">
+                    <li><span class="punto-azul"></span> Cada 3 a 6 meses como buena práctica</li>
+                    <li><span class="punto-azul"></span> Si sospechas que alguien accedió a tu cuenta</li>
+                    <li><span class="punto-azul"></span> Si recibiste un correo de acceso no reconocido</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</main>
+<script src="../menu.js"></script>
+
+<script>
+    // Seleccionamos todos los elementos que tengan la clase 'toggle-password'
+    const togglePasswordIcons = document.querySelectorAll('.toggle-password');
+
+    // Recorremos cada ojito
+    togglePasswordIcons.forEach(icon => {
+        icon.addEventListener('click', function () {
+            // Encontramos el input que está dentro del mismo contenedor
+            const input = this.parentElement.querySelector('input');
+
+            // Verificamos si el input actualmente oculta la contraseña
+            if (input.type === 'password') {
+                input.type = 'text'; // La mostramos
+                // Cambiamos el icono a ojo tachado
+                this.classList.remove('fa-eye');
+                this.classList.add('fa-eye-slash');
+            } else {
+                input.type = 'password'; // La volvemos a ocultar
+                // Cambiamos el icono a ojo normal
+                this.classList.remove('fa-eye-slash');
+                this.classList.add('fa-eye');
+            }
+        });
+    });
+</script>
+
+</body>
+</html>
