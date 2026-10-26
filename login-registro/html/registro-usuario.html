@@ -158,7 +158,7 @@
                   </svg>
                   <input
                     id="confirm-password"
-                    name="confirm-password"
+                    name="confirmPassword"
                     type="password"
                     placeholder="Repite tu contraseña"
                     autocomplete="new-password"
@@ -203,25 +203,6 @@
       </footer>
     </div>
 
-    <script>
-      const signupForm = document.querySelector(".signup-form");
-      document.querySelectorAll(".password-toggle").forEach((passwordToggle) => {
-        passwordToggle.addEventListener("click", () => {
-          const passwordInput = passwordToggle.parentElement.querySelector("input");
-          const isPasswordHidden = passwordInput.type === "password";
-          passwordInput.type = isPasswordHidden ? "text" : "password";
-          passwordToggle.setAttribute("aria-pressed", String(isPasswordHidden));
-          passwordToggle.setAttribute(
-            "aria-label",
-            isPasswordHidden ? "Ocultar contraseña" : "Mostrar contraseña",
-          );
-        });
-      });
-
-      signupForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        window.location.href = "verificacion-usuario.html";
-      });
-    </script>
+    <script type="module" src="../js/ui-auth.js"></script>
   </body>
 </html>

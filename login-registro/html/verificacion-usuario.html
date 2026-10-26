@@ -115,68 +115,6 @@
       </footer>
     </div>
 
-    <script>
-      const codeInputs = [...document.querySelectorAll(".code-input")];
-      const verificationForm = document.querySelector(".verification-form");
-      const resendButton = document.querySelector(".resend-button");
-      const resendCountdown = document.querySelector(".resend-countdown");
-      const resendFeedback = document.querySelector(".resend-feedback");
-      let remainingSeconds = 60;
-      let countdownTimer;
-
-      codeInputs.forEach((input, index) => {
-        input.addEventListener("input", () => {
-          input.value = input.value.replace(/\D/g, "").slice(0, 1);
-          if (input.value && codeInputs[index + 1]) {
-            codeInputs[index + 1].focus();
-          }
-        });
-
-        input.addEventListener("keydown", (event) => {
-          if (event.key === "Backspace" && !input.value && codeInputs[index - 1]) {
-            codeInputs[index - 1].focus();
-          }
-        });
-      });
-
-      const formatCountdown = (seconds) => {
-        const minutes = String(Math.floor(seconds / 60)).padStart(2, "0");
-        const remainder = String(seconds % 60).padStart(2, "0");
-        return `${minutes}:${remainder}`;
-      };
-
-      const startResendCountdown = () => {
-        window.clearInterval(countdownTimer);
-        remainingSeconds = 60;
-        resendButton.disabled = true;
-        resendButton.innerHTML = `Reenviar en <span class="resend-countdown">${formatCountdown(remainingSeconds)}</span>`;
-
-        countdownTimer = window.setInterval(() => {
-          remainingSeconds -= 1;
-
-          if (remainingSeconds <= 0) {
-            window.clearInterval(countdownTimer);
-            resendButton.disabled = false;
-            resendButton.textContent = "Reenviar";
-            return;
-          }
-
-          resendButton.querySelector(".resend-countdown").textContent =
-            formatCountdown(remainingSeconds);
-        }, 1000);
-      };
-
-      resendButton.addEventListener("click", () => {
-        resendFeedback.textContent = "Código reenviado. Revisa la bandeja de entrada de tu correo electrónico.";
-        startResendCountdown();
-      });
-
-      verificationForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        window.location.href = "registro-exitoso.html";
-      });
-
-      startResendCountdown();
-    </script>
+    <script type="module" src="../js/ui-auth.js"></script>
   </body>
 </html>

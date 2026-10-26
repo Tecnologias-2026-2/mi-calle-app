@@ -120,6 +120,27 @@ a {
   outline-offset: 3px;
 }
 
+.auth-message {
+  width: 100%;
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.auth-message--error {
+  background: #fff1f1;
+  color: #b42318;
+}
+
+.auth-message--success {
+  background: #ecfdf3;
+  color: #067647;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
