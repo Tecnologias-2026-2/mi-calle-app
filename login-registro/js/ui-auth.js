@@ -59,7 +59,7 @@ function setupLoginForm() {
       renderMessage(message, result.message, result.ok ? "success" : "error");
       if (result.ok) {
         window.setTimeout(() => {
-          window.location.href = "bienvenida.html";
+          window.location.href = "../../portal_usuario/html/index.html";
         }, 700);
       }
     } catch (error) {
