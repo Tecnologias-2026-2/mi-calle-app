@@ -24,7 +24,7 @@
         </a>
         <a class="nav-link is-active" href="reports-list.html" aria-current="page">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.75h9l5 5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4.75a1 1 0 0 1 1-1Z"/><path d="M14 4v5h5M8 13h8M8 17h8"/></svg>
-          <span>Reportes</span><span class="nav-count">24</span>
+          <span>Reportes</span><span class="nav-count" data-report-count>0</span>
         </a>
         <a class="nav-link" href="profile.html">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
@@ -81,63 +81,33 @@
             <h1>Reportes recibidos</h1>
             <p class="page-description">Selecciona un reporte para revisar su información y actualizar su estado.</p>
           </div>
-          <span class="reports-total"><strong>24</strong> reportes recibidos</span>
+          <span class="reports-total"><strong id="reports-total-count">0</strong> reportes recibidos</span>
         </section>
 
         <section class="reports-toolbar panel" aria-label="Filtros de reportes">
           <label for="report-search">Buscar reporte</label>
           <input id="report-search" type="search" placeholder="Buscar por número, tipo o ubicación..." aria-label="Buscar por número, tipo o ubicación">
-          <span class="reports-toolbar-note">Mostrando 6 reportes recientes</span>
+          <label class="filter-label" for="report-status-filter">Estado</label>
+          <select id="report-status-filter" aria-label="Filtrar por estado">
+            <option value="">Todos</option>
+            <option value="pendiente">Pendiente</option>
+            <option value="proceso">En proceso</option>
+            <option value="resuelto">Resuelto</option>
+            <option value="descartado">Descartado</option>
+          </select>
+          <label class="filter-label" for="report-category-filter">Categoría</label>
+          <select id="report-category-filter" aria-label="Filtrar por categoría">
+            <option value="">Todas</option>
+          </select>
+          <span class="reports-toolbar-note" id="reports-filter-note" aria-live="polite"></span>
         </section>
 
-        <section class="reports-list" aria-label="Lista de reportes">
-          <a class="report-list-card panel" href="reports.html">
-            <span class="report-list-icon report-list-icon--blue" aria-hidden="true">#</span>
-            <span class="report-list-main"><strong>#MC-024 · Bache en la vía</strong><small>Calle 45 # 12-30, Bogotá · María Rodríguez</small></span>
-            <span class="report-list-status report-list-status--blue">En proceso</span>
-            <span class="report-list-date">12 sep 2024</span>
-            <span class="report-list-arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="report-list-card panel" href="reports.html">
-            <span class="report-list-icon report-list-icon--amber" aria-hidden="true">#</span>
-            <span class="report-list-main"><strong>#MC-023 · Semáforo averiado</strong><small>Carrera 15 con Calle 82 · Juan Pérez</small></span>
-            <span class="report-list-status report-list-status--amber">Pendiente</span>
-            <span class="report-list-date">11 sep 2024</span>
-            <span class="report-list-arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="report-list-card panel" href="reports.html">
-            <span class="report-list-icon report-list-icon--green" aria-hidden="true">#</span>
-            <span class="report-list-main"><strong>#MC-022 · Alumbrado público</strong><small>Calle 63 con Carrera 24 · Laura Gómez</small></span>
-            <span class="report-list-status report-list-status--green">Resuelto</span>
-            <span class="report-list-date">10 sep 2024</span>
-            <span class="report-list-arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="report-list-card panel" href="reports.html">
-            <span class="report-list-icon report-list-icon--blue" aria-hidden="true">#</span>
-            <span class="report-list-main"><strong>#MC-021 · Señal de tránsito dañada</strong><small>Avenida 7 con Calle 116 · Carlos Ruiz</small></span>
-            <span class="report-list-status report-list-status--blue">En proceso</span>
-            <span class="report-list-date">9 sep 2024</span>
-            <span class="report-list-arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="report-list-card panel" href="reports.html">
-            <span class="report-list-icon report-list-icon--amber" aria-hidden="true">#</span>
-            <span class="report-list-main"><strong>#MC-020 · Basura acumulada</strong><small>Calle 45 con Carrera 13 · Ana Torres</small></span>
-            <span class="report-list-status report-list-status--amber">Pendiente</span>
-            <span class="report-list-date">8 sep 2024</span>
-            <span class="report-list-arrow" aria-hidden="true">→</span>
-          </a>
-          <a class="report-list-card panel" href="reports.html">
-            <span class="report-list-icon report-list-icon--green" aria-hidden="true">#</span>
-            <span class="report-list-main"><strong>#MC-019 · Andén deteriorado</strong><small>Carrera 30 con Calle 26 · Diego Castro</small></span>
-            <span class="report-list-status report-list-status--green">Resuelto</span>
-            <span class="report-list-date">7 sep 2024</span>
-            <span class="report-list-arrow" aria-hidden="true">→</span>
-          </a>
-        </section>
+        <section class="reports-list" id="admin-reports" aria-label="Lista de reportes" aria-live="polite"></section>
         <footer class="content-footer"><span>© 2024 Mi Calle</span><span>Construyendo calles más seguras, juntos.</span></footer>
       </div>
     </main>
   </div>
   <script src="admin-ui.js"></script>
+  <script src="admin-service.js"></script>
 </body>
 </html>
