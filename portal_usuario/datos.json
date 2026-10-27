@@ -1,0 +1,78 @@
+{
+  "id": 1,
+  "nombreCompleto": "María González",
+  "nombreUsuario": "Maria",
+  "correo": "maria.gomez@correo.com",
+  "telefono": "+57 300 456 1237",
+  "miembroDesde": "2025-01"
+}
+
+{
+  "usuarioId": 1,
+  "notificaciones": {
+    "cambiosEstado": true,
+    "reporteReparado": true,
+    "reportesCercanos": true
+  },
+  "canales": {
+    "correo": true,
+    "plataforma": true
+  }
+}
+
+[
+  {
+    "id": 1,
+    "usuarioId": 1,
+    "tipo": "basura",
+    "ubicacion": "Calle 45 con Carrera 13",
+    "fecha": "2026-10-24",
+    "estado": "reportado",
+    "descripcion": "Bolsas de basura acumuladas sobre la calzada."
+  },
+  {
+    "id": 2,
+    "usuarioId": 1,
+    "tipo": "alumbrado",
+    "ubicacion": "Calle 63 con Carrera 24",
+    "fecha": "2026-10-19",
+    "estado": "en_revision",
+    "descripcion": "Poste sin luz desde hace varios días."
+  },
+  {
+    "id": 3,
+    "usuarioId": 1,
+    "tipo": "semaforo",
+    "ubicacion": "Carrera 15 con Calle 82",
+    "fecha": "2026-09-26",
+    "estado": "reparado",
+    "descripcion": "Semáforo intermitente en todas las fases."
+  },
+  {
+    "id": 4,
+    "usuarioId": 1,
+    "tipo": "huecos",
+    "ubicacion": "Carrera 9 con Calle 72",
+    "fecha": "2026-08-26",
+    "estado": "reportado",
+    "descripcion": "Hueco profundo en el carril derecho."
+  },
+  {
+    "id": 5,
+    "usuarioId": 1,
+    "tipo": "senalizacion",
+    "ubicacion": "Avenida 7 con Calle 116",
+    "fecha": "2026-07-10",
+    "estado": "reparado",
+    "descripcion": "Señal de pare caída."
+  },
+  {
+    "id": 6,
+    "usuarioId": 1,
+    "tipo": "alcantarilla",
+    "ubicacion": "Carrera 30 con Calle 26",
+    "fecha": "2026-06-15",
+    "estado": "reportado",
+    "descripcion": "Alcantarilla sin tapa junto al andén."
+  }
+]
