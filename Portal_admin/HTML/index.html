@@ -26,7 +26,7 @@
         </a>
         <a class="nav-link" href="reports-list.html">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3.75h9l5 5V20a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V4.75a1 1 0 0 1 1-1Z"/><path d="M14 4v5h5M8 13h8M8 17h8"/></svg>
-          <span>Reportes</span><span class="nav-count">24</span>
+          <span>Reportes</span><span class="nav-count" data-report-count>0</span>
         </a>
         <a class="nav-link" href="profile.html">
           <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg>
@@ -97,24 +97,7 @@
           </label>
         </section>
 
-        <section class="stats-grid" aria-label="Indicadores de reportes">
-          <article class="stat-card">
-            <div class="stat-top"><span class="stat-icon icon-blue"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5"/></svg></span><span class="stat-change positive">+12.5%</span></div>
-            <p class="stat-label">Total de reportes</p><div class="stat-value">24</div><p class="stat-note"><span class="trend-up">↗</span> vs. mes anterior</p>
-          </article>
-          <article class="stat-card">
-            <div class="stat-top"><span class="stat-icon icon-indigo"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span><span class="stat-change neutral">En seguimiento</span></div>
-            <p class="stat-label">En proceso</p><div class="stat-value">10</div><p class="stat-note">Casos en atención</p>
-          </article>
-          <article class="stat-card">
-            <div class="stat-top"><span class="stat-icon icon-amber"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 2.8 19h18.4L12 3Z"/><path d="M12 9v4M12 16h.01"/></svg></span><span class="stat-change warning">Requieren atención</span></div>
-            <p class="stat-label">Pendientes</p><div class="stat-value">7</div><p class="stat-note">Por revisar</p>
-          </article>
-          <article class="stat-card">
-            <div class="stat-top"><span class="stat-icon icon-green"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span><span class="stat-change positive">+8.2%</span></div>
-            <p class="stat-label">Resueltos</p><div class="stat-value">7</div><p class="stat-note"><span class="trend-up">↗</span> vs. mes anterior</p>
-          </article>
-        </section>
+        <section class="stats-grid" id="admin-kpis" aria-label="Indicadores de reportes" aria-live="polite"></section>
 
         <section class="charts-grid" aria-label="Estadísticas de reportes">
           <article class="panel period-panel">
@@ -137,11 +120,11 @@
           <article class="panel status-panel">
             <div class="panel-heading"><div><h2>Reportes por estado</h2><p>Distribución actual de los casos</p></div><button class="more-button" type="button" aria-label="Más opciones">···</button></div>
             <div class="status-chart-wrap">
-              <div class="donut-chart" role="img" aria-label="24 reportes: 10 en proceso, 7 pendientes y 7 resueltos."><div class="donut-center"><strong>24</strong><span>Reportes</span></div></div>
+              <div class="donut-chart" role="img" aria-label="Distribución de reportes por estado."><div class="donut-center"><strong>0</strong><span>Reportes</span></div></div>
               <ul class="legend">
-                <li><span class="legend-label"><i class="legend-dot dot-blue"></i>En proceso</span><strong>10</strong></li>
-                <li><span class="legend-label"><i class="legend-dot dot-green"></i>Resueltos</span><strong>7</strong></li>
-                <li><span class="legend-label"><i class="legend-dot dot-amber"></i>Pendientes</span><strong>7</strong></li>
+                <li><span class="legend-label"><i class="legend-dot dot-blue"></i>En proceso</span><strong>0</strong></li>
+                <li><span class="legend-label"><i class="legend-dot dot-green"></i>Resueltos</span><strong>0</strong></li>
+                <li><span class="legend-label"><i class="legend-dot dot-amber"></i>Pendientes</span><strong>0</strong></li>
               </ul>
             </div>
           </article>
@@ -161,5 +144,6 @@
     </main>
   </div>
   <script src="admin-ui.js"></script>
+  <script src="admin-service.js"></script>
 </body>
 </html>

@@ -1,0 +1,94 @@
+{
+  "estadisticas": [
+    {
+      "id": "total",
+      "etiqueta": "Total de reportes",
+      "indicador": "Todos los casos",
+      "nota": "Reportes recibidos",
+      "icono": "blue"
+    },
+    {
+      "id": "proceso",
+      "etiqueta": "En proceso",
+      "indicador": "En seguimiento",
+      "nota": "Casos en atención",
+      "icono": "indigo"
+    },
+    {
+      "id": "pendiente",
+      "etiqueta": "Pendientes",
+      "indicador": "Requieren atención",
+      "nota": "Por revisar",
+      "icono": "amber"
+    },
+    {
+      "id": "resuelto",
+      "etiqueta": "Resueltos",
+      "indicador": "Atendidos",
+      "nota": "Incidencias solucionadas",
+      "icono": "green"
+    }
+  ],
+  "reportes": [
+    {
+      "id": "MC-024",
+      "categoria": "Bache en la vía",
+      "ubicacion": "Calle 45 # 12-30, Bogotá",
+      "reportadoPor": "María Rodríguez",
+      "fecha": "2026-10-25",
+      "descripcion": "Hay un bache grande en medio de la vía que dificulta el paso de los vehículos.",
+      "estado": "proceso",
+      "gravedad": "alta"
+    },
+    {
+      "id": "MC-023",
+      "categoria": "Semáforo averiado",
+      "ubicacion": "Carrera 15 con Calle 82, Bogotá",
+      "reportadoPor": "Juan Pérez",
+      "fecha": "2026-10-24",
+      "descripcion": "El semáforo de la intersección no está funcionando.",
+      "estado": "pendiente",
+      "gravedad": "alta"
+    },
+    {
+      "id": "MC-022",
+      "categoria": "Alumbrado público",
+      "ubicacion": "Calle 63 con Carrera 24, Bogotá",
+      "reportadoPor": "Laura Gómez",
+      "fecha": "2026-10-23",
+      "descripcion": "La luminaria lleva varios días apagada.",
+      "estado": "resuelto",
+      "gravedad": "media"
+    },
+    {
+      "id": "MC-021",
+      "categoria": "Señal de tránsito dañada",
+      "ubicacion": "Avenida 7 con Calle 116, Bogotá",
+      "reportadoPor": "Carlos Ruiz",
+      "fecha": "2026-10-22",
+      "descripcion": "La señal de tránsito está inclinada y es difícil de ver.",
+      "estado": "proceso",
+      "gravedad": "media"
+    },
+    {
+      "id": "MC-020",
+      "categoria": "Bache en la vía",
+      "ubicacion": "Calle 45 con Carrera 13, Bogotá",
+      "reportadoPor": "Ana Torres",
+      "fecha": "2026-10-21",
+      "descripcion": "Se reporta un hueco profundo en la calzada.",
+      "estado": "pendiente",
+      "gravedad": "alta"
+    },
+    {
+      "id": "MC-019",
+      "categoria": "Andén deteriorado",
+      "ubicacion": "Carrera 30 con Calle 26, Bogotá",
+      "reportadoPor": "Diego Castro",
+      "fecha": "2026-10-20",
+      "descripcion": "Hay varias losas sueltas en el andén.",
+      "estado": "resuelto",
+      "gravedad": "baja"
+    }
+  ]
+}
