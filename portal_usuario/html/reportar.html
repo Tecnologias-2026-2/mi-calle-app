@@ -72,13 +72,13 @@
             <h3 class="subtitulo">Reportar un problema</h3>
             <p class="descripcion-formulario">Informa sobre un problema que afecta a tu comunidad.</p>
 
-            <form action="#" method="POST" enctype="multipart/form-data">
+            <form id="formulario-reporte" method="POST">
                 
                 <!-- Tipo de Problema -->
                 <div class="campo-formulario">
                     <label><i class="fa-solid fa-circle-info"></i> Tipo de problema</label>
                     <div class="select-con-flecha">
-                        <select required>
+                        <select id="tipo" name="tipo" required>
                             <option value="" disabled selected>Seleccione el tipo de problema</option>
                             <option value="huecos">Hueco en la vía</option>
                             <option value="semaforo">Semáforo en mal estado</option>
@@ -107,21 +107,21 @@
                     <label><i class="fa-solid fa-location-dot"></i> Ubicación</label>
                     <div class="input-con-icono">
                         <i class="fa-solid fa-map-pin"></i>
-                        <input type="text" placeholder="Seleccionar ubicación" required>
+                        <input id="ubicacion" name="ubicacion" type="text" placeholder="Seleccionar ubicación" required>
                     </div>
                 </div>
 
                 <!-- Descripción -->
                 <div class="campo-formulario">
                     <label><i class="fa-solid fa-list"></i> Descripción</label>
-                    <textarea rows="4" placeholder="Describe el daño observado, riesgos o información adicional." required></textarea>
+                    <textarea id="descripcion" name="descripcion" rows="4" placeholder="Describe el daño observado, riesgos o información adicional." required></textarea>
                 </div>
 
                 <!-- Botones -->
                 <div class="botones-formulario">
-                    <a href="mis_reportes.html" class="btn-guardar">
+                    <button type="submit" class="btn-guardar">
                         <i class="fa-solid fa-arrow-right"></i> Enviar reporte
-                    </a>
+                    </button>
                     <a href="index.html" class="btn-cancelar">Cancelar</a>
                 </div>
 
@@ -129,6 +129,7 @@
         </section>
     </div>
 </main>
+<script src="../reportes.js"></script>
 <script src="../menu.js"></script>
 </body>
 </html>
