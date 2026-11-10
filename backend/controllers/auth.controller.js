@@ -88,7 +88,7 @@ async function verify(req, res, token) {
 
     const { data: user, error } = await supabase
       .from('usuarios')
-      .select('id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified, telefono')
+      .select('id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified')
       .eq('correo_electronico', normalizedEmail)
       .maybeSingle();
     if (error) throw error;
@@ -114,7 +114,6 @@ async function verify(req, res, token) {
         email: user.correo_electronico,
         role: user.rol,
         is_verified: user.is_verified,
-        telefono: user.telefono || '',
       },
     });
   }
@@ -151,7 +150,7 @@ async function login(req, res, body) {
   const { data: user, error } = await supabase
     .from('usuarios')
     .select(
-      'id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified, telefono'
+      'id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified'
     )
     .eq('correo_electronico', normalizedEmail)
     .maybeSingle();
@@ -188,7 +187,6 @@ async function login(req, res, body) {
       email: user.correo_electronico,
       role: user.rol,
       is_verified: user.is_verified,
-      telefono: user.telefono || '',
     },
   });
 }
@@ -207,16 +205,38 @@ async function updateProfile(req, res, body, sessionUser) {
     return sendJson(res, 400, { error: 'El teléfono no puede superar 20 caracteres.' });
   }
 
+  const updateData = { nombre_completo: name };
+  if (phone) updateData.telefono = phone;
+
   const { data: user, error } = await supabase
     .from('usuarios')
-    .update({
-      nombre_completo: name,
-      telefono: phone || null,
-    })
+    .update(updateData)
     .eq('id_usuario', sessionUser.sub)
-    .select('id_usuario, nombre_completo, correo_electronico, rol, is_verified, telefono')
+    .select('id_usuario, nombre_completo, correo_electronico, rol, is_verified')
     .maybeSingle();
 
+  if (error && phone && /telefono|column/i.test(error.message || '')) {
+    const fallback = await supabase
+      .from('usuarios')
+      .update({ nombre_completo: name })
+      .eq('id_usuario', sessionUser.sub)
+      .select('id_usuario, nombre_completo, correo_electronico, rol, is_verified')
+      .maybeSingle();
+    if (fallback.error) throw fallback.error;
+    if (!fallback.data) return sendJson(res, 404, { error: 'Usuario no encontrado.' });
+    return sendJson(res, 200, {
+      message: 'Nombre actualizado. El teléfono no se guardó porque la columna telefono aún no existe en la base de datos.',
+      warning: 'telefono_no_disponible',
+      user: {
+        id: fallback.data.id_usuario,
+        name: fallback.data.nombre_completo,
+        email: fallback.data.correo_electronico,
+        role: fallback.data.rol,
+        is_verified: fallback.data.is_verified,
+        telefono: '',
+      },
+    });
+  }
   if (error) throw error;
   if (!user) return sendJson(res, 404, { error: 'Usuario no encontrado.' });
 
@@ -228,7 +248,7 @@ async function updateProfile(req, res, body, sessionUser) {
       email: user.correo_electronico,
       role: user.rol,
       is_verified: user.is_verified,
-      telefono: user.telefono || '',
+      telefono: '',
     },
   });
 }

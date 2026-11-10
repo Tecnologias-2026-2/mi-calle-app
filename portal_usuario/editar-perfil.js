@@ -43,7 +43,7 @@ profileForm.addEventListener("submit", async (event) => {
 
         MiCalleAuth.saveUser(data.user);
         usernameInput.value = data.user.name;
-        showProfileMessage("Cambios guardados correctamente.");
+        showProfileMessage(data.message || "Cambios guardados correctamente.");
     } catch (error) {
         console.error("No se pudo actualizar el perfil:", error);
         showProfileMessage(error.message || "No se pudieron guardar los cambios.", true);
