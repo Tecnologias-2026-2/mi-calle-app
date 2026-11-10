@@ -79,6 +79,20 @@ body {
     background-color: var(--fondo-pagina);
 }
 
+#mapa,
+.mapa-formulario {
+    width: 100%;
+    min-height: 420px;
+    border-radius: 12px;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.mapa-formulario {
+    min-height: 320px;
+    margin: 12px 0 20px;
+}
+
 /* Contenedor principal de todas las páginas */
 .dashboard-inicio {
     max-width: 1200px;

@@ -10,6 +10,8 @@ formularioReporte.addEventListener("submit", async (evento) => {
     const reporte = {
         tipo_problema: datosFormulario.get("tipo"),
         direccion_texto: datosFormulario.get("ubicacion").trim(),
+        latitud: Number(datosFormulario.get("latitud")),
+        longitud: Number(datosFormulario.get("longitud")),
         descripcion: datosFormulario.get("descripcion").trim(),
         estado_atencion: "Reportado"
     };
