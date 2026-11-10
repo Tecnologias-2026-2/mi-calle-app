@@ -1,8 +1,6 @@
 import {
   loginUser,
   registerUser,
-  resendVerificationCode,
-  verifyCode,
 } from "./auth-service.js";
 
 const messageClassByType = {
@@ -59,7 +57,7 @@ function setupLoginForm() {
       renderMessage(message, result.message, result.ok ? "success" : "error");
       if (result.ok) {
         window.setTimeout(() => {
-          window.location.href = "bienvenida.html";
+          window.location.href = "../../portal_usuario/html/index.html";
         }, 700);
       }
     } catch (error) {
@@ -84,73 +82,6 @@ function setupRegisterForm() {
       renderMessage(message, result.message, result.ok ? "success" : "error");
       if (result.ok) {
         window.setTimeout(() => {
-          window.location.href = "verificacion-usuario.html";
-        }, 700);
-      }
-    } catch (error) {
-      renderMessage(message, error.message);
-    } finally {
-      setFormBusy(form, false);
-    }
-  });
-}
-
-function setupVerificationForm() {
-  const form = document.querySelector(".verification-form");
-  if (!form) return;
-
-  const message = addMessageContainer(form);
-  const codeInputs = [...form.querySelectorAll(".code-input")];
-  const resendButton = form.querySelector(".resend-button");
-  const resendFeedback = form.querySelector(".resend-feedback");
-  let countdownTimer;
-
-  codeInputs.forEach((input, index) => {
-    input.addEventListener("input", () => {
-      input.value = input.value.replace(/\D/g, "").slice(0, 1);
-      if (input.value && codeInputs[index + 1]) codeInputs[index + 1].focus();
-    });
-    input.addEventListener("keydown", (event) => {
-      if (event.key === "Backspace" && !input.value && codeInputs[index - 1]) {
-        codeInputs[index - 1].focus();
-      }
-    });
-  });
-
-  const startResendCountdown = () => {
-    window.clearInterval(countdownTimer);
-    let remainingSeconds = 60;
-    resendButton.disabled = true;
-    resendButton.innerHTML = `Reenviar en <span class="resend-countdown">01:00</span>`;
-    countdownTimer = window.setInterval(() => {
-      remainingSeconds -= 1;
-      if (remainingSeconds <= 0) {
-        window.clearInterval(countdownTimer);
-        resendButton.disabled = false;
-        resendButton.textContent = "Reenviar";
-        return;
-      }
-      const minutes = String(Math.floor(remainingSeconds / 60)).padStart(2, "0");
-      const seconds = String(remainingSeconds % 60).padStart(2, "0");
-      resendButton.querySelector(".resend-countdown").textContent = `${minutes}:${seconds}`;
-    }, 1000);
-  };
-
-  resendButton.addEventListener("click", async () => {
-    const result = await resendVerificationCode();
-    resendFeedback.textContent = result.message;
-    startResendCountdown();
-  });
-
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    setFormBusy(form, true);
-    try {
-      const code = codeInputs.map((input) => input.value).join("");
-      const result = await verifyCode(code);
-      renderMessage(message, result.message, result.ok ? "success" : "error");
-      if (result.ok) {
-        window.setTimeout(() => {
           window.location.href = "registro-exitoso.html";
         }, 700);
       }
@@ -160,11 +91,8 @@ function setupVerificationForm() {
       setFormBusy(form, false);
     }
   });
-
-  startResendCountdown();
 }
 
 setupPasswordToggles();
 setupLoginForm();
 setupRegisterForm();
-setupVerificationForm();
