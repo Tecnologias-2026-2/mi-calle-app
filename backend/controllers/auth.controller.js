@@ -113,6 +113,7 @@ async function verify(req, res, token) {
         name: user.nombre_completo,
         email: user.correo_electronico,
         role: user.rol,
+        is_verified: user.is_verified,
       },
     });
   }
@@ -185,6 +186,7 @@ async function login(req, res, body) {
       name: user.nombre_completo,
       email: user.correo_electronico,
       role: user.rol,
+      is_verified: user.is_verified,
     },
   });
 }

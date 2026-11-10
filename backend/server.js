@@ -5,6 +5,7 @@ const { URL } = require('url');
 const cors = require('cors');
 const supabase = require('./config/supabase');
 const authController = require('./controllers/auth.controller');
+const { verifySessionToken } = require('./services/session.service');
 const app = express();
 
 app.use(cors({
@@ -77,7 +78,14 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'GET' && pathname === '/reportes') {
     try {
-      const { data, error } = await supabase.from('reportes').select('*');
+      const user = requireAuth(req, res);
+      if (!user) return;
+
+      let query = supabase.from('reportes').select('*');
+      if (requestUrl.searchParams.get('mine') === 'true') {
+        query = query.eq('id_usuario', user.sub);
+      }
+      const { data, error } = await query;
       if (error) throw error;
       
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
@@ -91,7 +99,12 @@ const server = http.createServer(async (req, res) => {
   else if (req.method === 'POST' && pathname === '/reportes') {
     try {
       const data = await readJsonBody(req);
-      const { data: insertedData, error } = await supabase.from('reportes').insert([data]).select();
+      const user = requireAuth(req, res);
+      if (!user) return;
+      const { data: insertedData, error } = await supabase
+        .from('reportes')
+        .insert([{ ...data, id_usuario: user.sub }])
+        .select();
       if (error) throw error;
       res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
       return res.end(JSON.stringify(insertedData));
@@ -114,6 +127,19 @@ function applyCors(req, res) {
       resolve();
     });
   });
+}
+
+function requireAuth(req, res) {
+  const authorization = req.headers.authorization || '';
+  const token = authorization.startsWith('Bearer ')
+    ? authorization.slice('Bearer '.length)
+    : null;
+  const user = verifySessionToken(token);
+  if (user) return user;
+
+  res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify({ error: 'La sesión es inválida o ha expirado.' }));
+  return null;
 }
 
 function readJsonBody(req) {

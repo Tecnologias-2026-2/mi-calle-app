@@ -48,6 +48,12 @@ function setupLoginForm() {
   if (!form) return;
 
   const message = addMessageContainer(form);
+  const sessionMessage = new URLSearchParams(window.location.search).get("session");
+  if (sessionMessage === "expired") {
+    renderMessage(message, "Tu sesión expiró. Inicia sesión nuevamente.");
+  } else if (sessionMessage === "required") {
+    renderMessage(message, "Inicia sesión para acceder al portal ciudadano.");
+  }
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     setFormBusy(form, true);

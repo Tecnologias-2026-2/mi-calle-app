@@ -46,7 +46,7 @@ function agregarMarcadores(reportes) {
 
 async function cargarReportes() {
     try {
-        const respuesta = await fetch(`${BASE_URL}/reportes`);
+        const respuesta = await MiCalleAuth.request("/reportes");
         const datos = await respuesta.json().catch(() => []);
         if (!respuesta.ok) {
             throw new Error(datos.error || `Error HTTP ${respuesta.status}`);

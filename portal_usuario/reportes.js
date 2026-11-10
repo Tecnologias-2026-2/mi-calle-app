@@ -1,7 +1,4 @@
 const formularioReporte = document.querySelector("#formulario-reporte");
-const BASE_URL = "https://mi-calle-app-backend.onrender.com";
-const urlReportes = `${BASE_URL}/reportes`;
-
 formularioReporte.addEventListener("submit", async (evento) => {
     evento.preventDefault();
 
@@ -19,7 +16,7 @@ formularioReporte.addEventListener("submit", async (evento) => {
     botonEnvio.disabled = true;
 
     try {
-        const respuesta = await fetch(urlReportes, {
+        const respuesta = await MiCalleAuth.request("/reportes", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

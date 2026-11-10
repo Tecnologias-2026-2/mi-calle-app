@@ -34,6 +34,7 @@ export async function loginUser({ email, password }) {
   }
 
   window.localStorage.setItem(SESSION_KEY, result.session);
+  window.localStorage.setItem("mi-calle-user", JSON.stringify(result.user));
   return {
     ok: true,
     message: authMessages.login.success,
@@ -98,4 +99,5 @@ export async function registerUser({
 
 export function logoutUser() {
   window.localStorage.removeItem(SESSION_KEY);
+  window.localStorage.removeItem("mi-calle-user");
 }

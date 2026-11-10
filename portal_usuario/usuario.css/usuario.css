@@ -1,3 +1,24 @@
+.estado-vacio {
+    display: grid;
+    gap: 0.45rem;
+    justify-items: center;
+    padding: 2rem 1rem;
+    color: #64748b;
+    text-align: center;
+}
+
+.estado-vacio strong {
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+.estado-vacio a {
+    display: inline-block;
+    margin-top: 0.45rem;
+    color: #2563eb;
+    font-weight: 600;
+    text-decoration: none;
+}
 /* ==========================================================================
    MI CALLE · PORTAL CIUDADANO · usuario.css
    --------------------------------------------------------------------------
