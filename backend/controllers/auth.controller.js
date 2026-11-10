@@ -136,4 +136,57 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
+async function login(req, res, body) {
+  const { email, password } = body || {};
+  const normalizedEmail = String(email || '').trim().toLowerCase();
+
+  if (!normalizedEmail || !password) {
+    return sendJson(res, 400, {
+      error: 'Email y contraseña son obligatorios.',
+    });
+  }
+
+  const { data: user, error } = await supabase
+    .from('usuarios')
+    .select(
+      'id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified'
+    )
+    .eq('correo_electronico', normalizedEmail)
+    .maybeSingle();
+
+  if (error) {
+    throw error;
+  }
+
+  if (!user || !(await verifyPassword(String(password), user.contrasena))) {
+    return sendJson(res, 401, {
+      error: 'El email o la contraseña no son correctos.',
+    });
+  }
+
+  if (!user.is_verified) {
+    return sendJson(res, 403, {
+      error: 'Debes verificar tu correo antes de iniciar sesión.',
+    });
+  }
+
+  const session = createSessionToken({
+    sub: user.id_usuario,
+    email: user.correo_electronico,
+    role: user.rol,
+    exp: Date.now() + 7 * 24 * 60 * 60 * 1000,
+  });
+
+  return sendJson(res, 200, {
+    message: 'Inicio de sesión exitoso.',
+    session,
+    user: {
+      id: user.id_usuario,
+      name: user.nombre_completo,
+      email: user.correo_electronico,
+      role: user.rol,
+    },
+  });
+}
+
 module.exports = { register, verify, login };
