@@ -11,22 +11,17 @@ function initializeProfileForm() {
     const user = MiCalleAuth.getUser();
     if (!user) return;
 
-    const name = user.name || user.nombre_completo || "";
-    usernameInput.value = name;
+    usernameInput.value = user.name || user.nombre_completo || "";
 }
-
-document.querySelector("#nombre-completo").addEventListener("input", (event) => {
-    usernameInput.value = event.target.value;
-});
 
 profileForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const submitButton = document.querySelector(".btn-guardar-perfil");
-    const name = document.querySelector("#nombre-completo").value.trim();
+    const name = usernameInput.value.trim();
     const phone = document.querySelector("#telefono").value.trim();
 
     if (!name) {
-        showProfileMessage("Escribe tu nombre completo.", true);
+        showProfileMessage("Escribe tu nombre de usuario.", true);
         return;
     }
 
