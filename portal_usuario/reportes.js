@@ -1,5 +1,6 @@
 const formularioReporte = document.querySelector("#formulario-reporte");
-const urlReportes = "http://localhost:3000/reportes";
+const BASE_URL = "https://mi-calle-app-backend.onrender.com";
+const urlReportes = `${BASE_URL}/reportes`;
 
 formularioReporte.addEventListener("submit", async (evento) => {
     evento.preventDefault();
@@ -7,12 +8,10 @@ formularioReporte.addEventListener("submit", async (evento) => {
     const botonEnvio = formularioReporte.querySelector("[type=submit]");
     const datosFormulario = new FormData(formularioReporte);
     const reporte = {
-        usuarioId: 1,
-        tipo: datosFormulario.get("tipo"),
-        ubicacion: datosFormulario.get("ubicacion").trim(),
+        tipo_problema: datosFormulario.get("tipo"),
+        direccion_texto: datosFormulario.get("ubicacion").trim(),
         descripcion: datosFormulario.get("descripcion").trim(),
-        fecha: new Date().toISOString().slice(0, 10),
-        estado: "reportado"
+        estado_atencion: "Reportado"
     };
 
     botonEnvio.disabled = true;
@@ -26,7 +25,7 @@ formularioReporte.addEventListener("submit", async (evento) => {
             body: JSON.stringify(reporte)
         });
 
-        const datosRespuesta = await respuesta.json();
+        const datosRespuesta = await respuesta.json().catch(() => ({}));
         console.log("Respuesta del servidor al crear el reporte:", datosRespuesta);
 
         if (!respuesta.ok) {
@@ -36,7 +35,7 @@ formularioReporte.addEventListener("submit", async (evento) => {
         window.location.href = "mis_reportes.html";
     } catch (error) {
         console.error("No se pudo crear el reporte:", error);
-        alert("No se pudo enviar el reporte. Verifica que el servidor esté disponible e inténtalo de nuevo.");
+        alert(error.message || "No se pudo enviar el reporte. Inténtalo de nuevo.");
     } finally {
         botonEnvio.disabled = false;
     }

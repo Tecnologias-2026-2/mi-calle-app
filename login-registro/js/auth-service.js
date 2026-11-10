@@ -1,5 +1,5 @@
 import { authMessages } from "./auth-data.js";
-const API_URL = "http://localhost:3000";
+const BASE_URL = "https://mi-calle-app-backend.onrender.com";
 const SESSION_KEY = "mi-calle-session";
 
 function validateEmail(email) {
@@ -19,7 +19,7 @@ export async function loginUser({ email, password }) {
 
   let response;
   try {
-    response = await fetch(`${API_URL}/api/auth/login`, {
+    response = await fetch(`${BASE_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: normalizedEmail, password }),
@@ -69,7 +69,7 @@ export async function registerUser({
 
   let response;
   try {
-    response = await fetch(`${API_URL}/api/auth/register`, {
+    response = await fetch(`${BASE_URL}/api/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

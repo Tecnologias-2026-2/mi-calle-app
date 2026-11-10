@@ -1,15 +1,35 @@
 require('dotenv').config();
 const http = require('http');
 const { URL } = require('url');
+const cors = require('cors');
 const supabase = require('./config/supabase');
 const authController = require('./controllers/auth.controller');
 
+const allowedOrigins = (process.env.FRONTEND_ORIGINS ||
+  'https://tecnologias-2026-2.github.io')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
+
+const corsMiddleware = cors({
+  origin(origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+    return callback(new Error('Origen no permitido por CORS.'));
+  },
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+});
+
 // 2. Creación del servidor web
 const server = http.createServer(async (req, res) => {
-  // Configuración de CORS y JSON
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  try {
+    await applyCors(req, res);
+  } catch (error) {
+    res.writeHead(403, { 'Content-Type': 'application/json; charset=utf-8' });
+    return res.end(JSON.stringify({ error: error.message }));
+  }
 
   // Manejo de la petición OPTIONS (CORS preflight)
   if (req.method === 'OPTIONS') {
@@ -77,6 +97,15 @@ const server = http.createServer(async (req, res) => {
     return res.end(JSON.stringify({ error: 'Ruta no encontrada' }));
   }
 });
+
+function applyCors(req, res) {
+  return new Promise((resolve, reject) => {
+    corsMiddleware(req, res, (error) => {
+      if (error) return reject(error);
+      resolve();
+    });
+  });
+}
 
 function readJsonBody(req) {
   return new Promise((resolve, reject) => {

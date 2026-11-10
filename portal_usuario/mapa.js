@@ -1,4 +1,5 @@
-const urlReportes = "http://localhost:3000/reportes";
+const BASE_URL = "https://mi-calle-app-backend.onrender.com";
+const urlReportes = `${BASE_URL}/reportes`;
 const areaMapa = document.querySelector("#area-mapa");
 const contadorReportes = document.querySelector(".contador-reportes");
 const tiposReporte = {
