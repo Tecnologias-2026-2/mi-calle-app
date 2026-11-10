@@ -5,6 +5,7 @@ const vistaPreviaFotografia = document.querySelector("#vista-previa-fotografia")
 const estadoUbicacion = document.querySelector("#estado-ubicacion");
 const inputLatitud = document.querySelector("#input-lat");
 const inputLongitud = document.querySelector("#input-lng");
+const inputDireccion = document.querySelector("#direccion-texto");
 const mapaFormulario = L.map("mapa").setView([4.711, -74.0721], 13);
 let marcadorSeleccionado = null;
 
@@ -77,6 +78,7 @@ formularioReporte.addEventListener("submit", async (evento) => {
         tipo_problema: datosFormulario.get("tipo"),
         latitud: Number(datosFormulario.get("latitud")),
         longitud: Number(datosFormulario.get("longitud")),
+        direccion_texto: String(datosFormulario.get("direccion_texto") || "").trim(),
         descripcion: String(datosFormulario.get("descripcion") || "").trim(),
         estado_atencion: "Reportado"
     };
@@ -87,6 +89,12 @@ formularioReporte.addEventListener("submit", async (evento) => {
         return;
     }
 
+    if (!reporte.direccion_texto) {
+        inputDireccion.setCustomValidity("Ingresa una dirección aproximada.");
+        inputDireccion.reportValidity();
+        return;
+    }
+    inputDireccion.setCustomValidity("");
     botonEnvio.disabled = true;
 
     try {

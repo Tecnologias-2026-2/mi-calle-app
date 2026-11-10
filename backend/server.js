@@ -92,15 +92,21 @@ const server = http.createServer(async (req, res) => {
       const user = requireAuth(req, res);
       if (!user) return;
 
-      let query = supabase.from('reportes').select('*');
+      let query = supabase.from('reportes').select('*, ubicaciones(*)');
       if (requestUrl.searchParams.get('mine') === 'true') {
         query = query.eq('id_usuario', user.sub);
       }
       const { data, error } = await query;
       if (error) throw error;
+
+      const reportes = (data || []).map((reporte) => ({
+        ...reporte,
+        ...(reporte.ubicaciones || {}),
+        ubicacion: reporte.ubicaciones || null,
+      }));
       
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      return res.end(JSON.stringify(data));
+      return res.end(JSON.stringify(reportes));
     } catch (error) {
       return handleError(res, error, 'Error interno al obtener los reportes.');
     }
@@ -112,13 +118,52 @@ const server = http.createServer(async (req, res) => {
       const data = await readJsonBody(req);
       const user = requireAuth(req, res);
       if (!user) return;
+
+      const tipoProblema = String(data.tipo_problema || '').trim();
+      const descripcion = String(data.descripcion || '').trim();
+      const direccionTexto = String(data.direccion_texto || '').trim();
+      const latitud = Number(data.latitud);
+      const longitud = Number(data.longitud);
+      if (!tipoProblema || !descripcion || !direccionTexto
+        || !Number.isFinite(latitud) || !Number.isFinite(longitud)) {
+        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
+        return res.end(JSON.stringify({
+          error: 'Tipo, descripción, dirección y ubicación válida son obligatorios.',
+        }));
+      }
+
+      const { data: ubicacion, error: ubicacionError } = await supabase
+        .from('ubicaciones')
+        .insert([{
+          latitud: Number(latitud.toFixed(6)),
+          longitud: Number(longitud.toFixed(6)),
+          direccion_texto: direccionTexto,
+        }])
+        .select()
+        .single();
+      if (ubicacionError) throw ubicacionError;
+
+      const reporte = {
+        tipo_problema: tipoProblema,
+        id_ubicacion: ubicacion.id_ubicacion,
+        descripcion,
+        estado_atencion: String(data.estado_atencion || 'Reportado'),
+        id_usuario: user.sub,
+      };
       const { data: insertedData, error } = await supabase
         .from('reportes')
-        .insert([{ ...data, id_usuario: user.sub }])
+        .insert([reporte])
         .select();
-      if (error) throw error;
+      if (error) {
+        await supabase.from('ubicaciones').delete().eq('id_ubicacion', ubicacion.id_ubicacion);
+        throw error;
+      }
       res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
-      return res.end(JSON.stringify(insertedData));
+      return res.end(JSON.stringify([{
+        ...(insertedData?.[0] || {}),
+        ...ubicacion,
+        ubicacion,
+      }]));
     } catch (error) {
       return handleError(res, error, 'Error interno al crear el reporte.');
     }

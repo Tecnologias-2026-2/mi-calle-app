@@ -33,6 +33,11 @@ en HTML, JavaScript del navegador ni repositorios públicos.
   puede ser nulo o estar vacío.
 - `GET /verify?token=...`: verifica el token y activa la cuenta.
 
+`POST /reportes` requiere `tipo_problema`, `descripcion`, `latitud`,
+`longitud` y `direccion_texto`. La ubicación se guarda en `ubicaciones` y el
+reporte conserva su relación mediante `id_ubicacion`; `id_usuario` se toma
+siempre del token autenticado.
+
 El token se genera con `crypto.randomBytes`, expira en 24 horas y se elimina
 después de una verificación exitosa. Las contraseñas se guardan usando
 `crypto.scrypt`; nunca se almacenan en texto plano.

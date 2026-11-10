@@ -539,6 +539,25 @@ body {
     background-color: white;
 }
 
+/* --- Input de texto --- */
+.campo-formulario > input[type="text"] {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    color: var(--texto);
+    background-color: var(--fondo-input);
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.campo-formulario > input[type="text"]:focus {
+    border-color: var(--azul);
+    background-color: white;
+}
+
 /* --- Textarea --- */
 textarea {
     width: 100%;

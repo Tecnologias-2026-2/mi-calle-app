@@ -126,6 +126,36 @@
                 <input id="input-lat" name="latitud" type="hidden" required>
                 <input id="input-lng" name="longitud" type="hidden" required>
 
+                <!-- Dirección aproximada -->
+                <div class="campo-formulario">
+                    <label for="direccion-texto">
+                        <i class="fa-solid fa-road"></i> Dirección aproximada
+                    </label>
+                    <input
+                        id="direccion-texto"
+                        name="direccion_texto"
+                        type="text"
+                        maxlength="255"
+                        autocomplete="street-address"
+                        list="sugerencias-direccion"
+                        placeholder="Ej. Carrera 7 Bis # 72-41"
+                        aria-describedby="ayuda-direccion"
+                        required
+                    >
+                    <datalist id="sugerencias-direccion">
+                        <option value="Calle 26 # 10-15"></option>
+                        <option value="Carrera 7 Bis # 72-41"></option>
+                        <option value="Diagonal 45A # 18-20"></option>
+                        <option value="Transversal 32 # 5-10"></option>
+                        <option value="Avenida Calle 80 # 30-25"></option>
+                    </datalist>
+                    <p id="ayuda-direccion" class="descripcion-formulario">
+                        Puedes usar Calle, Carrera, Avenida, Diagonal, Transversal,
+                        letras, Bis y complementos tal como aparecen en tu dirección.
+                        Escríbela de forma aproximada si no conoces todos los datos.
+                    </p>
+                </div>
+
                 <!-- Descripción -->
                 <div class="campo-formulario">
                     <label><i class="fa-solid fa-list"></i> Descripción</label>
