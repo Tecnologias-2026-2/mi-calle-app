@@ -63,38 +63,44 @@
             <section class="tarjeta-blanco">
                 <h3 class="subtitulo">Información personal</h3>
                 
-                <form action="#" method="POST">
+                <form id="formulario-editar-perfil" novalidate>
                     <div class="campo-formulario">
-                        <label>Nombre completo</label>
+                        <label for="nombre-completo">Nombre completo</label>
                         <div class="input-con-icono">
                             <i class="fa-regular fa-user"></i>
-                            <input type="text" data-user-name value="" placeholder="No registrado" required>
+                            <input id="nombre-completo" name="nombre_completo" type="text" data-user-name
+                                value="" placeholder="Escribe tu nombre completo" maxlength="100" required>
                         </div>
                     </div>
 
                     <div class="campo-formulario">
-                        <label>Nombre de usuario</label>
+                        <label for="nombre-usuario">Nombre de usuario</label>
                         <div class="input-con-icono">
                             <i class="fa-regular fa-pen-to-square"></i>
-                            <input type="text" value="" placeholder="No configurado" required>
+                            <input id="nombre-usuario" name="nombre_usuario" type="text"
+                                value="" placeholder="Se usará tu nombre del registro" readonly>
                         </div>
                     </div>
 
                     <div class="campo-formulario">
-                        <label>Correo electrónico</label>
+                        <label for="correo-electronico">Correo electrónico</label>
                         <div class="input-con-icono">
                             <i class="fa-regular fa-envelope"></i>
-                            <input type="email" data-user-email value="" placeholder="No registrado" required>
+                            <input id="correo-electronico" name="email" type="email" data-user-email
+                                value="" placeholder="No registrado" readonly>
                         </div>
                     </div>
 
                     <div class="campo-formulario">
-                        <label>Número de contacto</label>
+                        <label for="telefono">Número de contacto</label>
                         <div class="input-con-icono">
                             <i class="fa-solid fa-phone"></i>
-                            <input type="text" data-user-phone-input value="" placeholder="No registrado">
+                            <input id="telefono" name="telefono" type="tel" data-user-phone-input
+                                value="" placeholder="No registrado" maxlength="20">
                         </div>
                     </div>
+
+                    <p id="mensaje-editar-perfil" role="status" aria-live="polite"></p>
                 </form>
             </section>
         </div>
@@ -117,8 +123,10 @@
 
             <!-- Botones de acción -->
             <div class="botones-perfil-edicion">
-                <a href="perfil.html" class="btn-perfil-primario btn-guardar-perfil">
-                    <i class="fa-regular fa-floppy-disk"></i> Guardar cambios</a>
+                <button type="submit" form="formulario-editar-perfil"
+                    class="btn-perfil-primario btn-guardar-perfil">
+                    <i class="fa-regular fa-floppy-disk"></i> Guardar cambios
+                </button>
                 <a href="perfil.html" class="btn-perfil-secundario btn-cancelar"> Cancelar</a>
             </div>
 
@@ -127,5 +135,6 @@
 </main>
 </body>
 <script src="../portal-auth.js"></script>
+<script src="../editar-perfil.js"></script>
 <script src="../menu.js"></script>
 </html>

@@ -28,7 +28,7 @@ const corsMiddleware = cors({
     }
     return callback(new Error('Origen no permitido por CORS.'));
   },
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
 });
 
@@ -73,6 +73,17 @@ const server = http.createServer(async (req, res) => {
       return await authController.verify(req, res, requestUrl.searchParams.get('token'));
     } catch (error) {
       return handleError(res, error, 'Error al verificar el correo.');
+    }
+  }
+
+  if (req.method === 'PUT' && pathname === '/api/users/me') {
+    try {
+      const user = requireAuth(req, res);
+      if (!user) return;
+      const body = await readJsonBody(req);
+      return await authController.updateProfile(req, res, body, user);
+    } catch (error) {
+      return handleError(res, error, 'Error al actualizar el perfil.');
     }
   }
 

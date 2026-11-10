@@ -88,7 +88,7 @@ async function verify(req, res, token) {
 
     const { data: user, error } = await supabase
       .from('usuarios')
-      .select('id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified')
+      .select('id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified, telefono')
       .eq('correo_electronico', normalizedEmail)
       .maybeSingle();
     if (error) throw error;
@@ -114,6 +114,7 @@ async function verify(req, res, token) {
         email: user.correo_electronico,
         role: user.rol,
         is_verified: user.is_verified,
+        telefono: user.telefono || '',
       },
     });
   }
@@ -150,7 +151,7 @@ async function login(req, res, body) {
   const { data: user, error } = await supabase
     .from('usuarios')
     .select(
-      'id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified'
+      'id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified, telefono'
     )
     .eq('correo_electronico', normalizedEmail)
     .maybeSingle();
@@ -187,8 +188,49 @@ async function login(req, res, body) {
       email: user.correo_electronico,
       role: user.rol,
       is_verified: user.is_verified,
+      telefono: user.telefono || '',
     },
   });
 }
 
-module.exports = { register, verify, login };
+async function updateProfile(req, res, body, sessionUser) {
+  const name = String(body?.nombre_completo || '').trim();
+  const phone = String(body?.telefono || '').trim();
+
+  if (!name) {
+    return sendJson(res, 400, { error: 'El nombre completo es obligatorio.' });
+  }
+  if (name.length > 100) {
+    return sendJson(res, 400, { error: 'El nombre completo no puede superar 100 caracteres.' });
+  }
+  if (phone.length > 20) {
+    return sendJson(res, 400, { error: 'El teléfono no puede superar 20 caracteres.' });
+  }
+
+  const { data: user, error } = await supabase
+    .from('usuarios')
+    .update({
+      nombre_completo: name,
+      telefono: phone || null,
+    })
+    .eq('id_usuario', sessionUser.sub)
+    .select('id_usuario, nombre_completo, correo_electronico, rol, is_verified, telefono')
+    .maybeSingle();
+
+  if (error) throw error;
+  if (!user) return sendJson(res, 404, { error: 'Usuario no encontrado.' });
+
+  return sendJson(res, 200, {
+    message: 'Perfil actualizado correctamente.',
+    user: {
+      id: user.id_usuario,
+      name: user.nombre_completo,
+      email: user.correo_electronico,
+      role: user.rol,
+      is_verified: user.is_verified,
+      telefono: user.telefono || '',
+    },
+  });
+}
+
+module.exports = { register, verify, login, updateProfile };

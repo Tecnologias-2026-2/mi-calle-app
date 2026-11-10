@@ -43,6 +43,14 @@ const MiCalleAuth = (() => {
             clearSession();
         }
 
+        function saveUser(user) {
+            const storage = window.localStorage.getItem(USER_KEY) !== null
+                ? window.localStorage
+                : window.sessionStorage;
+            storage.setItem(USER_KEY, JSON.stringify(user));
+            renderUser(user);
+        }
+
         const token = readStorage(SESSION_KEY);
         const payload = token ? decodePayload(token) : null;
         return payload ? { id: payload.sub, email: payload.email, role: payload.role } : null;
@@ -150,5 +158,5 @@ const MiCalleAuth = (() => {
         setupLogout();
     }
 
-    return { BASE_URL, getToken, getUser, clearSession, request, renderUser, redirectToLogin };
+    return { BASE_URL, getToken, getUser, clearSession, request, renderUser, saveUser, redirectToLogin };
 })();
