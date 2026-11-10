@@ -29,8 +29,8 @@ en HTML, JavaScript del navegador ni repositorios públicos.
 - `POST /api/auth/register`: recibe `nombre_completo`, `email` y `password`.
 - `POST /api/auth/login`: recibe `email` y `password`, después de verificar el correo.
 - `PUT /api/users/me`: requiere `Authorization: Bearer <session>` y actualiza
-  `nombre_completo` del usuario autenticado. `telefono` es opcional; si la
-  columna aún no existe, el nombre se guarda y el backend devuelve una advertencia.
+  `nombre_completo` y `telefono_contacto` del usuario autenticado. El teléfono
+  puede ser nulo o estar vacío.
 - `GET /verify?token=...`: verifica el token y activa la cuenta.
 
 El token se genera con `crypto.randomBytes`, expira en 24 horas y se elimina
