@@ -56,7 +56,7 @@
 </header>
 
   <main class="dashboard-inicio">
-    <h1 class="titulo-bienvenida">¡Hola, María!</h1>
+    <h1 class="titulo-bienvenida">Cargando...</h1>
     
     <!-- AQUÍ INICIA EL LAYOUT DE 2 COLUMNAS -->
     <div class="layout-principal">
@@ -80,45 +80,8 @@
             <!-- Sección Actividad Reciente -->
             <section class="tarjeta-blanco">
                 <h3 class="subtitulo">Actividad reciente</h3>
-                <div class="lista-actividad">
-                    
-                    <div class="item-actividad-inicio">
-                        <div class="icono-act-inicio azul"><i class="fa-solid fa-trash"></i></div>
-                        <div class="info-act-inicio">
-                            <strong>Nombre del reporte</strong>
-                            <span>Hace 2 días</span>
-                        </div>
-                        <span class="estado estado-azul">Reportado</span>
-                    </div>
-
-                    <div class="item-actividad-inicio">
-                        <div class="icono-act-inicio amarillo"><i class="fa-solid fa-lightbulb"></i></div>
-                        <div class="info-act-inicio">
-                            <strong>Nombre del reporte</strong>
-                            <span>Hace 1 semana</span>
-                        </div>
-                        <span class="estado estado-rojo">En revisión</span>
-                    </div>
-
-                    <div class="item-actividad-inicio">
-                        <div class="icono-act-inicio verde"><i class="fa-solid fa-car"></i></div>
-                        <div class="info-act-inicio">
-                            <strong>Nombre del reporte</strong>
-                            <span>Hace 1 mes</span>
-                        </div>
-                        <span class="estado estado-verde">Resuelto</span>
-                    </div>
-
-                    <div class="item-actividad-inicio">
-                        <div class="icono-act-inicio azul"><i class="fa-solid fa-road"></i></div>
-                        <div class="info-act-inicio">
-                            <strong>Nombre del reporte</strong>
-                            <span>Hace 2 meses</span>
-                        </div>
-                        <span class="estado estado-azul">Reportado</span>
-                    </div>
-
-                </div>
+                <p data-reports-loading>Cargando...</p>
+                <div class="lista-actividad" data-recent-reports></div>
             </section>
         </div> <!-- ✅ AQUÍ CIERRA LA COLUMNA IZQUIERDA -->
 
@@ -136,19 +99,19 @@
                 <h3 class="subtitulo">Resumen de actividad</h3>
                 <div class="grid-resumen-inicio">
                     <div class="tarjeta-resumen-inicio borde-gris">
-                        <span class="numero-inicio">6</span>
+                        <span class="numero-inicio" data-report-count="total">0</span>
                         <span class="etiqueta-inicio">Total reportes</span>
                     </div>
                     <div class="tarjeta-resumen-inicio borde-azul">
-                        <span class="numero-inicio azul">3</span>
+                        <span class="numero-inicio azul" data-report-count="reportado">0</span>
                         <span class="etiqueta-inicio">Reportados</span>
                     </div>
                     <div class="tarjeta-resumen-inicio borde-amarillo">
-                        <span class="numero-inicio amarillo">1</span>
+                        <span class="numero-inicio amarillo" data-report-count="proceso">0</span>
                         <span class="etiqueta-inicio">En proceso</span>
                     </div>
                     <div class="tarjeta-resumen-inicio borde-verde">
-                        <span class="numero-inicio verde">2</span>
+                        <span class="numero-inicio verde" data-report-count="resuelto">0</span>
                         <span class="etiqueta-inicio">Resueltos</span>
                     </div>
                 </div>
@@ -169,6 +132,7 @@
 
  </main>
 <script src="../portal-auth.js"></script>
+<script src="../portal-data.js"></script>
 <script src="../menu.js"></script>
 </body>
 </html>

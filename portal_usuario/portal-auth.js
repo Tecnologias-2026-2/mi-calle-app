@@ -18,11 +18,16 @@ const MiCalleAuth = (() => {
         }
     }
 
+    function clearSession() {
+        [SESSION_KEY, USER_KEY].forEach((key) => {
+            window.localStorage.removeItem(key);
+            window.sessionStorage.removeItem(key);
+        });
+    }
+
     function getToken() {
         const token = readStorage(SESSION_KEY);
-        if (!token || typeof token !== "string") return null;
-
-        const payload = decodePayload(token);
+        const payload = token && typeof token === "string" ? decodePayload(token) : null;
         if (!payload || !payload.sub || !payload.exp || Number(payload.exp) <= Date.now()) {
             clearSession();
             return null;
@@ -41,13 +46,6 @@ const MiCalleAuth = (() => {
         const token = readStorage(SESSION_KEY);
         const payload = token ? decodePayload(token) : null;
         return payload ? { id: payload.sub, email: payload.email, role: payload.role } : null;
-    }
-
-    function clearSession() {
-        [SESSION_KEY, USER_KEY].forEach((key) => {
-            window.localStorage.removeItem(key);
-            window.sessionStorage.removeItem(key);
-        });
     }
 
     function redirectToLogin(message) {
@@ -73,7 +71,7 @@ const MiCalleAuth = (() => {
         }
 
         const headers = new Headers(options.headers || {});
-        headers.set("Authorization", `Bearer ${token}`);
+        headers.set("Authorization", ["Bearer", token].join(" "));
         if (options.body && !(options.body instanceof FormData)) {
             headers.set("Content-Type", "application/json");
         }
@@ -107,21 +105,31 @@ const MiCalleAuth = (() => {
             element.textContent = initials(user);
             element.setAttribute("aria-label", `Perfil de ${name}`);
         });
+        document.querySelectorAll("[data-user-name-text]").forEach((element) => {
+            element.textContent = name;
+        });
         document.querySelectorAll(".tarjeta-perfil h3, .tarjeta-perfil-edicion h3").forEach((element) => {
             element.textContent = shortName;
         });
-        document.querySelectorAll(".tarjeta-perfil .perfil-datos p:first-child, .tarjeta-perfil-edicion .perfil-datos p:first-child").forEach((element) => {
-            element.innerHTML = `<i class="fa-regular fa-envelope"></i> ${email}`;
+        document.querySelectorAll("input[data-user-name]").forEach((input) => { input.value = name; });
+        document.querySelectorAll("input[data-user-email]").forEach((input) => { input.value = email; });
+        document.querySelectorAll("[data-user-email-text]").forEach((element) => {
+            element.textContent = email || "No registrado";
         });
-        document.querySelectorAll(".perfil-datos p[data-user-email]").forEach((element) => {
-            element.textContent = email;
+        document.querySelectorAll("[data-user-role]").forEach((element) => {
+            element.textContent = user.role || user.rol || "No configurado";
+        });
+        document.querySelectorAll("[data-user-phone]").forEach((element) => {
+            element.textContent = user.phone || user.telefono || "No registrado";
+        });
+        document.querySelectorAll("input[data-user-phone-input]").forEach((input) => {
+            input.value = user.phone || user.telefono || "";
+            input.placeholder = user.phone || user.telefono || "No registrado";
         });
         document.querySelectorAll("[data-user-verification]").forEach((element) => {
             const verified = user.is_verified !== false && user.isVerified !== false;
-            element.innerHTML = `<i class="fa-solid ${verified ? "fa-circle-check" : "fa-circle-exclamation"}"></i> ${verified ? "Cuenta verificada" : "Cuenta pendiente de verificación"}`;
+            element.textContent = verified ? "Cuenta verificada" : "Cuenta pendiente de verificación";
         });
-        document.querySelectorAll("input[data-user-name]").forEach((input) => { input.value = name; });
-        document.querySelectorAll("input[data-user-email]").forEach((input) => { input.value = email; });
     }
 
     function setupLogout() {

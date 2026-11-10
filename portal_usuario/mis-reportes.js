@@ -1,92 +1,86 @@
 const tablaBody = document.querySelector(".tabla-reportes tbody");
-const resumen = {
-    total: document.querySelector(".borde-gris .numero-inicio"),
-    reportado: document.querySelector(".borde-azul .numero-inicio"),
-    proceso: document.querySelector(".borde-amarillo .numero-inicio"),
-    resuelto: document.querySelector(".borde-verde .numero-inicio")
-};
 
-const estadoConfig = {
-    Reportado: { label: "Reportado", clase: "estado-azul" },
-    Pendiente: { label: "Pendiente", clase: "estado-rojo" },
-    "En revisión": { label: "En revisión", clase: "estado-rojo" },
-    "En proceso": { label: "En proceso", clase: "estado-amarillo" },
-    Resuelto: { label: "Resuelto", clase: "estado-verde" }
-};
-
-function formatearFecha(fecha) {
-    if (!fecha) return "Sin fecha";
-    return new Date(fecha).toLocaleDateString("es-CO");
+function escapeReportHTML(value) {
+    const element = document.createElement("div");
+    element.textContent = value == null ? "" : String(value);
+    return element.innerHTML;
 }
 
-function crearFila(reporte) {
-    const fila = document.createElement("tr");
-    const estado = estadoConfig[reporte.estado_atencion] || estadoConfig.Reportado;
-    const latitud = Number(reporte.latitud);
-    const longitud = Number(reporte.longitud);
-    const ubicacion = Number.isFinite(latitud) && Number.isFinite(longitud)
-        ? `<a href="https://www.google.com/maps?q=${latitud},${longitud}" target="_blank" rel="noopener">${escaparHTML(reporte.direccion_texto || "Ver ubicación")} <i class="fa-solid fa-map-location-dot"></i></a>`
-        : escaparHTML(reporte.direccion_texto || reporte.ubicacion || "Sin ubicación");
-    const foto = reporte.foto_url || reporte.imagen_url || reporte.foto;
-    fila.innerHTML = `
-        <td>${escaparHTML(reporte.tipo_problema || reporte.categoria || "Sin tipo")}</td>
-        <td>${ubicacion}${foto ? ` <a href="${escaparHTML(foto)}" target="_blank" rel="noopener" aria-label="Ver foto del reporte"><i class="fa-regular fa-image"></i></a>` : ""}</td>
-        <td>${formatearFecha(reporte.fecha_creacion)}</td>
-        <td><span class="estado ${estado.clase}">${estado.label}</span></td>
-    `;
-    return fila;
+function getStatus(report) {
+    const key = String(report.estado_atencion || report.estado || "reportado").toLowerCase();
+    const statuses = {
+        reportado: ["Reportado", "estado-azul"],
+        pendiente: ["Pendiente", "estado-rojo"],
+        "en revisión": ["En revisión", "estado-rojo"],
+        en_revision: ["En revisión", "estado-rojo"],
+        "en proceso": ["En proceso", "estado-amarillo"],
+        resuelto: ["Resuelto", "estado-verde"],
+        reparado: ["Reparado", "estado-verde"]
+    };
+    return statuses[key] || statuses.reportado;
 }
 
-function escaparHTML(valor) {
-    const contenedor = document.createElement("div");
-    contenedor.textContent = valor;
-    return contenedor.innerHTML;
+function formatDate(report) {
+    const value = report.fecha_creacion || report.created_at || report.fecha;
+    if (!value) return "Sin fecha";
+    const date = new Date(value);
+    return Number.isNaN(date.getTime()) ? "Sin fecha" : date.toLocaleDateString("es-CO");
 }
 
-function mostrarEstadoVacio() {
-    tablaBody.innerHTML = `
-        <tr><td colspan="4">
-            <div class="estado-vacio">
-                <strong>Aún no tienes reportes</strong>
-                <span>Cuando informes un problema de tu comunidad, aparecerá aquí.</span>
-                <a href="reportar.html">Crear reporte</a>
-            </div>
-        </td></tr>`;
+function renderSummary(reports) {
+    const counts = {
+        total: reports.length,
+        reportado: reports.filter((report) => ["reportado", "pendiente"].includes(
+            String(report.estado_atencion || report.estado || "").toLowerCase()
+        )).length,
+        proceso: reports.filter((report) => ["en revisión", "en_revision", "en proceso"].includes(
+            String(report.estado_atencion || report.estado || "").toLowerCase()
+        )).length,
+        resuelto: reports.filter((report) => ["resuelto", "reparado"].includes(
+            String(report.estado_atencion || report.estado || "").toLowerCase()
+        )).length
+    };
+    Object.entries(counts).forEach(([key, value]) => {
+        document.querySelector(`[data-report-count="${key}"]`).textContent = value;
+    });
 }
 
-function actualizarResumen(reportes) {
-    resumen.total.textContent = reportes.length;
-    resumen.reportado.textContent = reportes.filter(
-        ({ estado_atencion }) => estado_atencion === "Reportado"
-    ).length;
-    resumen.proceso.textContent = reportes.filter(
-        ({ estado_atencion }) => ["Pendiente", "En revisión", "En proceso"].includes(estado_atencion)
-    ).length;
-    resumen.resuelto.textContent = reportes.filter(
-        ({ estado_atencion }) => estado_atencion === "Resuelto"
-    ).length;
+function renderRows(reports) {
+    if (!reports.length) {
+        tablaBody.innerHTML = `<tr><td colspan="4"><div class="estado-vacio">
+            <strong>Aún no has creado ningún reporte</strong>
+            <span>Cuando informes un problema de tu comunidad, aparecerá aquí.</span>
+            <a href="reportar.html">Crear reporte</a>
+        </div></td></tr>`;
+        return;
+    }
+
+    tablaBody.replaceChildren(...reports.map((report) => {
+        const [label, className] = getStatus(report);
+        const title = report.tipo_problema || report.categoria || report.tipo || "Reporte ciudadano";
+        const location = report.direccion_texto || report.ubicacion || "Sin ubicación";
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${escapeReportHTML(title)}</td>
+            <td>${escapeReportHTML(location)}</td>
+            <td>${escapeReportHTML(formatDate(report))}</td>
+            <td><span class="estado ${className}">${label}</span></td>`;
+        return row;
+    }));
 }
 
-async function cargarMisReportes() {
+async function loadMyReports() {
     try {
-        const respuesta = await MiCalleAuth.request("/reportes?mine=true");
-        const datos = await respuesta.json().catch(() => ({}));
-        if (!respuesta.ok) {
-            throw new Error(datos.error || `Error HTTP ${respuesta.status}`);
-        }
-        if (!Array.isArray(datos)) {
-            throw new Error("La respuesta del servidor no contiene reportes.");
-        }
-
-        if (datos.length === 0) {
-            mostrarEstadoVacio();
-        } else {
-            tablaBody.replaceChildren(...datos.map(crearFila));
-        }
-        actualizarResumen(datos);
+        const response = await MiCalleAuth.request("/reportes?mine=true");
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(data.error || `Error HTTP ${response.status}`);
+        if (!Array.isArray(data)) throw new Error("La respuesta del servidor no contiene reportes.");
+        renderSummary(data);
+        renderRows(data);
     } catch (error) {
-        tablaBody.innerHTML = `<tr><td colspan="4">${escaparHTML(error.message)}</td></tr>`;
+        console.error("No se pudieron cargar los reportes del usuario:", error);
+        tablaBody.innerHTML = `<tr><td colspan="4">No se pudieron cargar tus reportes. Intenta nuevamente.</td></tr>`;
     }
 }
 
-cargarMisReportes();
+loadMyReports();

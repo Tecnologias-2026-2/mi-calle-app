@@ -65,10 +65,10 @@
                 <div class="perfil-avatar">
                     <i class="fa-solid fa-user"></i>
                 </div>
-                <h3>María</h3>
+                <h3>Usuario</h3>
                 <div class="perfil-datos">
-                    <p><i class="fa-regular fa-envelope"></i> maria.gomez@correo.com</p>
-                    <p><i class="fa-regular fa-calendar"></i> Miembro desde enero 2025</p>
+                    <p><i class="fa-regular fa-envelope"></i> <span data-user-email-text>No registrado</span></p>
+                    <p><i class="fa-solid fa-user-tag"></i> <span data-user-role>No configurado</span></p>
                     <p data-user-verification><i class="fa-solid fa-circle-check"></i> Cuenta verificada</p>
                 </div>
             </div>
@@ -78,19 +78,19 @@
                 <h3 class="subtitulo">Resumen de actividad</h3>
                 <div class="grid-resumen-inicio">
                     <div class="tarjeta-resumen-inicio borde-gris">
-                        <span class="numero-inicio">6</span>
+                        <span class="numero-inicio" data-report-count="total">0</span>
                         <span class="etiqueta-inicio">Total reportes</span>
                     </div>
                     <div class="tarjeta-resumen-inicio borde-azul">
-                        <span class="numero-inicio azul">3</span>
+                        <span class="numero-inicio azul" data-report-count="reportado">0</span>
                         <span class="etiqueta-inicio">Reportados</span>
                     </div>
                     <div class="tarjeta-resumen-inicio borde-amarillo">
-                        <span class="numero-inicio amarillo">1</span>
+                        <span class="numero-inicio amarillo" data-report-count="proceso">0</span>
                         <span class="etiqueta-inicio">En proceso</span>
                     </div>
                     <div class="tarjeta-resumen-inicio borde-verde">
-                        <span class="numero-inicio verde">2</span>
+                        <span class="numero-inicio verde" data-report-count="resuelto">0</span>
                         <span class="etiqueta-inicio">Resueltos</span>
                     </div>
                 </div>
@@ -104,7 +104,7 @@
                     <label>Nombre completo</label>
                     <div class="input-con-icono">
                         <i class="fa-regular fa-user"></i>
-                        <input type="text" data-user-name value="María González" readonly>
+                        <input type="text" data-user-name value="" placeholder="No registrado" readonly>
                     </div>
                 </div>
 
@@ -112,7 +112,7 @@
                     <label>Correo electrónico</label>
                     <div class="input-con-icono">
                         <i class="fa-regular fa-envelope"></i>
-                        <input type="email" data-user-email value="maria.gomez@correo.com" readonly>
+                        <input type="email" data-user-email value="" placeholder="No registrado" readonly>
                     </div>
                 </div>
 
@@ -120,7 +120,7 @@
                     <label>Número de contacto</label>
                     <div class="input-con-icono">
                         <i class="fa-solid fa-phone"></i>
-                        <input type="text" value="+57 300 456 1237" readonly>
+                        <input type="text" data-user-phone-input value="" placeholder="No registrado" readonly>
                     </div>
                 </div>
             </section>
@@ -156,45 +156,8 @@
             <!-- Actividad Reciente (Misma que en Inicio) -->
             <section class="tarjeta-blanco">
                 <h3 class="subtitulo">Actividad reciente</h3>
-                <div class="lista-actividad">
-                    
-                    <div class="item-actividad-inicio">
-                        <div class="icono-act-inicio azul"><i class="fa-solid fa-trash"></i></div>
-                        <div class="info-act-inicio">
-                            <strong>Basura en calzada</strong>
-                            <span>3 ago 2025</span>
-                        </div>
-                        <span class="estado estado-azul">Reportado</span>
-                    </div>
-
-                    <div class="item-actividad-inicio">
-                        <div class="icono-act-inicio amarillo"><i class="fa-solid fa-lightbulb"></i></div>
-                        <div class="info-act-inicio">
-                            <strong>Alumbrado público dañado</strong>
-                            <span>25 jul 2025</span>
-                        </div>
-                        <span class="estado estado-rojo">En revisión</span>
-                    </div>
-
-                    <div class="item-actividad-inicio">
-                        <div class="icono-act-inicio verde"><i class="fa-solid fa-car"></i></div>
-                        <div class="info-act-inicio">
-                            <strong>Semáforo en mal estado</strong>
-                            <span>2 mar 2025</span>
-                        </div>
-                        <span class="estado estado-verde">Resuelto</span>
-                    </div>
-
-                    <div class="item-actividad-inicio">
-                        <div class="icono-act-inicio azul"><i class="fa-solid fa-road"></i></div>
-                        <div class="info-act-inicio">
-                            <strong>Hueco en la vía</strong>
-                            <span>18 nov 2024</span>
-                        </div>
-                        <span class="estado estado-azul">Reportado</span>
-                    </div>
-
-                </div>
+                <p data-reports-loading>Cargando...</p>
+                <div class="lista-actividad" data-recent-reports></div>
             </section>
 
             <!-- Botones de acción -->
@@ -214,6 +177,7 @@
     </div>
 </main>
 <script src="../portal-auth.js"></script>
+<script src="../portal-data.js"></script>
 <script src="../menu.js"></script>
 </body>
 </html>

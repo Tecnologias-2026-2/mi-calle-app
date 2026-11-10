@@ -66,8 +66,8 @@
         <!-- Cabecera del mapa con título y contador -->
         <div class="cabecera-mapa">
             <h1>Mapa de reportes</h1>
-            <div class="contador-reportes">
-                <i class="fa-solid fa-location-dot"></i> 10 reportes en tu zona
+            <div class="contador-reportes" aria-live="polite">
+                <i class="fa-solid fa-spinner fa-spin"></i> Cargando reportes...
             </div>
         </div>
 
@@ -90,18 +90,18 @@
         <div class="info-detalle">
             <div class="fila-detalle">
                 <span class="label-detalle">Reporte</span>
-                <strong id="detalle-reporte">Hueco en la vía</strong>
+                <strong id="detalle-reporte">Selecciona un reporte</strong>
             </div>
             <div class="fila-detalle">
                 <span class="label-detalle">Ubicación</span>
-                <strong id="detalle-ubicacion">Carrera 9 con Calle 72</strong>
+                <strong id="detalle-ubicacion">Sin ubicación</strong>
             </div>
             <div class="fila-detalle">
                 <span class="label-detalle">Fecha</span>
-                <strong id="detalle-fecha">10 de octubre de 2026</strong>
+                <strong id="detalle-fecha">Sin fecha</strong>
             </div>
             <div class="fila-detalle">
-                <span id="detalle-estado" class="estado estado-azul">Reportado</span>
+                <span id="detalle-estado" class="estado estado-azul">Sin estado</span>
             </div>
         </div>
     </div>
