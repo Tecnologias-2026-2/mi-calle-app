@@ -50,7 +50,7 @@ function renderRows(reports) {
         tablaBody.innerHTML = `<tr><td colspan="4"><div class="estado-vacio">
             <strong>Aún no has creado ningún reporte</strong>
             <span>Cuando informes un problema de tu comunidad, aparecerá aquí.</span>
-            <a href="reportar.html">Crear reporte</a>
+            <a class="btn-guardar" href="reportar.html">Crear mi primer reporte</a>
         </div></td></tr>`;
         return;
     }
@@ -70,6 +70,7 @@ function renderRows(reports) {
 }
 
 async function loadMyReports() {
+    tablaBody.innerHTML = '<tr><td colspan="4">Cargando tus reportes...</td></tr>';
     try {
         const response = await MiCalleAuth.request("/reportes?mine=true");
         const data = await response.json().catch(() => ({}));

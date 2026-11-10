@@ -60,7 +60,7 @@ function renderRecentReports(reports) {
             container.innerHTML = `<div class="estado-vacio">
                 <strong>Aún no has creado ningún reporte</strong>
                 <span>Cuando informes un problema de tu comunidad, aparecerá aquí.</span>
-                <a href="reportar.html">Crear reporte</a>
+                <a class="btn-guardar" href="reportar.html">Crear reporte</a>
             </div>`;
             return;
         }
