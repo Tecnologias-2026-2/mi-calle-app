@@ -5,14 +5,6 @@ const cors = require('cors');
 const supabase = require('./config/supabase');
 const authController = require('./controllers/auth.controller');
 
-app.use(cors({
-  origin: 'https://tecnologias-2026-2.github.io/mi-calle-app', // Sin el slash (/) al final
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
-app.use(express.json());
-
 const allowedOrigins = (process.env.FRONTEND_ORIGINS ||
   'https://tecnologias-2026-2.github.io/mi-calle-app')
   .split(',')
