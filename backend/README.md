@@ -33,10 +33,13 @@ en HTML, JavaScript del navegador ni repositorios públicos.
   puede ser nulo o estar vacío.
 - `GET /verify?token=...`: verifica el token y activa la cuenta.
 
-`POST /reportes` requiere `tipo_problema`, `descripcion`, `latitud`,
-`longitud` y `direccion_texto`. La ubicación se guarda en `ubicaciones` y el
-reporte conserva su relación mediante `id_ubicacion`; `id_usuario` se toma
-siempre del token autenticado.
+`POST /reportes` recibe `multipart/form-data` con `tipo_problema`,
+`descripcion`, `latitud`, `longitud`, `direccion_texto` y `fotografia` (JPG o
+PNG de máximo 5 MB). La imagen se guarda en el bucket privado
+`reportes-fotos`, su ruta se registra en `fotografias.url_imagen`, la ubicación
+se guarda en `ubicaciones` y el reporte conserva sus relaciones mediante
+`id_fotografia` e `id_ubicacion`; `id_usuario` se toma siempre del token
+autenticado.
 
 El token se genera con `crypto.randomBytes`, expira en 24 horas y se elimina
 después de una verificación exitosa. Las contraseñas se guardan usando

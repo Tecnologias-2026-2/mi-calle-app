@@ -13,7 +13,7 @@
     <!-- CSS de mi portal usuario-->
     <link rel="stylesheet" href="../usuario.css/usuario.css">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
 
     <!-- Font Awesome (Librería de iconos) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -21,7 +21,7 @@
       <!-- Fuente Poppins-->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIINfQ3Jq7k5N4T8eQ9H7Y2f5m2e3z3f4M="
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
         crossorigin="" />
  
 
@@ -85,13 +85,13 @@
                     <div class="select-con-flecha">
                         <select id="tipo" name="tipo" required>
                             <option value="" disabled selected>Seleccione el tipo de problema</option>
-                            <option value="huecos">Hueco en la vía</option>
-                            <option value="semaforo">Semáforo en mal estado</option>
-                            <option value="alcantarilla">Alcantarilla sin tapa</option>
-                            <option value="senalizacion">Señalizacion dañada</option>
-                            <option value="alumbrado">Alumbrado público dañado</option>
-                            <option value="basura">Acumulación de basura</option>
-                            <option value="otros">Otros</option>
+                            <option value="Hueco en la vía">Hueco en la vía</option>
+                            <option value="Semáforo en mal estado">Semáforo en mal estado</option>
+                            <option value="Alcantarilla sin tapa">Alcantarilla sin tapa</option>
+                            <option value="Señalización dañada">Señalización dañada</option>
+                            <option value="Alumbrado público dañado">Alumbrado público dañado</option>
+                            <option value="Acumulación de basura">Acumulación de basura</option>
+                            <option value="Otros">Otros</option>
                         </select>
                     </div>
                 </div>
@@ -103,7 +103,7 @@
                         <i class="fa-solid fa-camera"></i>
                         <strong>Agregar fotografía</strong>
                         <span>Tamaño máximo 5MB. Formato JPG o PNG.</span>
-                        <input type="file" id="input-foto" accept="image/png, image/jpeg" hidden>
+                        <input type="file" id="input-foto" name="fotografia" accept="image/png, image/jpeg" hidden>
                     </label>
                     <p id="estado-fotografia" class="estado-formulario" role="status" aria-live="polite">
                         No has seleccionado una fotografía.

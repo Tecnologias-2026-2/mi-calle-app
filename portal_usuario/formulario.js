@@ -75,13 +75,14 @@ formularioReporte.addEventListener("submit", async (evento) => {
     const botonEnvio = formularioReporte.querySelector("[type=submit]");
     const datosFormulario = new FormData(formularioReporte);
     const reporte = {
-        tipo_problema: datosFormulario.get("tipo"),
+        tipo_problema: String(datosFormulario.get("tipo") || ""),
         latitud: Number(datosFormulario.get("latitud")),
         longitud: Number(datosFormulario.get("longitud")),
         direccion_texto: String(datosFormulario.get("direccion_texto") || "").trim(),
         descripcion: String(datosFormulario.get("descripcion") || "").trim(),
         estado_atencion: "Reportado"
     };
+    const fotografia = datosFormulario.get("fotografia");
 
     if (!Number.isFinite(reporte.latitud) || !Number.isFinite(reporte.longitud)) {
         estadoUbicacion.textContent = "Selecciona la ubicación del reporte en el mapa antes de enviar.";
@@ -95,12 +96,18 @@ formularioReporte.addEventListener("submit", async (evento) => {
         return;
     }
     inputDireccion.setCustomValidity("");
+    if (!(fotografia instanceof File) || !fotografia.size) {
+        estadoFotografia.textContent = "Selecciona una fotografía antes de enviar.";
+        estadoFotografia.dataset.error = "true";
+        return;
+    }
+    datosFormulario.append("tipo_problema", reporte.tipo_problema);
     botonEnvio.disabled = true;
 
     try {
         const respuesta = await MiCalleAuth.request("/reportes", {
             method: "POST",
-            body: JSON.stringify(reporte)
+            body: datosFormulario
         });
         const datosRespuesta = await respuesta.json().catch(() => ({}));
 
