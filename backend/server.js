@@ -8,7 +8,7 @@ const authController = require('./controllers/auth.controller');
 const app = express();
 
 app.use(cors({
-    origin: 'https://tecnologias-2026-2.github.io', 
+    origin: 'https://tecnologias-2026-2.github.io/mi-calle-app', 
     credentials: true
 }));
 
