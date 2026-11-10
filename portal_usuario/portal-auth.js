@@ -1,4 +1,4 @@
-const MiCalleAuth = (() => {
+window.MiCalleAuth = (() => {
     const BASE_URL = "https://mi-calle-app-backend.onrender.com";
     const SESSION_KEY = "mi-calle-session";
     const USER_KEY = "mi-calle-user";
@@ -46,14 +46,6 @@ const MiCalleAuth = (() => {
         const token = readStorage(SESSION_KEY);
         const payload = token ? decodePayload(token) : null;
         return payload ? { id: payload.sub, email: payload.email, role: payload.role } : null;
-    }
-
-    function saveUser(user) {
-        const storage = window.localStorage.getItem(USER_KEY) !== null
-            ? window.localStorage
-            : window.sessionStorage;
-        storage.setItem(USER_KEY, JSON.stringify(user));
-        renderUser(user);
     }
 
     function redirectToLogin(message) {
@@ -158,5 +150,20 @@ const MiCalleAuth = (() => {
         setupLogout();
     }
 
-    return { BASE_URL, getToken, getUser, clearSession, request, renderUser, saveUser, redirectToLogin };
+    return {
+        BASE_URL,
+        getToken,
+        getUser,
+        clearSession,
+        request,
+        renderUser,
+        saveUser(user) {
+            const storage = window.localStorage.getItem(USER_KEY) !== null
+                ? window.localStorage
+                : window.sessionStorage;
+            storage.setItem(USER_KEY, JSON.stringify(user));
+            renderUser(user);
+        },
+        redirectToLogin
+    };
 })();
