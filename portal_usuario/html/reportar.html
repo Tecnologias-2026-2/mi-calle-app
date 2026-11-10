@@ -105,18 +105,24 @@
                         <span>Tamaño máximo 5MB. Formato JPG o PNG.</span>
                         <input type="file" id="input-foto" accept="image/png, image/jpeg" hidden>
                     </label>
+                    <p id="estado-fotografia" class="estado-formulario" role="status" aria-live="polite">
+                        No has seleccionado una fotografía.
+                    </p>
+                    <img id="vista-previa-fotografia" alt="Vista previa de la fotografía seleccionada" hidden>
                 </div>
 
                 <!-- Ubicación -->
                 <div class="campo-formulario">
-                    <label><i class="fa-solid fa-location-dot"></i> Ubicación</label>
-                    <div class="input-con-icono">
-                        <i class="fa-solid fa-map-pin"></i>
-                        <input id="ubicacion" name="ubicacion" type="text" placeholder="Seleccionar ubicación" required>
-                    </div>
+                    <label><i class="fa-solid fa-location-dot"></i> Ubicación del reporte</label>
+                    <p class="descripcion-formulario">
+                        Haz clic en el mapa para colocar el marcador. Puedes arrastrarlo para ajustar la ubicación.
+                    </p>
                 </div>
 
                 <div id="mapa" class="mapa-formulario" aria-label="Selecciona la ubicación del reporte"></div>
+                <p id="estado-ubicacion" class="estado-formulario" role="status" aria-live="polite">
+                    Selecciona una ubicación en el mapa.
+                </p>
                 <input id="input-lat" name="latitud" type="hidden" required>
                 <input id="input-lng" name="longitud" type="hidden" required>
 
@@ -143,7 +149,6 @@
     crossorigin=""></script>
 <script src="../portal-auth.js"></script>
 <script src="../formulario.js"></script>
-<script src="../reportes.js"></script>
 <script src="../menu.js"></script>
 </body>
 </html>
