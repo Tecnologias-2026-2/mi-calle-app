@@ -4,6 +4,14 @@ const { URL } = require('url');
 const cors = require('cors');
 const supabase = require('./config/supabase');
 const authController = require('./controllers/auth.controller');
+const app = express();
+
+app.use(cors({
+    origin: 'https://tecnologias-2026-2.github.io', 
+    credentials: true
+}));
+
+app.use(express.json());
 
 const allowedOrigins = (process.env.FRONTEND_ORIGINS ||
   'https://tecnologias-2026-2.github.io/mi-calle-app')
