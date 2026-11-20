@@ -226,7 +226,14 @@
     if (!result.session || !result.user) {
       throw new ServiceError("La respuesta de inicio de sesión no contiene sesión y usuario.", null, "invalid_response");
     }
-    localStorage.setItem(SESSION_KEY, result.session);
+    const accessToken = typeof result.session === "string"
+      ? result.session
+      : result.session?.access_token;
+
+    if (!accessToken || !result.user) {
+      throw new ServiceError("La respuesta de inicio de sesión no contiene sesión y usuario.", null, "invalid_response");
+    }
+    localStorage.setItem(SESSION_KEY, accessToken);
     localStorage.setItem(USER_KEY, JSON.stringify(result.user));
     return responseDto(normalizeSession(result.user, "render"), provider);
   }
