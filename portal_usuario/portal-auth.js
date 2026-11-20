@@ -1,8 +1,10 @@
 window.MiCalleAuth = (() => {
     const BASE_URL = "https://mi-calle-app-backend.onrender.com";
     const SESSION_KEY = "mi-calle-session";
+    const REFRESH_TOKEN_KEY = "mi-calle-refresh-token";
     const USER_KEY = "mi-calle-user";
     const LOGIN_URL = "../../login-registro/html/login-usuario.html";
+    let refreshPromise = null;
 
     function readStorage(key) {
         return window.localStorage.getItem(key) || window.sessionStorage.getItem(key);
@@ -21,7 +23,7 @@ window.MiCalleAuth = (() => {
     }
 
     function clearSession() {
-        [SESSION_KEY, USER_KEY].forEach((key) => {
+        [SESSION_KEY, REFRESH_TOKEN_KEY, USER_KEY].forEach((key) => {
             window.localStorage.removeItem(key);
             window.sessionStorage.removeItem(key);
         });
@@ -32,7 +34,11 @@ window.MiCalleAuth = (() => {
         if (window.MiCalleDemo?.isEnabled()) return null;
         const token = readStorage(SESSION_KEY);
         const payload = token && typeof token === "string" ? decodePayload(token) : null;
-        if (!payload || !payload.sub || !payload.exp || Number(payload.exp) <= Date.now()) {
+        if (!payload || !payload.sub || !payload.exp) {
+            clearSession();
+            return null;
+        }
+        if (Number(payload.exp) * 1000 <= Date.now() && !readStorage(REFRESH_TOKEN_KEY)) {
             clearSession();
             return null;
         }
@@ -106,12 +112,71 @@ window.MiCalleAuth = (() => {
             headers.set("Content-Type", "application/json");
         }
 
-        const response = await fetch(`${BASE_URL}${path}`, { ...options, headers });
-        if (response.status === 401 || response.status === 403) {
+        let response = await fetch(`${BASE_URL}${path}`, { ...options, headers });
+        if (response.status === 401) {
+            let refreshedToken;
+            try {
+                refreshedToken = await refreshSession();
+            } catch (error) {
+                if (!readStorage(REFRESH_TOKEN_KEY)) {
+                    redirectToLogin("expired");
+                    throw new Error("La sesión ha expirado. Inicia sesión nuevamente.");
+                }
+                throw error;
+            }
+            if (refreshedToken) {
+                headers.set("Authorization", `Bearer ${refreshedToken}`);
+                response = await fetch(`${BASE_URL}${path}`, { ...options, headers });
+            }
+        }
+        if (response.status === 401) {
             redirectToLogin("expired");
             throw new Error("La sesión ha expirado. Inicia sesión nuevamente.");
         }
         return response;
+    }
+
+    async function refreshSession() {
+        const refreshToken = readStorage(REFRESH_TOKEN_KEY);
+        if (!refreshToken) return null;
+        if (refreshPromise) return refreshPromise;
+
+        refreshPromise = (async () => {
+            const response = await fetch(`${BASE_URL}/api/auth/refresh`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ refresh_token: refreshToken }),
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+                if (response.status === 400 || response.status === 401) clearSession();
+                throw new Error(data.error || `No se pudo renovar la sesión (HTTP ${response.status}).`);
+            }
+
+            const session = data.session && typeof data.session === "object"
+                ? data.session
+                : {};
+            const accessToken = session.access_token
+                || (typeof data.session === "string" ? data.session : null);
+            const nextRefreshToken = session.refresh_token || data.refresh_token;
+            if (!accessToken || !nextRefreshToken || !data.user) {
+                throw new Error("La renovación no devolvió una sesión completa.");
+            }
+
+            const storage = window.localStorage.getItem(SESSION_KEY) !== null
+                || window.localStorage.getItem(REFRESH_TOKEN_KEY) !== null
+                ? window.localStorage
+                : window.sessionStorage;
+            storage.setItem(SESSION_KEY, accessToken);
+            storage.setItem(REFRESH_TOKEN_KEY, nextRefreshToken);
+            storage.setItem(USER_KEY, JSON.stringify(data.user));
+            renderUser(data.user);
+            return accessToken;
+        })().finally(() => {
+            refreshPromise = null;
+        });
+
+        return refreshPromise;
     }
 
     function initials(user) {
@@ -190,6 +255,7 @@ window.MiCalleAuth = (() => {
         getUser,
         clearSession,
         request,
+        refreshSession,
         renderUser,
         saveUser(user) {
             const storage = window.localStorage.getItem(USER_KEY) !== null

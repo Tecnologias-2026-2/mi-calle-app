@@ -75,6 +75,15 @@ const server = http.createServer(async (req, res) => {
     }
   }
 
+  if (req.method === 'POST' && pathname === '/api/auth/refresh') {
+    try {
+      const body = await readJsonBody(req);
+      return await authController.refresh(req, res, body);
+    } catch (error) {
+      return handleError(res, error, 'Error al renovar la sesión.');
+    }
+  }
+
   if (req.method === 'GET' && pathname === '/verify') {
     try {
       return await authController.verify(

@@ -18,7 +18,7 @@ async function register(req, res, body) {
     return sendJson(res, 400, { error: 'La contraseña debe tener al menos 8 caracteres.' });
   }
 
-  const { error } = await createPublicClient().auth.signUp({
+  const { data, error } = await createPublicClient().auth.signUp({
     email,
     password,
     options: { data: { nombre_completo: name } },
@@ -30,9 +30,20 @@ async function register(req, res, body) {
     return sendJson(res, 400, { error: 'Supabase Auth no pudo completar el registro.' });
   }
 
-  return sendJson(res, 201, {
-    message: 'Registro enviado. Revisa tu correo para confirmar la cuenta.',
-  });
+  const response = {
+    message: data.session
+      ? 'Registro completado.'
+      : 'Registro enviado. Revisa tu correo para confirmar la cuenta.',
+  };
+  if (data.session && data.user) {
+    const profile = await loadProfile(data.session.access_token, data.user.id);
+    if (!profile) {
+      return sendJson(res, 409, { error: 'El perfil todavía no está disponible para esta cuenta.' });
+    }
+    response.session = sessionDto(data.session);
+    response.user = userDto(data.user, profile);
+  }
+  return sendJson(res, 201, response);
 }
 
 async function verify(req, res, tokenHash, type = 'signup') {
@@ -90,16 +101,31 @@ async function login(req, res, body) {
 
   return sendJson(res, 200, {
     message: 'Inicio de sesión exitoso.',
-    session: data.session.access_token,
-    refresh_token: data.session.refresh_token,
-    expires_at: data.session.expires_at,
-    user: {
-      id: profile.id_usuario,
-      name: profile.nombre_completo,
-      email: data.user.email,
-      role: profile.rol,
-      telefono: profile.telefono || '',
-    },
+    session: sessionDto(data.session),
+    user: userDto(data.user, profile),
+  });
+}
+
+async function refresh(req, res, body) {
+  const refreshToken = String(body?.refresh_token || '');
+  if (!refreshToken) {
+    return sendJson(res, 400, { error: 'Se requiere el refresh token de Supabase.' });
+  }
+
+  const { data, error } = await createPublicClient().auth.refreshSession({
+    refresh_token: refreshToken,
+  });
+  if (error || !data.session || !data.user) {
+    return sendJson(res, 401, { error: 'La sesión ya no se puede renovar. Inicia sesión nuevamente.' });
+  }
+
+  const profile = await loadProfile(data.session.access_token, data.user.id);
+  if (!profile) {
+    return sendJson(res, 409, { error: 'El perfil todavía no está disponible para esta cuenta.' });
+  }
+  return sendJson(res, 200, {
+    session: sessionDto(data.session),
+    user: userDto(data.user, profile),
   });
 }
 
@@ -138,9 +164,37 @@ async function updateProfile(req, res, body, authenticated) {
   });
 }
 
+async function loadProfile(accessToken, userId) {
+  const { data, error } = await createUserClient(accessToken)
+    .from('perfiles')
+    .select('id_usuario, nombre_completo, telefono, rol')
+    .eq('id_usuario', userId)
+    .maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+function sessionDto(session) {
+  return {
+    access_token: session.access_token,
+    refresh_token: session.refresh_token,
+    expires_at: session.expires_at,
+  };
+}
+
+function userDto(user, profile) {
+  return {
+    id: profile.id_usuario,
+    name: profile.nombre_completo,
+    email: user.email,
+    role: profile.rol,
+    telefono: profile.telefono || '',
+  };
+}
+
 function sendJson(res, statusCode, payload) {
   res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
   res.end(JSON.stringify(payload));
 }
 
-module.exports = { register, verify, login, updateProfile };
+module.exports = { register, verify, login, refresh, updateProfile };

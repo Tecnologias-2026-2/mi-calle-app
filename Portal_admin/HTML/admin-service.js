@@ -97,39 +97,49 @@ function connectStatusUpdate(reports, refreshReports) {
   });
 }
 
-function showDemoGate(message) {
+function showAdminGate(message, provider) {
   const content = document.querySelector(".dashboard-content");
   if (!content) return;
   const notice = document.createElement("section");
   notice.className = "panel";
   const title = document.createElement("h1");
-  title.textContent = "Panel administrativo de demostración";
+  title.textContent = provider === "demo"
+    ? "Panel administrativo de demostración"
+    : "Acceso administrativo";
   const description = document.createElement("p");
   description.textContent = message;
   const login = document.createElement("a");
-  login.href = "../../login-registro/html/login-admin.html?demo=1";
-  login.textContent = "Acceder como administrador demo";
+  login.href = provider === "demo"
+    ? "../../login-registro/html/login-admin.html?demo=1"
+    : "../../login-registro/html/login-admin.html";
+  login.textContent = provider === "demo"
+    ? "Acceder como administrador demo"
+    : "Iniciar sesión como administrador";
   notice.append(title, description, login);
   content.replaceChildren(notice);
 }
 
 async function initializeAdminService() {
   try {
-    if (window.MiCalleServices.provider !== "demo") {
-      showDemoGate("La integración administrativa del servicio Render no está disponible todavía.");
-      return;
-    }
-
+    const provider = window.MiCalleServices.provider;
     const session = window.MiCalleServices.getCurrentSession();
-    if (session?.mode !== "demo" || session.user.role !== "administrador") {
-      showDemoGate("La sesión de administrador demo no está activa. Este flujo no representa autorización real.");
+    if (session?.user.role !== "administrador") {
+      showAdminGate(
+        provider === "demo"
+          ? "La sesión de administrador demo no está activa. Este flujo no representa autorización real."
+          : "Inicia sesión con una cuenta cuyo rol sea administrador.",
+        provider,
+      );
       return;
     }
 
     const adminName = document.querySelector(".user-copy strong");
     const adminRole = document.querySelector(".user-copy small");
-    if (adminName) adminName.textContent = "Administrador demo";
-    if (adminRole) adminRole.textContent = "Datos locales";
+    if (adminName) adminName.textContent = session.user.name || "Administrador";
+    if (adminRole) adminRole.textContent = provider === "demo" ? "Datos locales" : "Administrador";
+    document.querySelector(".logout-button")?.addEventListener("click", () => {
+      window.MiCalleServices.logout();
+    });
 
     const statistics = await window.MiCalleServices.getAdminStatistics();
     const reports = await window.MiCalleServices.getAdminReports();
@@ -150,7 +160,7 @@ async function initializeAdminService() {
     renderAdminView(statistics, reports);
   } catch (error) {
     console.error("No se pudo inicializar el módulo administrativo.", error);
-    showDemoGate(`No se pudieron cargar los datos demo: ${error.message}`);
+    window.AdminUI.showAdminError(`No se pudieron cargar los datos administrativos: ${error.message}`);
   }
 }
 

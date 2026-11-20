@@ -215,7 +215,10 @@ test("Render adapter preserves current HTTP paths and maps payloads to normalize
           ok: true,
           status: 200,
           json: async () => ({
-            session: "new-render-token",
+            session: {
+              access_token: "new-render-token",
+              refresh_token: "new-refresh-token",
+            },
             user: { id: "citizen-2", nombre_completo: "Nueva ciudadana", role: "ciudadano" },
           }),
         };
@@ -251,6 +254,7 @@ test("Render adapter preserves current HTTP paths and maps payloads to normalize
   assert.equal(Object.hasOwn(loggedIn.data, "accessToken"), false);
   assert.equal(services.getCurrentSession().mode, "render");
   assert.equal(localStorage.getItem("mi-calle-session"), "new-render-token");
+  assert.equal(localStorage.getItem("mi-calle-refresh-token"), "new-refresh-token");
   const registered = await services.register({
     username: "Nueva ciudadana",
     email: "new@example.com",
@@ -259,6 +263,149 @@ test("Render adapter preserves current HTTP paths and maps payloads to normalize
   assert.equal(registered.data.message, "Verifica tu correo.");
   await services.logout();
   assert.equal(services.getCurrentSession(), null);
+  assert.equal(localStorage.getItem("mi-calle-refresh-token"), null);
+});
+
+test("Render session refresh retries authenticated requests with the new JWT", async () => {
+  const calls = [];
+  const localStorage = createStorage({
+    "mi-calle-session": "expired-token",
+    "mi-calle-refresh-token": "old-refresh-token",
+    "mi-calle-user": JSON.stringify({ id: "citizen-1", role: "ciudadano" }),
+  });
+  const services = createServices({
+    demo: { isEnabled: () => false },
+    localStorage,
+    sessionStorage: createStorage(),
+    location: { search: "" },
+    fetch: async (url, init = {}) => {
+      calls.push({ url, init });
+      if (url.endsWith("/api/auth/refresh")) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({
+            session: { access_token: "fresh-token", refresh_token: "fresh-refresh-token" },
+            user: { id: "citizen-1", name: "Ciudadana", role: "ciudadano" },
+          }),
+        };
+      }
+      if (url.endsWith("/reportes?mine=true") && calls.filter((call) => call.url.endsWith("/reportes?mine=true")).length === 1) {
+        return { ok: false, status: 401, json: async () => ({ error: "JWT expirado" }) };
+      }
+      if (url.endsWith("/reportes?mine=true")) {
+        return { ok: true, status: 200, json: async () => [] };
+      }
+      throw new Error(`Unexpected request ${url}`);
+    },
+  });
+
+  assert.deepEqual(await services.getMyReports(), []);
+  const reportRequests = calls.filter((call) => call.url.endsWith("/reportes?mine=true"));
+  assert.equal(reportRequests[0].init.headers.get("Authorization"), "Bearer expired-token");
+  assert.equal(reportRequests[1].init.headers.get("Authorization"), "Bearer fresh-token");
+  assert.equal(localStorage.getItem("mi-calle-refresh-token"), "fresh-refresh-token");
+});
+
+test("Render registration keeps the Auth session when email confirmation is disabled", async () => {
+  const localStorage = createStorage();
+  const services = createServices({
+    demo: { isEnabled: () => false },
+    localStorage,
+    sessionStorage: createStorage(),
+    location: { search: "" },
+    fetch: async (url) => {
+      assert.ok(url.endsWith("/api/auth/register"));
+      return {
+        ok: true,
+        status: 201,
+        json: async () => ({
+          message: "Registro completado.",
+          session: { access_token: "signup-access", refresh_token: "signup-refresh" },
+          user: { id: "citizen-1", name: "Nueva ciudadana", role: "ciudadano" },
+        }),
+      };
+    },
+  });
+
+  const result = await services.register({
+    username: "Nueva ciudadana",
+    email: "new@example.com",
+    password: "pass1234",
+  });
+  assert.equal(result.data.authenticated, true);
+  assert.equal(localStorage.getItem("mi-calle-session"), "signup-access");
+  assert.equal(localStorage.getItem("mi-calle-refresh-token"), "signup-refresh");
+});
+
+test("Render admin operations use authenticated report and role-guarded endpoints", async () => {
+  const calls = [];
+  const id = "550e8400-e29b-41d4-a716-446655440000";
+  let status = "en_revision";
+  const services = createServices({
+    demo: { isEnabled: () => false },
+    localStorage: createStorage({
+      "mi-calle-session": "admin-token",
+      "mi-calle-refresh-token": "admin-refresh-token",
+      "mi-calle-user": JSON.stringify({ id: "admin-1", name: "Administradora", role: "administrador" }),
+    }),
+    sessionStorage: createStorage(),
+    location: { search: "" },
+    fetch: async (url, init = {}) => {
+      calls.push({ url, init });
+      if (url.endsWith("/reportes") && init.method !== "PUT") {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => [{
+            id_reporte: id,
+            tipo_problema: "bache",
+            descripcion: "Daño",
+            estado_atencion: status,
+          }],
+        };
+      }
+      if (url.endsWith(`/reportes/${id}/historial`)) {
+        return { ok: true, status: 200, json: async () => [] };
+      }
+      if (url.endsWith(`/api/admin/reportes/${id}/reportante`)) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ id_usuario: "citizen-1", nombre_completo: "Ciudadana" }),
+        };
+      }
+      if (url.endsWith(`/api/admin/reportes/${id}/estado`)) {
+        status = JSON.parse(init.body).estado_atencion;
+        return { ok: true, status: 200, json: async () => ({ id_reporte: id, estado_atencion: status }) };
+      }
+      if (url.endsWith(`/reportes/${id}`)) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => ({ id_reporte: id, estado_atencion: status }),
+        };
+      }
+      throw new Error(`Unexpected request ${url}`);
+    },
+  });
+
+  const [report] = await services.getAdminReports();
+  assert.equal(report.reporter.name, "Ciudadana");
+  const protectedReads = calls.filter((call) => (
+    call.url.endsWith("/reportes")
+    || call.url.endsWith(`/api/admin/reportes/${id}/reportante`)
+  ));
+  assert.ok(protectedReads.every((call) => call.init.headers.get("Authorization") === "Bearer admin-token"));
+  assert.equal((await services.getAdminStatistics()).length, 4);
+
+  await services.updateReportStatus(id, "en_proceso", "Inspección realizada");
+  const updateCall = calls.find((call) => call.url.endsWith(`/api/admin/reportes/${id}/estado`));
+  assert.equal(updateCall.init.headers.get("Authorization"), "Bearer admin-token");
+  assert.deepEqual(JSON.parse(updateCall.init.body), {
+    estado_atencion: "en_proceso",
+    observacion: "Inspección realizada",
+  });
 });
 
 test("Supabase provider is not selectable before its adapter is implemented", () => {

@@ -1,6 +1,7 @@
 const profileForm = document.querySelector("#formulario-editar-perfil");
 const profileMessage = document.querySelector("#mensaje-editar-perfil");
 const usernameInput = document.querySelector("#nombre-usuario");
+const phoneInput = document.querySelector("#telefono");
 
 function showProfileMessage(message, isError = false) {
     profileMessage.textContent = message;
@@ -12,13 +13,14 @@ function initializeProfileForm() {
     if (!user) return;
 
     usernameInput.value = user.name || user.nombre_completo || "";
+    phoneInput.value = user.telefono || user.phone || "";
 }
 
 profileForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const submitButton = document.querySelector(".btn-guardar-perfil");
     const name = usernameInput.value.trim();
-    const phone = document.querySelector("#telefono").value.trim();
+    const phone = phoneInput.value.trim();
 
     if (!name) {
         showProfileMessage("Escribe tu nombre de usuario.", true);
@@ -43,6 +45,7 @@ profileForm.addEventListener("submit", async (event) => {
 
         MiCalleAuth.saveUser(data.user);
         usernameInput.value = data.user.name;
+        phoneInput.value = data.user.telefono || "";
         showProfileMessage(data.message || "Cambios guardados correctamente.");
     } catch (error) {
         console.error("No se pudo actualizar el perfil:", error);

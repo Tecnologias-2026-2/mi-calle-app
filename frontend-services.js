@@ -32,8 +32,10 @@
   const location = options.location || { search: "" };
   const API_BASE_URL = "https://mi-calle-app-backend.onrender.com";
   const SESSION_KEY = "mi-calle-session";
+  const REFRESH_TOKEN_KEY = "mi-calle-refresh-token";
   const USER_KEY = "mi-calle-user";
   const allowedStatuses = new Set(["pendiente", "en_revision", "en_proceso", "reparado"]);
+  let refreshPromise = null;
 
   class ServiceError extends Error {
     constructor(message, status = null, code = "service_error") {
@@ -153,14 +155,18 @@
     const token = localStorage?.getItem(SESSION_KEY) || sessionStorage?.getItem(SESSION_KEY) || null;
     if (!token) return null;
     let user = null;
+    let refreshToken = null;
     try {
       const rawUser = localStorage?.getItem(USER_KEY) || sessionStorage?.getItem(USER_KEY);
       user = rawUser ? JSON.parse(rawUser) : null;
+      refreshToken = localStorage?.getItem(REFRESH_TOKEN_KEY)
+        || sessionStorage?.getItem(REFRESH_TOKEN_KEY)
+        || null;
     } catch (error) {
       throw new ServiceError(`No se pudo leer el usuario guardado: ${error.message}`, null, "invalid_session");
     }
     const normalized = normalizeSession(user, "render");
-    return normalized ? { ...normalized, accessToken: token } : null;
+    return normalized ? { ...normalized, accessToken: token, refreshToken } : null;
   }
 
   function getCurrentSession() {
@@ -172,7 +178,9 @@
     }
     const session = readLegacySession();
     if (!session) return null;
-    const { accessToken, ...publicSession } = session;
+    const publicSession = { ...session };
+    delete publicSession.accessToken;
+    delete publicSession.refreshToken;
     return publicSession;
   }
 
@@ -184,10 +192,85 @@
     return session.accessToken;
   }
 
+  function getSessionTokens(result = {}) {
+    const session = result.session && typeof result.session === "object"
+      ? result.session
+      : {};
+    return {
+      accessToken: session.access_token
+        || (typeof result.session === "string" ? result.session : null)
+        || result.access_token
+        || null,
+      refreshToken: session.refresh_token || result.refresh_token || null,
+    };
+  }
+
+  function persistSession(result) {
+    const { accessToken, refreshToken } = getSessionTokens(result);
+    if (!accessToken) {
+      throw new ServiceError("La respuesta no contiene un access token de Supabase.", null, "invalid_response");
+    }
+    localStorage.setItem(SESSION_KEY, accessToken);
+    if (refreshToken) {
+      localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
+    } else {
+      localStorage.removeItem(REFRESH_TOKEN_KEY);
+    }
+    if (result.user) localStorage.setItem(USER_KEY, JSON.stringify(result.user));
+    sessionStorage?.removeItem(SESSION_KEY);
+    sessionStorage?.removeItem(REFRESH_TOKEN_KEY);
+    sessionStorage?.removeItem(USER_KEY);
+    return accessToken;
+  }
+
+  function clearStoredSession() {
+    [SESSION_KEY, REFRESH_TOKEN_KEY, USER_KEY].forEach((key) => {
+      localStorage?.removeItem(key);
+      sessionStorage?.removeItem(key);
+    });
+  }
+
+  async function refreshLegacySession() {
+    const refreshToken = localStorage?.getItem(REFRESH_TOKEN_KEY)
+      || sessionStorage?.getItem(REFRESH_TOKEN_KEY);
+    if (!refreshToken) return null;
+    if (refreshPromise) return refreshPromise;
+
+    refreshPromise = (async () => {
+      const response = await fetchRequest(`${API_BASE_URL}/api/auth/refresh`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ refresh_token: refreshToken }),
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        if (response.status === 400 || response.status === 401) clearStoredSession();
+        throw new ServiceError(
+          data.error || `No se pudo renovar la sesión (HTTP ${response.status}).`,
+          response.status,
+          "refresh_failed",
+        );
+      }
+      return persistSession(data);
+    })().finally(() => {
+      refreshPromise = null;
+    });
+
+    return refreshPromise;
+  }
+
   async function legacyFetch(path, init = {}, authenticated = false) {
     const headers = new Headers(init.headers || {});
-    if (authenticated) headers.set("Authorization", `Bearer ${requireLegacyToken()}`);
-    const response = await fetchRequest(`${API_BASE_URL}${path}`, { ...init, headers });
+    const token = authenticated ? requireLegacyToken() : null;
+    if (token) headers.set("Authorization", `Bearer ${token}`);
+    let response = await fetchRequest(`${API_BASE_URL}${path}`, { ...init, headers });
+    if (authenticated && response.status === 401) {
+      const refreshedToken = await refreshLegacySession();
+      if (refreshedToken) {
+        headers.set("Authorization", `Bearer ${refreshedToken}`);
+        response = await fetchRequest(`${API_BASE_URL}${path}`, { ...init, headers });
+      }
+    }
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
       throw new ServiceError(data.error || `Error HTTP ${response.status}`, response.status, "http_error");
@@ -202,6 +285,14 @@
     return value;
   }
 
+  function requireAdministratorSession() {
+    const session = getCurrentSession();
+    if (session?.user.role !== "administrador") {
+      throw new ServiceError("Se requiere una sesión de administrador.", 403, "forbidden");
+    }
+    return session;
+  }
+
   async function login(credentials = {}) {
     const provider = getProvider();
     if (provider === "demo") {
@@ -211,10 +302,6 @@
       const session = demo.loginAs(credentials.role);
       return responseDto(normalizeSession({ ...session.user, role: session.role }, "demo"), provider);
     }
-    if (credentials.role === "administrador") {
-      throw new ServiceError("El inicio de sesión administrativo de Render no está conectado.", null, "operation_unavailable");
-    }
-
     const result = await legacyFetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -223,18 +310,15 @@
         password: credentials.password,
       }),
     });
-    if (!result.session || !result.user) {
-      throw new ServiceError("La respuesta de inicio de sesión no contiene sesión y usuario.", null, "invalid_response");
-    }
-    const accessToken = typeof result.session === "string"
-      ? result.session
-      : result.session?.access_token;
-
+    const { accessToken } = getSessionTokens(result);
     if (!accessToken || !result.user) {
       throw new ServiceError("La respuesta de inicio de sesión no contiene sesión y usuario.", null, "invalid_response");
     }
-    localStorage.setItem(SESSION_KEY, accessToken);
-    localStorage.setItem(USER_KEY, JSON.stringify(result.user));
+    const actualRole = result.user.role || result.user.rol;
+    if (credentials.role === "administrador" && actualRole !== "administrador") {
+      throw new ServiceError("La cuenta no tiene rol de administrador.", 403, "forbidden");
+    }
+    persistSession(result);
     return responseDto(normalizeSession(result.user, "render"), provider);
   }
 
@@ -252,7 +336,12 @@
         password: input.password,
       }),
     });
-    return responseDto({ message: result.message || "" }, provider);
+    if (result.user && getSessionTokens(result).accessToken) persistSession(result);
+    return responseDto({
+      message: result.message || "",
+      user: result.user || null,
+      authenticated: Boolean(result.user && getSessionTokens(result).accessToken),
+    }, provider);
   }
 
   async function logout() {
@@ -261,10 +350,7 @@
       demo.logout();
       return responseDto(null, provider);
     }
-    localStorage?.removeItem(SESSION_KEY);
-    localStorage?.removeItem(USER_KEY);
-    sessionStorage?.removeItem(SESSION_KEY);
-    sessionStorage?.removeItem(USER_KEY);
+    clearStoredSession();
     return responseDto(null, provider);
   }
 
@@ -292,26 +378,48 @@
 
   async function getAdminReports() {
     const provider = getProvider();
-    if (provider !== "demo") {
-      throw new ServiceError("El adaptador Render no ofrece consultas administrativas.", null, "operation_unavailable");
+    if (provider === "demo") {
+      const session = getCurrentSession();
+      if (session?.user.role !== "administrador") {
+        throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
+      }
+      await demo.initialize();
+      return demo.getReports().map((report) => normalizeReport(report, { includeReporter: true }));
     }
-    const session = getCurrentSession();
-    if (session?.user.role !== "administrador") {
-      throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
-    }
-    await demo.initialize();
-    return demo.getReports().map((report) => normalizeReport(report, { includeReporter: true }));
+
+    requireAdministratorSession();
+    const reports = asArray(await legacyFetch("/reportes", {}, true), "reportes administrativos");
+    return Promise.all(reports.map(async (report) => {
+      const id = String(report.id_reporte || report.id || "");
+      if (!id) throw new ServiceError("Un reporte no contiene identificador.", null, "invalid_response");
+      const [history, identity] = await Promise.all([
+        getReportHistory(id),
+        legacyFetch(`/api/admin/reportes/${encodeURIComponent(id)}/reportante`, {}, true),
+      ]);
+      return normalizeReport({
+        ...report,
+        history,
+        reporter: { id: identity.id_usuario, name: identity.nombre_completo },
+      }, { includeReporter: true });
+    }));
   }
 
   async function getAdminStatistics() {
-    if (getProvider() !== "demo") {
-      throw new ServiceError("El adaptador Render no ofrece estadísticas administrativas.", null, "operation_unavailable");
+    const provider = getProvider();
+    if (provider === "demo") {
+      if (getCurrentSession()?.user.role !== "administrador") {
+        throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
+      }
+      await demo.initialize();
+      return demo.getStatistics();
     }
-    if (getCurrentSession()?.user.role !== "administrador") {
-      throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
-    }
-    await demo.initialize();
-    return demo.getStatistics();
+    requireAdministratorSession();
+    return [
+      { id: "total", etiqueta: "Total de reportes", indicador: "Todos los casos", nota: "Reportes recibidos", icono: "blue" },
+      { id: "en_proceso", etiqueta: "En proceso", indicador: "En seguimiento", nota: "Casos en atención", icono: "indigo" },
+      { id: "pendiente", etiqueta: "Pendientes", indicador: "Requieren atención", nota: "Por revisar", icono: "amber" },
+      { id: "reparado", etiqueta: "Reparados", indicador: "Atendidos", nota: "Incidencias solucionadas", icono: "green" },
+    ];
   }
 
   async function getReportById(id) {
@@ -321,9 +429,13 @@
       const report = demo.getReportById(id);
       return report ? normalizeReport(report) : null;
     }
-    const reports = asArray(await legacyFetch("/reportes"), "detalle del reporte");
-    const found = reports.find((report) => String(report.id_reporte || report.id) === String(id));
-    return found ? normalizeReport(found) : null;
+    try {
+      const report = await legacyFetch(`/reportes/${encodeURIComponent(id)}`);
+      return normalizeReport(report);
+    } catch (error) {
+      if (error.status === 404) return null;
+      throw error;
+    }
   }
 
   async function getReportHistory(id) {
@@ -332,8 +444,11 @@
       await demo.initialize();
       return demo.getHistory(id).map((entry) => normalizeHistory(entry));
     }
-    const report = await getReportById(id);
-    return report?.history || [];
+    const history = asArray(
+      await legacyFetch(`/reportes/${encodeURIComponent(id)}/historial`),
+      "historial del reporte",
+    );
+    return history.map((entry) => normalizeHistory(entry));
   }
 
   async function createReport(input = {}) {
@@ -378,28 +493,61 @@
 
   async function updateReportStatus(id, status, observation = "") {
     const provider = getProvider();
-    if (provider !== "demo") {
-      throw new ServiceError("El adaptador Render no ofrece actualización administrativa.", null, "operation_unavailable");
+    const nextStatus = normalizeStatus(status);
+    if (provider === "demo") {
+      if (getCurrentSession()?.user.role !== "administrador") {
+        throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
+      }
+      const report = demo.updateReport(id, nextStatus, observation);
+      return responseDto(normalizeReport(report, { includeReporter: true }), provider);
     }
-    if (getCurrentSession()?.user.role !== "administrador") {
-      throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
+
+    requireAdministratorSession();
+    const currentReport = await getReportById(id);
+    if (!currentReport) throw new ServiceError(`No se encontró el reporte ${id}.`, 404, "not_found");
+    if (currentReport.status === nextStatus) {
+      throw new ServiceError(
+        "Selecciona un estado distinto; V11.1 solo registra observaciones junto con ese cambio.",
+        409,
+        "status_unchanged",
+      );
     }
-    const report = demo.updateReport(id, status, observation);
-    return responseDto(normalizeReport(report, { includeReporter: true }), provider);
+    await legacyFetch(`/api/admin/reportes/${encodeURIComponent(id)}/estado`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ estado_atencion: nextStatus, observacion }),
+    }, true);
+    const [updatedReport, history] = await Promise.all([
+      getReportById(id),
+      getReportHistory(id),
+    ]);
+    if (!updatedReport) {
+      throw new ServiceError(`No se encontró el reporte ${id} después de actualizarlo.`, 404, "not_found");
+    }
+    return responseDto(normalizeReport({ ...updatedReport, history }), provider);
   }
 
-  async function saveAdminObservation(id, observation) {
+  async function saveAdminObservation(id, observation, status = null) {
     const provider = getProvider();
-    if (provider !== "demo") {
-      throw new ServiceError("El adaptador Render no ofrece observaciones administrativas.", null, "operation_unavailable");
+    if (provider === "demo") {
+      if (getCurrentSession()?.user.role !== "administrador") {
+        throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
+      }
+      const report = demo.getReportById(id);
+      if (!report) throw new ServiceError(`No se encontró el reporte ${id}.`, 404, "not_found");
+      const updated = demo.updateReport(id, report.estado_atencion, observation);
+      return responseDto(normalizeReport(updated, { includeReporter: true }), provider);
     }
-    if (getCurrentSession()?.user.role !== "administrador") {
-      throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
+
+    requireAdministratorSession();
+    if (!status) {
+      throw new ServiceError(
+        "V11.1 solo persiste observaciones junto con una transición; indica el nuevo estado.",
+        409,
+        "observation_requires_status_change",
+      );
     }
-    const report = demo.getReportById(id);
-    if (!report) throw new ServiceError(`No se encontró el reporte ${id}.`, 404, "not_found");
-    const updated = demo.updateReport(id, report.estado_atencion, observation);
-    return responseDto(normalizeReport(updated, { includeReporter: true }), provider);
+    return updateReportStatus(id, status, observation);
   }
 
   function subscribePublicReports(callback) {

@@ -62,8 +62,11 @@ function setupLoginForm() {
       const result = await loginUser(Object.fromEntries(new FormData(form)));
       renderMessage(message, result.message, result.ok ? "success" : "error");
       if (result.ok) {
+        const destination = result.user?.role === "administrador"
+          ? "../../Portal_admin/HTML/index.html"
+          : "../../portal_usuario/html/index.html";
         window.setTimeout(() => {
-          window.location.href = "../../portal_usuario/html/index.html";
+          window.location.href = destination;
         }, 700);
       }
     } catch (error) {
@@ -87,8 +90,13 @@ function setupRegisterForm() {
       const result = await registerUser(Object.fromEntries(new FormData(form)));
       renderMessage(message, result.message, result.ok ? "success" : "error");
       if (result.ok) {
+        const destination = result.authenticated
+          ? (result.user?.role === "administrador"
+            ? "../../Portal_admin/HTML/index.html"
+            : "../../portal_usuario/html/index.html")
+          : "registro-exitoso.html";
         window.setTimeout(() => {
-          window.location.href = "registro-exitoso.html";
+          window.location.href = destination;
         }, 700);
       }
     } catch (error) {

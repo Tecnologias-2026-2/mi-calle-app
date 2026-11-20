@@ -62,6 +62,8 @@ export async function registerUser({
     return {
       ok: result.ok,
       message: result.data.message || authMessages.register.confirmEmail,
+      user: result.data.user || null,
+      authenticated: Boolean(result.data.authenticated),
     };
   } catch (error) {
     return { ok: false, message: error.message || authMessages.system.requestError };

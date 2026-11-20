@@ -146,6 +146,10 @@
       const passwordInput = document.querySelector("#admin-password");
       const passwordToggle = document.querySelector(".password-toggle");
       const adminLoginForm = document.querySelector("#admin-login-form");
+      const feedback = document.createElement("p");
+      feedback.dataset.adminLoginFeedback = "true";
+      feedback.setAttribute("role", "status");
+      adminLoginForm.append(feedback);
 
       passwordToggle.addEventListener("click", () => {
         const isPasswordHidden = passwordInput.type === "password";
@@ -157,20 +161,28 @@
         );
       });
 
-      adminLoginForm.addEventListener("submit", (event) => {
+      adminLoginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
-        const feedback = document.querySelector("[data-admin-login-feedback]");
+        const submitButton = adminLoginForm.querySelector("button[type='submit']");
         if (window.MiCalleDemo?.isEnabled()) {
           feedback.textContent = "Usa el botón de administrador demo. Este formulario no inicia una sesión real.";
           return;
         }
-        feedback.textContent = "El inicio de sesión administrativo real aún no está conectado.";
+        submitButton.disabled = true;
+        try {
+          const form = new FormData(adminLoginForm);
+          await window.MiCalleServices.login({
+            email: form.get("email"),
+            password: form.get("password"),
+            role: "administrador",
+          });
+          window.location.href = "../../Portal_admin/HTML/index.html";
+        } catch (error) {
+          feedback.textContent = error.message || "No se pudo iniciar la sesión administrativa.";
+        } finally {
+          submitButton.disabled = false;
+        }
       });
-
-      const feedback = document.createElement("p");
-      feedback.dataset.adminLoginFeedback = "true";
-      feedback.setAttribute("role", "status");
-      adminLoginForm.append(feedback);
 
       const demoAccess = document.querySelector("[data-demo-access]");
       if (window.MiCalleDemo?.isEnabled()) {
