@@ -37,6 +37,9 @@ document.addEventListener("keydown", (event) => {
 
 const reportStatus = {
   pendiente: { label: "Pendiente", color: "amber" },
+  en_revision: { label: "En revisión", color: "amber" },
+  en_proceso: { label: "En proceso", color: "blue" },
+  reparado: { label: "Reparado", color: "green" },
   proceso: { label: "En proceso", color: "blue" },
   resuelto: { label: "Resuelto", color: "green" },
   descartado: { label: "Descartado", color: "red" },
@@ -49,18 +52,34 @@ const severityColors = {
 };
 
 const statusColors = {
+  en_revision: "#e6a42c",
+  en_proceso: "#347ff0",
+  reparado: "#38bd84",
   proceso: "#347ff0",
   resuelto: "#38bd84",
   pendiente: "#f2b743",
   descartado: "#dc626b",
 };
 
+function normalizeStatus(status) {
+  return ({
+    proceso: "en_proceso",
+    resuelto: "reparado",
+    descartado: "pendiente",
+  })[status] || status;
+}
+
 function formatDate(date) {
+  const value = typeof date === "string" && /^\d{4}-\d{2}-\d{2}$/.test(date)
+    ? `${date}T12:00:00`
+    : date;
+  const parsedDate = new Date(value);
+  if (Number.isNaN(parsedDate.getTime())) return "Fecha no disponible";
   return new Intl.DateTimeFormat("es-CO", {
     day: "numeric",
     month: "short",
     year: "numeric",
-  }).format(new Date(`${date}T12:00:00`));
+  }).format(parsedDate);
 }
 
 function createElement(tag, className, text) {
@@ -82,11 +101,12 @@ function renderKpis(statistics, reports) {
 
   const counts = reports.reduce((result, report) => {
     result.total += 1;
-    if (Object.prototype.hasOwnProperty.call(result, report.estado)) {
-      result[report.estado] += 1;
+    const status = normalizeStatus(report.status);
+    if (Object.prototype.hasOwnProperty.call(result, status)) {
+      result[status] += 1;
     }
     return result;
-  }, { total: 0, pendiente: 0, proceso: 0, resuelto: 0, descartado: 0 });
+  }, { total: 0, pendiente: 0, en_revision: 0, en_proceso: 0, reparado: 0 });
 
   container.replaceChildren(...statistics.map((statistic) => {
     const card = createElement("article", "stat-card");
@@ -97,7 +117,7 @@ function renderKpis(statistics, reports) {
     card.append(
       top,
       createElement("p", "stat-label", statistic.etiqueta),
-      createElement("div", "stat-value", String(counts[statistic.id] ?? 0)),
+      createElement("div", "stat-value", String(counts[normalizeStatus(statistic.id)] ?? 0)),
       createElement("p", "stat-note", statistic.nota),
     );
     return card;
@@ -110,17 +130,17 @@ function renderStatusSummary(reports) {
     return;
   }
 
-  const statusOrder = ["proceso", "resuelto", "pendiente", "descartado"];
+  const statusOrder = ["pendiente", "en_revision", "en_proceso", "reparado"];
   const statusLabels = {
-    proceso: "En proceso",
-    resuelto: "Resueltos",
     pendiente: "Pendientes",
-    descartado: "Descartados",
+    en_revision: "En revisión",
+    en_proceso: "En proceso",
+    reparado: "Reparados",
   };
   const total = reports.length;
   let degrees = 0;
   const segments = statusOrder.map((status) => {
-    const count = reports.filter((report) => report.estado === status).length;
+    const count = reports.filter((report) => normalizeStatus(report.status) === status).length;
     const nextDegrees = total ? degrees + (count / total) * 360 : degrees;
     const segment = `${statusColors[status]} ${degrees}deg ${nextDegrees}deg`;
     degrees = nextDegrees;
@@ -154,7 +174,7 @@ function renderCategorySummary(reports) {
   }
 
   const categoryCounts = [...reports.reduce((counts, report) => {
-    counts.set(report.categoria, (counts.get(report.categoria) || 0) + 1);
+    counts.set(report.type, (counts.get(report.type) || 0) + 1);
     return counts;
   }, new Map()).entries()]
     .sort((first, second) => second[1] - first[1] || first[0].localeCompare(second[0], "es"))
@@ -179,7 +199,15 @@ function renderCategorySummary(reports) {
 }
 
 function statusColorsName(status) {
-  return { proceso: "blue", resuelto: "green", pendiente: "amber", descartado: "red" }[status];
+  return {
+    pendiente: "amber",
+    en_revision: "amber",
+    en_proceso: "blue",
+    reparado: "green",
+    proceso: "blue",
+    resuelto: "green",
+    descartado: "red",
+  }[status];
 }
 
 function renderReports(reports, total) {
@@ -193,8 +221,8 @@ function renderReports(reports, total) {
   }
 
   const cards = reports.map((report) => {
-    const status = reportStatus[report.estado];
-    const severity = severityColors[report.gravedad];
+    const status = reportStatus[normalizeStatus(report.status)];
+    const severity = severityColors[report.gravedad] || "media";
     const link = createElement("a", "report-list-card panel");
     link.href = `reports.html?id=${encodeURIComponent(report.id)}`;
     link.dataset.reportId = report.id;
@@ -203,13 +231,13 @@ function renderReports(reports, total) {
     link.append(reportIcon);
     const main = createElement("span", "report-list-main");
     main.append(
-      createElement("strong", "", `#${report.id} · ${report.categoria}`),
-      createElement("small", "", `${report.ubicacion} · ${report.reportadoPor}`),
+      createElement("strong", "", `#${report.id} · ${report.type}`),
+      createElement("small", "", `${report.location.address || "Ubicación no disponible"} · ${report.reporter?.name || "Reportante no disponible"}`),
     );
     link.append(
       main,
       createElement("span", `report-list-status report-list-status--${status.color}`, status.label),
-      createElement("span", "report-list-date", formatDate(report.fecha)),
+      createElement("span", "report-list-date", formatDate(report.createdAt)),
       createElement("span", "report-list-arrow", "→"),
     );
     return link;
@@ -238,25 +266,60 @@ function renderReportDetails(report) {
 
   reportId.textContent = `#${report.id}`;
   const facts = document.querySelectorAll(".report-facts dd");
-  facts[0].textContent = report.categoria;
-  facts[1].textContent = new Intl.DateTimeFormat("es-CO", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(`${report.fecha}T12:00:00`));
-  facts[2].textContent = report.ubicacion;
-  facts[3].textContent = report.reportadoPor;
-  document.querySelector(".report-description p").textContent = report.descripcion;
+  facts[0].textContent = report.type;
+  const reportDate = new Date(report.createdAt);
+  facts[1].textContent = Number.isNaN(reportDate.getTime())
+    ? "Fecha no disponible"
+    : new Intl.DateTimeFormat("es-CO", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    }).format(reportDate);
+  facts[2].textContent = report.location.address || "Ubicación no disponible";
+  facts[3].textContent = report.reporter?.name || "Reportante no disponible";
+  document.querySelector(".report-description p").textContent = report.description;
 
-  const selectedStatus = reportStatus[report.estado];
+  const normalizedStatus = normalizeStatus(report.status);
+  const selectedStatus = reportStatus[normalizedStatus];
   const currentStatus = document.querySelector(".current-status strong");
   currentStatus.textContent = selectedStatus.label;
   currentStatus.className = `report-list-status report-list-status--${selectedStatus.color}`;
 
-  const selectedOption = document.querySelector(`input[name="report-status"][value="${report.estado}"]`);
+  const selectedOption = document.querySelector(`input[name="report-status"][value="${normalizedStatus}"]`);
   if (selectedOption) {
     selectedOption.checked = true;
     selectedOption.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  const historyList = document.querySelector("#admin-report-history");
+  if (historyList) {
+    const history = report.history || [];
+    if (!history.length) {
+      historyList.replaceChildren(createElement("li", "", "Historial no disponible en esta conexión."));
+    } else {
+      historyList.replaceChildren(...history.map((entry) => {
+        const status = reportStatus[normalizeStatus(entry.status)]?.label || entry.status;
+        const date = entry.changedAt
+          ? new Intl.DateTimeFormat("es-CO", { dateStyle: "medium", timeStyle: "short" })
+            .format(new Date(entry.changedAt))
+          : "Fecha no disponible";
+        const observation = entry.observation ? ` — ${entry.observation}` : "";
+        return createElement("li", "", `${status} · ${date}${observation}`);
+      }));
+    }
+  }
+
+  const photoContainer = document.querySelector(".evidence-photo");
+  if (photoContainer) {
+    const photoUrl = report.photo.url;
+    if (photoUrl) {
+      const image = createElement("img", "admin-evidence-image");
+      image.src = photoUrl;
+      image.alt = `Fotografía de evidencia: ${report.type}`;
+      photoContainer.replaceChildren(image);
+    } else {
+      photoContainer.replaceChildren(createElement("p", "photo-caption", "Sin fotografía en estos datos demo."));
+    }
   }
 }
 

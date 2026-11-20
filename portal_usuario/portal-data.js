@@ -1,10 +1,7 @@
 const reportStatus = {
-    reportado: { label: "Reportado", className: "estado-azul" },
     pendiente: { label: "Pendiente", className: "estado-rojo" },
-    "en revisión": { label: "En revisión", className: "estado-rojo" },
     en_revision: { label: "En revisión", className: "estado-rojo" },
-    "en proceso": { label: "En proceso", className: "estado-amarillo" },
-    resuelto: { label: "Resuelto", className: "estado-verde" },
+    en_proceso: { label: "En proceso", className: "estado-amarillo" },
     reparado: { label: "Reparado", className: "estado-verde" }
 };
 
@@ -15,16 +12,15 @@ function escapeHTML(value) {
 }
 
 function getReportStatus(report) {
-    const key = String(report.estado_atencion || report.estado || "reportado").toLowerCase();
-    return reportStatus[key] || reportStatus.reportado;
+    return reportStatus[report.status] || reportStatus.pendiente;
 }
 
 function reportTitle(report) {
-    return report.tipo_problema || report.categoria || report.tipo || "Reporte ciudadano";
+    return report.type || "Reporte ciudadano";
 }
 
 function reportDate(report) {
-    const value = report.fecha_creacion || report.created_at || report.fecha;
+    const value = report.createdAt;
     if (!value) return "Sin fecha";
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? "Sin fecha" : date.toLocaleDateString("es-CO");
@@ -33,15 +29,9 @@ function reportDate(report) {
 function countReports(reports) {
     return {
         total: reports.length,
-        reportado: reports.filter((report) => ["reportado", "pendiente"].includes(
-            String(report.estado_atencion || report.estado || "").toLowerCase()
-        )).length,
-        proceso: reports.filter((report) => ["en revisión", "en_revision", "en proceso"].includes(
-            String(report.estado_atencion || report.estado || "").toLowerCase()
-        )).length,
-        resuelto: reports.filter((report) => ["resuelto", "reparado"].includes(
-            String(report.estado_atencion || report.estado || "").toLowerCase()
-        )).length
+        reportado: reports.filter((report) => report.status === "pendiente").length,
+        proceso: reports.filter((report) => ["en_revision", "en_proceso"].includes(report.status)).length,
+        resuelto: reports.filter((report) => report.status === "reparado").length
     };
 }
 
@@ -88,10 +78,7 @@ async function loadUserReports() {
         element.hidden = false;
         element.textContent = "Cargando...";
     });
-    const response = await MiCalleAuth.request("/reportes?mine=true");
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(data.error || `Error HTTP ${response.status}`);
-    if (!Array.isArray(data)) throw new Error("La respuesta del servidor no contiene reportes.");
+    const data = await MiCalleServices.getMyReports();
     document.querySelectorAll("[data-reports-loading]").forEach((element) => { element.hidden = true; });
     renderReportStats(data);
     renderRecentReports(data);
@@ -113,3 +100,7 @@ function showReportsError(error) {
 }
 
 loadUserReports().catch(showReportsError);
+MiCalleServices.subscribeMyReports((reports) => {
+    renderReportStats(reports);
+    renderRecentReports(reports);
+});

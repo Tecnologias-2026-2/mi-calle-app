@@ -99,6 +99,28 @@ function setupRegisterForm() {
   });
 }
 
+function setupDemoAccess() {
+  const access = document.querySelector("[data-demo-access]");
+  if (!access || !window.MiCalleDemo?.isEnabled()) return;
+
+  access.hidden = false;
+  access.querySelectorAll("[data-demo-role]").forEach((button) => {
+    button.addEventListener("click", async () => {
+      const role = button.dataset.demoRole;
+      try {
+        await window.MiCalleServices.login({ role });
+      window.location.href = role === "administrador"
+        ? "../../Portal_admin/HTML/index.html"
+        : "../../portal_usuario/html/index.html";
+      } catch (error) {
+        console.error("No se pudo iniciar la sesión demo.", error);
+        renderMessage(access.querySelector("p"), error.message);
+      }
+    });
+  });
+}
+
 setupPasswordToggles();
 setupLoginForm();
 setupRegisterForm();
+setupDemoAccess();

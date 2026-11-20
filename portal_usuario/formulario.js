@@ -74,17 +74,20 @@ formularioReporte.addEventListener("submit", async (evento) => {
 
     const botonEnvio = formularioReporte.querySelector("[type=submit]");
     const datosFormulario = new FormData(formularioReporte);
+    const latitudIngresada = String(datosFormulario.get("latitud") || "").trim();
+    const longitudIngresada = String(datosFormulario.get("longitud") || "").trim();
     const reporte = {
         tipo_problema: String(datosFormulario.get("tipo") || ""),
-        latitud: Number(datosFormulario.get("latitud")),
-        longitud: Number(datosFormulario.get("longitud")),
+        latitud: Number(latitudIngresada),
+        longitud: Number(longitudIngresada),
         direccion_texto: String(datosFormulario.get("direccion_texto") || "").trim(),
         descripcion: String(datosFormulario.get("descripcion") || "").trim(),
         estado_atencion: "Reportado"
     };
     const fotografia = datosFormulario.get("fotografia");
 
-    if (!Number.isFinite(reporte.latitud) || !Number.isFinite(reporte.longitud)) {
+    if (!latitudIngresada || !longitudIngresada
+        || !Number.isFinite(reporte.latitud) || !Number.isFinite(reporte.longitud)) {
         estadoUbicacion.textContent = "Selecciona la ubicación del reporte en el mapa antes de enviar.";
         estadoUbicacion.dataset.error = "true";
         return;
@@ -101,19 +104,19 @@ formularioReporte.addEventListener("submit", async (evento) => {
         estadoFotografia.dataset.error = "true";
         return;
     }
-    datosFormulario.append("tipo_problema", reporte.tipo_problema);
     botonEnvio.disabled = true;
 
     try {
-        const respuesta = await MiCalleAuth.request("/reportes", {
-            method: "POST",
-            body: datosFormulario
+        await MiCalleServices.createReport({
+            type: reporte.tipo_problema,
+            description: reporte.descripcion,
+            location: {
+                latitude: reporte.latitud,
+                longitude: reporte.longitud,
+                address: reporte.direccion_texto
+            },
+            photoFile: fotografia
         });
-        const datosRespuesta = await respuesta.json().catch(() => ({}));
-
-        if (!respuesta.ok) {
-            throw new Error(datosRespuesta.error || `Error HTTP ${respuesta.status}`);
-        }
 
         window.location.href = "mis_reportes.html";
     } catch (error) {

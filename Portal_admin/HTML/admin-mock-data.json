@@ -36,6 +36,8 @@
       "ubicacion": "Calle 45 # 12-30, Bogotá",
       "reportadoPor": "María Rodríguez",
       "fecha": "2026-10-25",
+      "latitud": 4.6342,
+      "longitud": -74.0823,
       "descripcion": "Hay un bache grande en medio de la vía que dificulta el paso de los vehículos.",
       "estado": "proceso",
       "gravedad": "alta"
@@ -46,6 +48,8 @@
       "ubicacion": "Carrera 15 con Calle 82, Bogotá",
       "reportadoPor": "Juan Pérez",
       "fecha": "2026-10-24",
+      "latitud": 4.6674,
+      "longitud": -74.0562,
       "descripcion": "El semáforo de la intersección no está funcionando.",
       "estado": "pendiente",
       "gravedad": "alta"
@@ -56,6 +60,8 @@
       "ubicacion": "Calle 63 con Carrera 24, Bogotá",
       "reportadoPor": "Laura Gómez",
       "fecha": "2026-10-23",
+      "latitud": 4.6517,
+      "longitud": -74.0748,
       "descripcion": "La luminaria lleva varios días apagada.",
       "estado": "resuelto",
       "gravedad": "media"
@@ -66,6 +72,8 @@
       "ubicacion": "Avenida 7 con Calle 116, Bogotá",
       "reportadoPor": "Carlos Ruiz",
       "fecha": "2026-10-22",
+      "latitud": 4.6953,
+      "longitud": -74.0351,
       "descripcion": "La señal de tránsito está inclinada y es difícil de ver.",
       "estado": "proceso",
       "gravedad": "media"
@@ -76,6 +84,8 @@
       "ubicacion": "Calle 45 con Carrera 13, Bogotá",
       "reportadoPor": "Ana Torres",
       "fecha": "2026-10-21",
+      "latitud": 4.6364,
+      "longitud": -74.0643,
       "descripcion": "Se reporta un hueco profundo en la calzada.",
       "estado": "pendiente",
       "gravedad": "alta"
@@ -86,6 +96,8 @@
       "ubicacion": "Carrera 30 con Calle 26, Bogotá",
       "reportadoPor": "Diego Castro",
       "fecha": "2026-10-20",
+      "latitud": 4.6265,
+      "longitud": -74.0784,
       "descripcion": "Hay varias losas sueltas en el andén.",
       "estado": "resuelto",
       "gravedad": "baja"

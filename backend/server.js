@@ -5,8 +5,14 @@ const { URL } = require('url');
 const crypto = require('crypto');
 const cors = require('cors');
 const supabase = require('./config/supabase');
+const { createPublicClient, createUserClient } = require('./config/supabase-user');
+const { validateImage } = require('./services/image-validation.service');
+const {
+  buildPhotoStoragePath,
+  cleanupUploadedPhoto,
+  inspectReportCreation,
+} = require('./services/photo-cleanup.service');
 const authController = require('./controllers/auth.controller');
-const { verifySessionToken } = require('./services/session.service');
 const app = express();
 
 app.use(cors({
@@ -71,7 +77,12 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'GET' && pathname === '/verify') {
     try {
-      return await authController.verify(req, res, requestUrl.searchParams.get('token'));
+      return await authController.verify(
+        req,
+        res,
+        requestUrl.searchParams.get('token_hash') || requestUrl.searchParams.get('token'),
+        requestUrl.searchParams.get('type') || 'signup',
+      );
     } catch (error) {
       return handleError(res, error, 'Error al verificar el correo.');
     }
@@ -79,10 +90,10 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'PUT' && pathname === '/api/users/me') {
     try {
-      const user = requireAuth(req, res);
-      if (!user) return;
+      const authenticated = await requireSupabaseUser(req, res);
+      if (!authenticated) return;
       const body = await readJsonBody(req);
-      return await authController.updateProfile(req, res, body, user);
+      return await authController.updateProfile(req, res, body, authenticated);
     } catch (error) {
       return handleError(res, error, 'Error al actualizar el perfil.');
     }
@@ -90,119 +101,291 @@ const server = http.createServer(async (req, res) => {
 
   if (req.method === 'GET' && pathname === '/reportes') {
     try {
-      const user = requireAuth(req, res);
-      if (!user) return;
-
-      let query = supabase.from('reportes').select('*, ubicaciones(*)');
-      if (requestUrl.searchParams.get('mine') === 'true') {
-        query = query.eq('id_usuario', user.sub);
+      const mine = requestUrl.searchParams.get('mine') === 'true';
+      let client = createPublicClient();
+      let result;
+      if (mine) {
+        const authenticated = await requireSupabaseUser(req, res);
+        if (!authenticated) return;
+        client = authenticated.client;
+        result = await client.rpc('mis_reportes');
+      } else {
+        result = await client
+          .from('reportes_publicos')
+          .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at');
       }
-      const { data, error } = await query;
+      const { data, error } = result;
       if (error) throw error;
 
-      const reportes = (data || []).map((reporte) => ({
-        ...reporte,
-        ...(reporte.ubicaciones || {}),
-        ubicacion: reporte.ubicaciones || null,
-      }));
-      
-      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-      return res.end(JSON.stringify(reportes));
+      const reportes = await enrichReports(client, data || []);
+      return sendJson(res, 200, reportes);
     } catch (error) {
       return handleError(res, error, 'Error interno al obtener los reportes.');
+    }
+  }
+
+  else if (req.method === 'GET' && /^\/reportes\/[^/]+\/historial$/.test(pathname)) {
+    try {
+      const idReporte = pathname.split('/')[2];
+      if (!isUuid(idReporte)) return sendJson(res, 400, { error: 'El identificador del reporte no es válido.' });
+
+      const client = createPublicClient();
+      const { data, error } = await client
+        .from('historial_estados_publico')
+        .select('id_historial, id_reporte, estado, fecha_cambio')
+        .eq('id_reporte', idReporte)
+        .order('fecha_cambio', { ascending: true });
+      if (error) throw error;
+      return sendJson(res, 200, data || []);
+    } catch (error) {
+      return handleError(res, error, 'Error interno al obtener el historial del reporte.');
+    }
+  }
+
+  else if (req.method === 'GET' && /^\/reportes\/[^/]+$/.test(pathname)) {
+    try {
+      const idReporte = pathname.split('/')[2];
+      if (!isUuid(idReporte)) return sendJson(res, 400, { error: 'El identificador del reporte no es válido.' });
+
+      const client = createPublicClient();
+      const { data, error } = await client
+        .from('reportes_publicos')
+        .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at')
+        .eq('id_reporte', idReporte)
+        .maybeSingle();
+      if (error) throw error;
+      if (!data) return sendJson(res, 404, { error: 'Reporte no encontrado.' });
+
+      const [report] = await enrichReports(client, [data]);
+      return sendJson(res, 200, report);
+    } catch (error) {
+      return handleError(res, error, 'Error interno al obtener el reporte.');
+    }
+  }
+
+  else if (req.method === 'PUT' && /^\/api\/admin\/reportes\/[^/]+\/estado$/.test(pathname)) {
+    try {
+      const idReporte = pathname.split('/')[4];
+      if (!isUuid(idReporte)) return sendJson(res, 400, { error: 'El identificador del reporte no es válido.' });
+      const authenticated = await requireAdministrator(req, res);
+      if (!authenticated) return;
+
+      const body = await readJsonBody(req);
+      const estado = String(body?.estado_atencion || body?.estado || '').trim();
+      const allowedStates = new Set(['pendiente', 'en_revision', 'en_proceso', 'reparado']);
+      if (!allowedStates.has(estado)) {
+        return sendJson(res, 400, { error: 'El estado del reporte no es válido.' });
+      }
+      const observacion = body?.observacion == null ? null : String(body.observacion);
+      const { error } = await authenticated.client.rpc('actualizar_estado_reporte', {
+        p_id_reporte: idReporte,
+        p_estado: estado,
+        p_observacion: observacion,
+      });
+      if (error) throw error;
+      return sendJson(res, 200, { id_reporte: idReporte, estado_atencion: estado });
+    } catch (error) {
+      return handleError(res, error, 'Error interno al actualizar el estado del reporte.');
+    }
+  }
+
+  else if (req.method === 'GET' && /^\/api\/admin\/reportes\/[^/]+\/reportante$/.test(pathname)) {
+    try {
+      const idReporte = pathname.split('/')[4];
+      if (!isUuid(idReporte)) return sendJson(res, 400, { error: 'El identificador del reporte no es válido.' });
+      const authenticated = await requireAdministrator(req, res);
+      if (!authenticated) return;
+
+      const { data, error } = await authenticated.client.rpc('consultar_identidad_reportante', {
+        p_id_reporte: idReporte,
+      });
+      if (error) throw error;
+      if (!data?.length) return sendJson(res, 404, { error: 'No se encontró la identidad del reportante.' });
+      return sendJson(res, 200, data[0]);
+    } catch (error) {
+      return handleError(res, error, 'Error interno al consultar la identidad del reportante.');
     }
   }
 
   // Endpoint POST: Crear un nuevo reporte
   else if (req.method === 'POST' && pathname === '/reportes') {
     let fotografiaPath = null;
-    let fotografiaId = null;
-    let ubicacionId = null;
+    let idReporte = null;
+    let uploadCompleted = false;
+    let rpcStarted = false;
     try {
+      const authenticated = await requireSupabaseUser(req, res);
+      if (!authenticated) return;
+      const { client: userClient } = authenticated;
       const { fields: data, file } = await readMultipartBody(req);
-      const user = requireAuth(req, res);
-      if (!user) return;
-
-      const tipoProblema = String(data.tipo_problema || '').trim();
+      const tipoProblema = normalizeProblemType(data.tipo_problema);
       const descripcion = String(data.descripcion || '').trim();
       const direccionTexto = String(data.direccion_texto || '').trim();
       const latitud = Number(data.latitud);
       const longitud = Number(data.longitud);
-      if (!file || !['image/jpeg', 'image/png'].includes(file.contentType)
-        || file.content.length > 5 * 1024 * 1024) {
-        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-        return res.end(JSON.stringify({
-          error: 'La fotografía es obligatoria y debe ser JPG o PNG.',
-        }));
-      }
-      if (!tipoProblema || !descripcion || !direccionTexto
+      if (!descripcion || !direccionTexto
         || !Number.isFinite(latitud) || !Number.isFinite(longitud)) {
-        res.writeHead(400, { 'Content-Type': 'application/json; charset=utf-8' });
-        return res.end(JSON.stringify({
+        return sendJson(res, 400, {
           error: 'Tipo, descripción, dirección y ubicación válida son obligatorios.',
-        }));
+        });
+      }
+      if (!tipoProblema) {
+        return sendJson(res, 400, { error: 'El tipo de problema no está contemplado en el modelo.' });
+      }
+      if (latitud < -90 || latitud > 90 || longitud < -180 || longitud > 180) {
+        return sendJson(res, 400, { error: 'Las coordenadas están fuera de rango.' });
       }
 
-      const extension = file.contentType === 'image/png' ? 'png' : 'jpg';
-      fotografiaPath = `reportes/${user.sub}/${crypto.randomUUID()}.${extension}`;
-      const { error: uploadError } = await supabase.storage
-        .from('reportes-fotos')
+      let image;
+      try {
+        image = await validateImage(file);
+      } catch (validationError) {
+        return sendJson(res, 400, { error: validationError.message });
+      }
+
+      idReporte = crypto.randomUUID();
+      fotografiaPath = buildPhotoStoragePath(crypto.randomUUID(), image.extension);
+      const { error: uploadError } = await userClient.storage
+        .from('reportes')
         .upload(fotografiaPath, file.content, {
-          contentType: file.contentType,
+          contentType: image.mimeType,
           upsert: false,
         });
       if (uploadError) throw uploadError;
+      uploadCompleted = true;
 
-      const { data: fotografia, error: fotografiaError } = await supabase
-        .from('fotografias')
-        .insert([{ url_imagen: fotografiaPath }])
-        .select()
-        .single();
-      if (fotografiaError) throw fotografiaError;
-      fotografiaId = fotografia.id_fotografia;
-
-      const { data: ubicacion, error: ubicacionError } = await supabase
-        .from('ubicaciones')
-        .insert([{
-          latitud: Number(latitud.toFixed(6)),
-          longitud: Number(longitud.toFixed(6)),
-          direccion_texto: direccionTexto,
-        }])
-        .select()
-        .single();
-      if (ubicacionError) throw ubicacionError;
-      ubicacionId = ubicacion.id_ubicacion;
-
-      const reporte = {
-        tipo_problema: tipoProblema,
-        id_ubicacion: ubicacion.id_ubicacion,
-        descripcion,
-        estado_atencion: String(data.estado_atencion || 'Reportado'),
-        id_usuario: user.sub,
-        id_fotografia: fotografiaId,
-      };
-      const { data: insertedData, error } = await supabase
-        .from('reportes')
-        .insert([reporte])
-        .select();
-      if (error) {
-        throw error;
+      rpcStarted = true;
+      const rpcResult = await userClient.rpc('crear_reporte_completo', {
+        p_id_reporte: idReporte,
+        p_tipo_problema: tipoProblema,
+        p_descripcion: descripcion,
+        p_storage_path: fotografiaPath,
+        p_latitud: Number(latitud.toFixed(6)),
+        p_longitud: Number(longitud.toFixed(6)),
+        p_direccion_texto: direccionTexto,
+        p_id_ubicacion: null,
+      });
+      if (rpcResult.error) {
+        const outcome = await inspectReportCreation(supabase, idReporte, fotografiaPath);
+        if (outcome === 'confirmado') {
+          res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
+          return res.end(JSON.stringify({ id_reporte: idReporte }));
+        }
+        if (outcome === 'sin_asociacion' && isDefinitiveDatabaseError(rpcResult.error)) {
+          const cleanup = await cleanupUploadedPhoto(supabase, fotografiaPath, idReporte);
+          if (cleanup.status === 'eliminado' || cleanup.status === 'ausente') {
+            uploadCompleted = false;
+            return handleError(res, rpcResult.error, 'No se pudo crear el reporte.');
+          }
+          console.error('La reserva de limpieza no autorizo eliminar la fotografia.', {
+            idReporte,
+            fotografiaPath,
+            cleanupStatus: cleanup.status,
+          });
+          return sendJson(res, 503, {
+            error: 'No se confirmó que la fotografía pudiera eliminarse; requiere reconciliación.',
+            id_reporte: idReporte,
+          });
+        }
+        if (outcome === 'inconsistente') {
+          console.error('La inspección encontró un estado parcial del reporte; se conserva la fotografía.', {
+            idReporte,
+            fotografiaPath,
+            error: rpcResult.error,
+          });
+          return sendJson(res, 503, {
+            error: 'El resultado del reporte es inconsistente y requiere reconciliación.',
+            id_reporte: idReporte,
+          });
+        }
+        console.error('Resultado de crear_reporte_completo incierto; se conserva el objeto para reconciliación.', {
+          idReporte,
+          fotografiaPath,
+          error: rpcResult.error,
+        });
+        return sendJson(res, 503, {
+          error: 'No se pudo confirmar el resultado del reporte. El objeto se conserva para reconciliación.',
+          id_reporte: idReporte,
+        });
       }
+      if (rpcResult.data !== idReporte) {
+        throw new Error('La RPC no confirmó el UUID de reporte solicitado.');
+      }
+
       res.writeHead(201, { 'Content-Type': 'application/json; charset=utf-8' });
-      return res.end(JSON.stringify([{
-        ...(insertedData?.[0] || {}),
-        ...ubicacion,
-        ubicacion,
-      }]));
+      return res.end(JSON.stringify({ id_reporte: idReporte }));
     } catch (error) {
-      if (ubicacionId) {
-        await supabase.from('ubicaciones').delete().eq('id_ubicacion', ubicacionId);
+      if (uploadCompleted && fotografiaPath && idReporte && rpcStarted) {
+        try {
+          const outcome = await inspectReportCreation(supabase, idReporte, fotografiaPath);
+          if (outcome === 'confirmado') {
+            return sendJson(res, 201, { id_reporte: idReporte });
+          }
+          if (outcome === 'sin_asociacion' && isDefinitiveDatabaseError(error)) {
+            const cleanup = await cleanupUploadedPhoto(supabase, fotografiaPath, idReporte);
+            if (cleanup.status === 'eliminado' || cleanup.status === 'ausente') {
+              uploadCompleted = false;
+            } else {
+              console.error('La reserva de limpieza no autorizo eliminar la fotografia.', {
+                idReporte,
+                fotografiaPath,
+                cleanupStatus: cleanup.status,
+              });
+              return sendJson(res, 503, {
+                error: 'No se confirmó que la fotografía pudiera eliminarse; requiere reconciliación.',
+                id_reporte: idReporte,
+              });
+            }
+          } else {
+            console.error('Resultado de la RPC incierto; se conserva el objeto para reconciliación.', {
+              idReporte,
+              fotografiaPath,
+              outcome,
+            });
+            return sendJson(res, 503, {
+              error: 'No se pudo confirmar el resultado del reporte. La fotografía se conserva para reconciliación.',
+              id_reporte: idReporte,
+            });
+          }
+        } catch (cleanupError) {
+          console.error('No se pudo resolver el resultado de la RPC; el objeto requiere reconciliación.', {
+            idReporte,
+            fotografiaPath,
+            error: cleanupError,
+          });
+          return sendJson(res, 503, {
+            error: 'No se pudo resolver el resultado del reporte; la fotografía se conserva para reconciliación.',
+            id_reporte: idReporte,
+          });
+        }
+      } else if (uploadCompleted && fotografiaPath && idReporte) {
+        try {
+          const cleanup = await cleanupUploadedPhoto(supabase, fotografiaPath, idReporte);
+          if (cleanup.status !== 'eliminado' && cleanup.status !== 'ausente') {
+            console.error('La reserva de limpieza no autorizo eliminar la fotografia.', {
+              idReporte,
+              fotografiaPath,
+              cleanupStatus: cleanup.status,
+            });
+            return sendJson(res, 503, {
+              error: 'La fotografía se conserva porque no se pudo confirmar que estuviera sin asociar.',
+              id_reporte: idReporte,
+            });
+          }
+        } catch (cleanupError) {
+          console.error('Falló la compensación de Storage; el objeto requiere reconciliación.', {
+            idReporte,
+            fotografiaPath,
+            error: cleanupError,
+          });
+          return sendJson(res, 503, {
+            error: 'Falló la compensación; la fotografía queda pendiente de reconciliación.',
+            id_reporte: idReporte,
+          });
+        }
       }
-      if (fotografiaId) {
-        await supabase.from('fotografias').delete().eq('id_fotografia', fotografiaId);
-      }
-      if (fotografiaPath) {
-        await supabase.storage.from('reportes-fotos').remove([fotografiaPath]);
+      if (error.statusCode) {
+        return sendJson(res, error.statusCode, { error: error.message });
       }
       return handleError(res, error, 'Error interno al crear el reporte.');
     }
@@ -224,100 +407,237 @@ function applyCors(req, res) {
   });
 }
 
-function requireAuth(req, res) {
+async function enrichReports(client, reports) {
+  const reportIds = [...new Set(reports.map((report) => report.id_reporte).filter(Boolean))];
+  if (!reportIds.length) return [];
+
+  const locationIds = [...new Set(reports.map((report) => report.id_ubicacion).filter(Boolean))];
+  const [locationsResult, photosResult] = await Promise.all([
+    locationIds.length
+      ? client
+        .from('ubicaciones')
+        .select('id_ubicacion, latitud, longitud, direccion_texto')
+        .in('id_ubicacion', locationIds)
+      : Promise.resolve({ data: [], error: null }),
+    client
+      .from('fotografias')
+      .select('id_reporte, storage_path, fecha_carga')
+      .in('id_reporte', reportIds),
+  ]);
+  if (locationsResult.error) throw locationsResult.error;
+  if (photosResult.error) throw photosResult.error;
+
+  const locationById = new Map(
+    (locationsResult.data || []).map((location) => [location.id_ubicacion, location]),
+  );
+  const photoByReportId = new Map(
+    (photosResult.data || []).map((photo) => [photo.id_reporte, photo]),
+  );
+
+  return reports.map((report) => {
+    const location = locationById.get(report.id_ubicacion) || null;
+    const storedPhoto = photoByReportId.get(report.id_reporte);
+    const photo = storedPhoto
+      ? {
+        url: client.storage.from('reportes').getPublicUrl(storedPhoto.storage_path).data.publicUrl,
+        storagePath: storedPhoto.storage_path,
+        uploadedAt: storedPhoto.fecha_carga,
+      }
+      : null;
+    return {
+      ...report,
+      ...(location || {}),
+      ubicacion: location,
+      photo,
+    };
+  });
+}
+
+async function requireSupabaseUser(req, res) {
   const authorization = req.headers.authorization || '';
   const token = authorization.startsWith('Bearer ')
     ? authorization.slice('Bearer '.length)
-    : null;
-  const user = verifySessionToken(token);
-  if (user) return user;
+    : '';
+  if (!token) {
+    sendJson(res, 401, { error: 'Se requiere una sesión Supabase válida.' });
+    return null;
+  }
 
-  res.writeHead(401, { 'Content-Type': 'application/json; charset=utf-8' });
-  res.end(JSON.stringify({ error: 'La sesión es inválida o ha expirado.' }));
-  return null;
+  const client = createUserClient(token);
+  const { data, error } = await client.auth.getUser(token);
+  if (error || !data.user) {
+    if (error && !error.status) {
+      console.error('No se pudo validar el access token contra Supabase Auth.', error);
+      sendJson(res, 503, { error: 'No se pudo validar la sesión con Supabase.' });
+      return null;
+    }
+    sendJson(res, 401, { error: 'La sesión Supabase es inválida o ha expirado.' });
+    return null;
+  }
+  return { client, user: data.user };
+}
+
+async function requireAdministrator(req, res) {
+  const authenticated = await requireSupabaseUser(req, res);
+  if (!authenticated) return null;
+
+  const { data: profile, error } = await authenticated.client
+    .from('perfiles')
+    .select('rol')
+    .eq('id_usuario', authenticated.user.id)
+    .maybeSingle();
+  if (error) throw error;
+  if (profile?.rol !== 'administrador') {
+    sendJson(res, 403, { error: 'La operación requiere un administrador autenticado.' });
+    return null;
+  }
+  return authenticated;
+}
+
+function isUuid(value) {
+  return typeof value === 'string'
+    && /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
 }
 
 function readJsonBody(req) {
   return new Promise((resolve, reject) => {
     let body = '';
+    let tooLarge = false;
     req.on('data', (chunk) => {
+      if (tooLarge) return;
       body += chunk;
-      if (body.length > 1_000_000) reject(new Error('El cuerpo de la petición es demasiado grande.'));
+      if (body.length > 1_000_000) {
+        tooLarge = true;
+        reject(requestError('El cuerpo de la petición es demasiado grande.', 413));
+      }
     });
     req.on('end', () => {
+      if (tooLarge) return;
       try {
         resolve(body ? JSON.parse(body) : {});
       } catch {
         reject(new Error('JSON inválido.'));
       }
+    });
+    req.on('error', reject);
+  });
+}
 
-      function readMultipartBody(req) {
-        const contentType = req.headers['content-type'] || '';
-        const boundaryMatch = contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/i);
-        if (!boundaryMatch) {
-          return Promise.reject(new Error('La petición debe ser multipart/form-data.'));
-        }
-        const boundary = boundaryMatch[1] || boundaryMatch[2];
+function readMultipartBody(req) {
+  const contentType = req.headers['content-type'] || '';
+  const boundaryMatch = contentType.match(/boundary=(?:"([^"]+)"|([^;]+))/i);
+  if (!boundaryMatch) {
+    const error = new Error('La petición debe ser multipart/form-data.');
+    error.statusCode = 400;
+    return Promise.reject(error);
+  }
+  const boundary = boundaryMatch[1] || boundaryMatch[2];
 
-        return new Promise((resolve, reject) => {
-          const chunks = [];
-          let totalLength = 0;
-          req.on('data', (chunk) => {
-            totalLength += chunk.length;
-            if (totalLength > 6 * 1024 * 1024) {
-              reject(new Error('La fotografía supera el límite de 5 MB.'));
-              req.destroy();
-              return;
-            }
-            chunks.push(chunk);
-          });
-          req.on('end', () => {
-            try {
-              const body = Buffer.concat(chunks);
-              const delimiter = Buffer.from(`--${boundary}`);
-              const fields = {};
-              let file = null;
-              let offset = 0;
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let totalLength = 0;
+    let rejected = false;
+    req.on('data', (chunk) => {
+      if (rejected) return;
+      totalLength += chunk.length;
+      if (totalLength > 6 * 1024 * 1024) {
+        rejected = true;
+        const error = new Error('La fotografía supera el límite de 5 MB.');
+        error.statusCode = 413;
+        reject(error);
+        return;
+      }
+      chunks.push(chunk);
+    });
+    req.on('end', () => {
+      if (rejected) return;
+      try {
+        const body = Buffer.concat(chunks);
+        const delimiter = Buffer.from(`--${boundary}`);
+        const fields = Object.create(null);
+        let file = null;
+        let offset = 0;
 
-              while (offset < body.length) {
-                const start = body.indexOf(delimiter, offset);
-                if (start === -1) break;
-                const partStart = start + delimiter.length;
-                if (body.subarray(partStart, partStart + 2).toString() === '--') break;
-                const contentStart = partStart + 2;
-                const headerEnd = body.indexOf(Buffer.from('\r\n\r\n'), contentStart);
-                if (headerEnd === -1) break;
-                const headers = body.subarray(contentStart, headerEnd).toString('utf8');
-                const nextBoundary = body.indexOf(delimiter, headerEnd + 4);
-                if (nextBoundary === -1) break;
-                const contentEnd = nextBoundary - 2;
-                const content = body.subarray(headerEnd + 4, contentEnd);
-                const nameMatch = headers.match(/name="([^"]+)"/i);
-                if (nameMatch) {
-                  const filenameMatch = headers.match(/filename="([^"]*)"/i);
-                  if (filenameMatch && filenameMatch[1]) {
-                    const typeMatch = headers.match(/Content-Type:\s*([^\r\n]+)/i);
-                    file = {
-                      content,
-                      contentType: typeMatch ? typeMatch[1].trim() : '',
-                    };
-                  } else {
-                    fields[nameMatch[1]] = content.toString('utf8');
-                  }
-                }
-                offset = nextBoundary;
+        while (offset < body.length) {
+          const start = body.indexOf(delimiter, offset);
+          if (start === -1) break;
+          const partStart = start + delimiter.length;
+          if (body.subarray(partStart, partStart + 2).toString() === '--') break;
+          const contentStart = partStart + 2;
+          const headerEnd = body.indexOf(Buffer.from('\r\n\r\n'), contentStart);
+          if (headerEnd === -1) throw requestError('El formulario multipart está mal formado.', 400);
+          const headers = body.subarray(contentStart, headerEnd).toString('utf8');
+          const nextBoundary = body.indexOf(delimiter, headerEnd + 4);
+          if (nextBoundary === -1) throw requestError('El formulario multipart está incompleto.', 400);
+          const contentEnd = nextBoundary - 2;
+          const content = body.subarray(headerEnd + 4, contentEnd);
+          const nameMatch = headers.match(/name="([^"]+)"/i);
+          if (nameMatch) {
+            const filenameMatch = headers.match(/filename="([^"]*)"/i);
+            if (filenameMatch && filenameMatch[1]) {
+              if (file) throw requestError('Solo se permite una fotografía por reporte.', 400);
+              const typeMatch = headers.match(/Content-Type:\s*([^\r\n]+)/i);
+              file = {
+                content,
+                filename: filenameMatch[1],
+                contentType: typeMatch ? typeMatch[1].trim() : '',
+              };
+            } else {
+              if (Object.prototype.hasOwnProperty.call(fields, nameMatch[1])) {
+                throw requestError(`El campo ${nameMatch[1]} está repetido.`, 400);
               }
-              resolve({ fields, file });
-            } catch (error) {
-              reject(error);
+              fields[nameMatch[1]] = content.toString('utf8');
             }
-          });
-          req.on('error', reject);
-        });
+          }
+          offset = nextBoundary;
+        }
+        resolve({ fields, file });
+      } catch (error) {
+        reject(error);
       }
     });
     req.on('error', reject);
   });
+}
+
+function isDefinitiveDatabaseError(error) {
+  const code = String(error?.code || '');
+  const sqlState = /^[0-9A-Z]{5}$/.test(code);
+  const connectionFailure = code.startsWith('08')
+    || ['57P01', '57P02', '57P03'].includes(code);
+  const status = Number(error?.status);
+  const definitiveHttpError = status >= 400 && status < 500
+    && status !== 408 && status !== 425;
+  return (sqlState && !connectionFailure)
+    || definitiveHttpError;
+}
+
+function sendJson(res, status, payload) {
+  res.writeHead(status, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify(payload));
+}
+
+function requestError(message, statusCode) {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
+}
+
+function normalizeProblemType(value) {
+  const type = String(value || '').trim();
+  const legacyCategories = {
+    'Hueco en la vía': 'bache',
+    'Alcantarilla sin tapa': 'alcantarilla_sin_tapa',
+    'Semáforo en mal estado': 'otro',
+    'Señalización dañada': 'otro',
+    'Alumbrado público dañado': 'otro',
+    'Acumulación de basura': 'otro',
+    Otros: 'otro',
+  };
+  if (legacyCategories[type]) return legacyCategories[type];
+  return ['bache', 'grieta', 'hundimiento', 'alcantarilla_sin_tapa', 'otro'].includes(type)
+    ? type
+    : '';
 }
 
 function handleError(res, error, message) {

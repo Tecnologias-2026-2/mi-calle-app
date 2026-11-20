@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle del reporte | Mi Calle</title>
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../usuario.css/usuario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <header class="header-usuario">
+        <a href="../../login-registro/html/landing.html" class="logo">
+            <div class="logo-icono"><i class="fa-solid fa-house"></i></div>
+            <div class="logo-texto"><h2>Mi Calle</h2><span>Reportador Ciudadano</span></div>
+        </a>
+        <nav class="menu-navegacion">
+            <a href="mapa.html">Reportes públicos</a>
+            <a href="../../login-registro/html/bienvenida.html">Acceso ciudadano</a>
+        </nav>
+    </header>
+    <main class="dashboard-inicio">
+        <a class="btn-cancelar" href="mapa.html">Volver a reportes</a>
+        <section class="tarjeta-blanco detalle-publico-reporte" aria-live="polite">
+            <p id="detalle-cargando">Cargando detalle del reporte…</p>
+            <div id="detalle-contenido" hidden>
+                <h1 id="detalle-titulo"></h1>
+                <p><strong>Estado:</strong> <span id="detalle-estado"></span></p>
+                <p><strong>Ubicación:</strong> <span id="detalle-ubicacion"></span></p>
+                <p><strong>Fecha:</strong> <span id="detalle-fecha"></span></p>
+                <p id="detalle-descripcion"></p>
+                <img id="detalle-fotografia" alt="Fotografía del reporte" hidden>
+                <p id="detalle-sin-fotografia" hidden>Este reporte no tiene una fotografía disponible en esta sesión.</p>
+                <p id="detalle-coordenadas" hidden></p>
+                <section aria-labelledby="historial-titulo">
+                    <h2 id="historial-titulo">Historial de estados</h2>
+                    <ol id="historial-estados"></ol>
+                </section>
+            </div>
+        </section>
+    </main>
+    <script src="../../demo-service.js"></script>
+    <script src="../../frontend-services.js"></script>
+    <script src="../reporte-detalle.js"></script>
+</body>
+</html>

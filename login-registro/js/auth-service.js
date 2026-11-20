@@ -1,6 +1,4 @@
 import { authMessages } from "./auth-data.js";
-const BASE_URL = "https://mi-calle-app-backend.onrender.com";
-const SESSION_KEY = "mi-calle-session";
 
 function validateEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -17,30 +15,17 @@ export async function loginUser({ email, password }) {
     return { ok: false, message: authMessages.validation.invalidEmail };
   }
 
-  let response;
   try {
-    response = await fetch(`${BASE_URL}/api/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: normalizedEmail, password }),
-    });
-  } catch {
-    return { ok: false, message: authMessages.system.requestError };
+    const result = await window.MiCalleServices.login({ email: normalizedEmail, password });
+    return {
+      ok: result.ok,
+      message: authMessages.login.success,
+      user: result.data.user,
+      session: result.data,
+    };
+  } catch (error) {
+    return { ok: false, message: error.message || authMessages.system.requestError };
   }
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
-    return { ok: false, message: result.error || authMessages.login.invalidCredentials };
-  }
-
-  window.localStorage.setItem(SESSION_KEY, result.session);
-  window.localStorage.setItem("mi-calle-user", JSON.stringify(result.user));
-  return {
-    ok: true,
-    message: authMessages.login.success,
-    user: result.user,
-    session: result.session,
-  };
 }
 
 export async function registerUser({
@@ -68,36 +53,21 @@ export async function registerUser({
     return { ok: false, message: authMessages.validation.passwordMismatch };
   }
 
-  let response;
   try {
-    response = await fetch(`${BASE_URL}/api/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        nombre_completo: normalizedUsername,
-        email: normalizedEmail,
-        password,
-      }),
+    const result = await window.MiCalleServices.register({
+      username: normalizedUsername,
+      email: normalizedEmail,
+      password,
     });
-  } catch {
-    return { ok: false, message: authMessages.system.requestError };
-  }
-
-  const result = await response.json().catch(() => ({}));
-  if (!response.ok) {
     return {
-      ok: false,
-      message: result.error || authMessages.system.requestError,
+      ok: result.ok,
+      message: result.data.message || authMessages.register.confirmEmail,
     };
+  } catch (error) {
+    return { ok: false, message: error.message || authMessages.system.requestError };
   }
-
-  return {
-    ok: true,
-    message: result.message || authMessages.register.confirmEmail,
-  };
 }
 
-export function logoutUser() {
-  window.localStorage.removeItem(SESSION_KEY);
-  window.localStorage.removeItem("mi-calle-user");
+export async function logoutUser() {
+  return window.MiCalleServices.logout();
 }

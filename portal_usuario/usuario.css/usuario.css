@@ -1587,3 +1587,63 @@ textarea::placeholder {
         grid-column: span 1;
     }
 }
+
+.filtros-reportes-publicos {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+}
+
+.filtros-reportes-publicos select {
+    min-width: 170px;
+    padding: 9px 12px;
+    border: 1px solid var(--borde);
+    border-radius: 8px;
+    background: #fff;
+    color: var(--texto-titulo);
+}
+
+.lista-reportes-publicos,
+.detalle-publico-reporte {
+    margin: 20px 0;
+    padding: 20px;
+}
+
+.lista-reportes-publicos h2,
+.detalle-publico-reporte h1 {
+    color: var(--texto-titulo);
+}
+
+#lista-reportes-publicos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 12px;
+}
+
+.reporte-publico-item {
+    display: grid;
+    gap: 8px;
+    padding: 14px;
+    border: 1px solid var(--borde-suave);
+    border-radius: 10px;
+}
+
+.reporte-publico-item h3,
+.reporte-publico-item p {
+    margin: 0;
+}
+
+.detalle-publico-reporte #detalle-fotografia {
+    display: block;
+    max-width: min(100%, 640px);
+    max-height: 420px;
+    margin: 18px 0;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+.detalle-publico-reporte li {
+    margin: 8px 0;
+}

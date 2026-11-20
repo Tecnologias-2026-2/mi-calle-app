@@ -117,6 +117,12 @@
                 </svg>
               </button>
             </form>
+            <section class="demo-access" data-demo-access hidden aria-label="Acceso administrativo de demostración">
+              <p>Acceso simulado: no valida permisos ni modifica datos reales.</p>
+              <button type="button" class="submit-button" data-demo-role="administrador">
+                Entrar como administrador demo
+              </button>
+            </section>
           </div>
         </section>
       </main>
@@ -134,6 +140,8 @@
       </footer>
     </div>
 
+    <script src="../../demo-service.js"></script>
+    <script src="../../frontend-services.js"></script>
     <script>
       const passwordInput = document.querySelector("#admin-password");
       const passwordToggle = document.querySelector(".password-toggle");
@@ -151,8 +159,31 @@
 
       adminLoginForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        window.location.href = "../../Portal_admin/HTML/index.html";
+        const feedback = document.querySelector("[data-admin-login-feedback]");
+        if (window.MiCalleDemo?.isEnabled()) {
+          feedback.textContent = "Usa el botón de administrador demo. Este formulario no inicia una sesión real.";
+          return;
+        }
+        feedback.textContent = "El inicio de sesión administrativo real aún no está conectado.";
       });
+
+      const feedback = document.createElement("p");
+      feedback.dataset.adminLoginFeedback = "true";
+      feedback.setAttribute("role", "status");
+      adminLoginForm.append(feedback);
+
+      const demoAccess = document.querySelector("[data-demo-access]");
+      if (window.MiCalleDemo?.isEnabled()) {
+        demoAccess.hidden = false;
+        demoAccess.querySelector("[data-demo-role='administrador']").addEventListener("click", async () => {
+          try {
+            await window.MiCalleServices.login({ role: "administrador" });
+            window.location.href = "../../Portal_admin/HTML/index.html";
+          } catch (error) {
+            feedback.textContent = error.message || "No se pudo iniciar la sesión demo.";
+          }
+        });
+      }
     </script>
   </body>
 </html>

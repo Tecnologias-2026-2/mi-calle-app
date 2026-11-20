@@ -13,15 +13,13 @@
     <!-- CSS de mi portal usuario-->
     <link rel="stylesheet" href="../usuario.css/usuario.css">
 
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-
     <!-- Font Awesome (Librería de iconos) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
       <!-- Fuente Poppins-->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-        integrity="sha256-p4NxAoJBhIINfQ3Jq7k5N4T8eQ9H7Y2f5m2e3z3f4M="
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
         crossorigin="" />
  
 
@@ -42,10 +40,10 @@
 
     
     <nav class="menu-navegacion" id="menu-navegacion">
-        <a href="index.html" >Inicio</a>
+        <a href="index.html">Inicio</a>
         <a href="reportar.html">Reportar un problema</a>
         <a href="mis_reportes.html">Mis reportes</a>
-        <a href="mapa.html" class="activo">Mapa de reportes</a>
+        <a href="mapa.html" class="activo">Reportes públicos</a>
     </nav>
 
     <div class="acciones-header">
@@ -70,6 +68,20 @@
                 <i class="fa-solid fa-spinner fa-spin"></i> Cargando reportes...
             </div>
         </div>
+        <div class="filtros-reportes-publicos" aria-label="Filtros de reportes">
+            <label for="filtro-categoria">Categoría</label>
+            <select id="filtro-categoria">
+                <option value="">Todas</option>
+            </select>
+            <label for="filtro-estado">Estado</label>
+            <select id="filtro-estado">
+                <option value="">Todos</option>
+                <option value="pendiente">Pendiente</option>
+                <option value="en_revision">En revisión</option>
+                <option value="en_proceso">En proceso</option>
+                <option value="reparado">Reparado</option>
+            </select>
+        </div>
 
         <!-- Área del mapa (simulada con CSS) -->
         <div class="area-mapa" id="mapa" aria-busy="true"></div>
@@ -80,6 +92,11 @@
             <div class="item-leyenda"><span class="punto-leyenda punto-revision"></span> En revisión</div>
             <div class="item-leyenda"><span class="punto-leyenda punto-reparado"></span> Reparado</div>
         </div>
+
+        <section class="lista-reportes-publicos tarjeta-blanco" aria-labelledby="reportes-publicos-titulo">
+            <h2 id="reportes-publicos-titulo">Reportes de la comunidad</h2>
+            <div id="lista-reportes-publicos" aria-live="polite">Cargando reportes...</div>
+        </section>
     </div>
 
     <!-- Tarjeta de información del reporte (aparece al hacer clic en un pin) -->
@@ -111,7 +128,8 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
     crossorigin=""></script>
-<script src="../portal-auth.js"></script>
+<script src="../../demo-service.js"></script>
+<script src="../../frontend-services.js"></script>
 <script src="../visualizacion.js"></script>
 <script src="../menu.js"></script>
 </body>

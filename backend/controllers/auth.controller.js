@@ -1,199 +1,109 @@
-const crypto = require('crypto');
-const supabase = require('../config/supabase');
-const { sendVerificationEmail } = require('../services/email.service');
-const { hashPassword, verifyPassword } = require('../services/password.service');
-const { createSessionToken } = require('../services/session.service');
-
-const TOKEN_TTL_MS = 24 * 60 * 60 * 1000;
+const { createPublicClient, createUserClient } = require('../config/supabase-user');
 
 async function register(req, res, body) {
-  const { nombre_completo: name, email, password } = body || {};
-  const normalizedEmail = String(email || '').trim().toLowerCase();
+  const name = String(body?.nombre_completo || '').trim();
+  const email = String(body?.email || '').trim().toLowerCase();
+  const password = String(body?.password || '');
 
-  if (!name || !normalizedEmail || !password) {
+  if (!name || !email || !password) {
     return sendJson(res, 400, { error: 'Nombre, email y contraseña son obligatorios.' });
   }
-  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizedEmail)) {
+  if (name.length > 100) {
+    return sendJson(res, 400, { error: 'El nombre completo no puede superar 100 caracteres.' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return sendJson(res, 400, { error: 'El email no es válido.' });
   }
-  if (String(password).length < 8) {
+  if (password.length < 8) {
     return sendJson(res, 400, { error: 'La contraseña debe tener al menos 8 caracteres.' });
   }
 
-  const { data: existingUser, error: lookupError } = await supabase
-    .from('usuarios')
-    .select('id_usuario, is_verified')
-    .eq('correo_electronico', normalizedEmail)
-    .maybeSingle();
-  if (lookupError) throw lookupError;
-  if (existingUser?.is_verified) {
-    return sendJson(res, 409, { error: 'Ya existe una cuenta verificada con ese email.' });
-  }
-
-  const token = crypto.randomBytes(32).toString('hex');
-  const passwordHash = await hashPassword(String(password));
-  const expiresAt = new Date(Date.now() + TOKEN_TTL_MS).toISOString();
-  const userData = {
-    nombre_completo: String(name).trim(),
-    correo_electronico: normalizedEmail,
-    contrasena: passwordHash,
-    rol: 'Ciudadano',
-    is_verified: false,
-    verification_token: token,
-    verification_expires_at: expiresAt,
-  };
-
-  const query = existingUser
-    ? supabase.from('usuarios').update(userData).eq('id_usuario', existingUser.id_usuario)
-    : supabase.from('usuarios').insert(userData);
-  const { error: saveError } = await query;
-  if (saveError) throw saveError;
-
-  try {
-    await sendVerificationEmail({ email: normalizedEmail, name, token });
-  } catch (emailError) {
-    await supabase
-      .from('usuarios')
-      .delete()
-      .eq('correo_electronico', normalizedEmail)
-      .eq('is_verified', false);
-    throw emailError;
+  const { error } = await createPublicClient().auth.signUp({
+    email,
+    password,
+    options: { data: { nombre_completo: name } },
+  });
+  if (error) {
+    if (Number(error.status) === 429) {
+      return sendJson(res, 429, { error: 'Se alcanzó el límite de registros. Inténtalo más tarde.' });
+    }
+    return sendJson(res, 400, { error: 'Supabase Auth no pudo completar el registro.' });
   }
 
   return sendJson(res, 201, {
-    message: 'Registro creado. Revisa tu correo para verificar la cuenta.',
+    message: 'Registro enviado. Revisa tu correo para confirmar la cuenta.',
   });
 }
 
-async function verify(req, res, token) {
-  if (!token) return sendJson(res, 400, { error: 'El token de verificación es obligatorio.' });
-
-  const { data: user, error: lookupError } = await supabase
-    .from('usuarios')
-    .select('id_usuario, verification_expires_at')
-    .eq('verification_token', token)
-    .maybeSingle();
-  if (lookupError) throw lookupError;
-  if (!user) return sendJson(res, 400, { error: 'El token es inválido o ya fue utilizado.' });
-  if (!user.verification_expires_at || new Date(user.verification_expires_at) <= new Date()) {
-    return sendJson(res, 410, { error: 'El token de verificación ha expirado.' });
+async function verify(req, res, tokenHash, type = 'signup') {
+  const allowedTypes = new Set([
+    'signup',
+    'email',
+    'recovery',
+    'invite',
+    'magiclink',
+    'email_change',
+  ]);
+  if (!tokenHash || !allowedTypes.has(type)) {
+    return sendJson(res, 400, { error: 'El código de verificación o su tipo no son válidos.' });
   }
 
-  async function login(req, res, body) {
-    const { email, password } = body || {};
-    const normalizedEmail = String(email || '').trim().toLowerCase();
-    if (!normalizedEmail || !password) {
-      return sendJson(res, 400, { error: 'Email y contraseña son obligatorios.' });
-    }
-
-    const { data: user, error } = await supabase
-      .from('usuarios')
-      .select('id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified, telefono_contacto')
-      .eq('correo_electronico', normalizedEmail)
-      .maybeSingle();
-    if (error) throw error;
-    if (!user || !(await verifyPassword(String(password), user.contrasena))) {
-      return sendJson(res, 401, { error: 'El email o la contraseña no son correctos.' });
-    }
-    if (!user.is_verified) {
-      return sendJson(res, 403, { error: 'Debes verificar tu correo antes de iniciar sesión.' });
-    }
-
-    const session = createSessionToken({
-      sub: user.id_usuario,
-      email: user.correo_electronico,
-      role: user.rol,
-      exp: Date.now() + 7 * 24 * 60 * 60 * 1000,
-    });
-    return sendJson(res, 200, {
-      message: 'Inicio de sesión exitoso.',
-      session,
-      user: {
-        id: user.id_usuario,
-        name: user.nombre_completo,
-        email: user.correo_electronico,
-        role: user.rol,
-        is_verified: user.is_verified,
-        telefono: user.telefono_contacto || '',
-      },
-    });
+  const { data, error } = await createPublicClient().auth.verifyOtp({
+    token_hash: tokenHash,
+    type,
+  });
+  if (error) {
+    return sendJson(res, 400, { error: 'El código es inválido, expiró o ya fue utilizado.' });
   }
 
-  const { error: updateError } = await supabase
-    .from('usuarios')
-    .update({
-      is_verified: true,
-      verification_token: null,
-      verification_expires_at: null,
-    })
-    .eq('id_usuario', user.id_usuario)
-    .eq('verification_token', token);
-  if (updateError) throw updateError;
-
-  return sendJson(res, 200, { message: 'Correo verificado correctamente. Ya puedes iniciar sesión.' });
-}
-
-function sendJson(res, statusCode, payload) {
-  res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
-  res.end(JSON.stringify(payload));
+  return sendJson(res, 200, {
+    message: 'Verificación completada.',
+    session: data.session?.access_token || null,
+  });
 }
 
 async function login(req, res, body) {
-  const { email, password } = body || {};
-  const normalizedEmail = String(email || '').trim().toLowerCase();
-
-  if (!normalizedEmail || !password) {
-    return sendJson(res, 400, {
-      error: 'Email y contraseña son obligatorios.',
-    });
+  const email = String(body?.email || '').trim().toLowerCase();
+  const password = String(body?.password || '');
+  if (!email || !password) {
+    return sendJson(res, 400, { error: 'Email y contraseña son obligatorios.' });
   }
 
-  const { data: user, error } = await supabase
-    .from('usuarios')
-    .select(
-      'id_usuario, nombre_completo, correo_electronico, contrasena, rol, is_verified, telefono_contacto'
-    )
-    .eq('correo_electronico', normalizedEmail)
-    .maybeSingle();
-
-  if (error) {
-    throw error;
-  }
-
-  if (!user || !(await verifyPassword(String(password), user.contrasena))) {
-    return sendJson(res, 401, {
-      error: 'El email o la contraseña no son correctos.',
-    });
-  }
-
-  if (!user.is_verified) {
-    return sendJson(res, 403, {
-      error: 'Debes verificar tu correo antes de iniciar sesión.',
-    });
-  }
-
-  const session = createSessionToken({
-    sub: user.id_usuario,
-    email: user.correo_electronico,
-    role: user.rol,
-    exp: Date.now() + 7 * 24 * 60 * 60 * 1000,
+  const { data, error } = await createPublicClient().auth.signInWithPassword({
+    email,
+    password,
   });
+  if (error || !data.session || !data.user) {
+    return sendJson(res, 401, { error: 'El email o la contraseña no son correctos, o la cuenta no está verificada.' });
+  }
+
+  const profileClient = createUserClient(data.session.access_token);
+  const { data: profile, error: profileError } = await profileClient
+    .from('perfiles')
+    .select('id_usuario, nombre_completo, telefono, rol')
+    .eq('id_usuario', data.user.id)
+    .maybeSingle();
+  if (profileError) throw profileError;
+  if (!profile) {
+    return sendJson(res, 409, { error: 'El perfil todavía no está disponible para esta cuenta.' });
+  }
 
   return sendJson(res, 200, {
     message: 'Inicio de sesión exitoso.',
-    session,
+    session: data.session.access_token,
+    refresh_token: data.session.refresh_token,
+    expires_at: data.session.expires_at,
     user: {
-      id: user.id_usuario,
-      name: user.nombre_completo,
-      email: user.correo_electronico,
-      role: user.rol,
-      is_verified: user.is_verified,
-      telefono: user.telefono_contacto || '',
+      id: profile.id_usuario,
+      name: profile.nombre_completo,
+      email: data.user.email,
+      role: profile.rol,
+      telefono: profile.telefono || '',
     },
   });
 }
 
-async function updateProfile(req, res, body, sessionUser) {
+async function updateProfile(req, res, body, authenticated) {
   const name = String(body?.nombre_completo || '').trim();
   const phone = String(body?.telefono || '').trim();
 
@@ -207,32 +117,30 @@ async function updateProfile(req, res, body, sessionUser) {
     return sendJson(res, 400, { error: 'El teléfono no puede superar 20 caracteres.' });
   }
 
-  const updateData = {
-    nombre_completo: name,
-    telefono_contacto: phone || null,
-  };
-
-  const { data: user, error } = await supabase
-    .from('usuarios')
-    .update(updateData)
-    .eq('id_usuario', sessionUser.sub)
-    .select('id_usuario, nombre_completo, correo_electronico, rol, is_verified, telefono_contacto')
+  const { data: profile, error } = await authenticated.client
+    .from('perfiles')
+    .update({ nombre_completo: name, telefono: phone || null })
+    .eq('id_usuario', authenticated.user.id)
+    .select('id_usuario, nombre_completo, telefono, rol')
     .maybeSingle();
-
   if (error) throw error;
-  if (!user) return sendJson(res, 404, { error: 'Usuario no encontrado.' });
+  if (!profile) return sendJson(res, 404, { error: 'Perfil no encontrado.' });
 
   return sendJson(res, 200, {
     message: 'Perfil actualizado correctamente.',
     user: {
-      id: user.id_usuario,
-      name: user.nombre_completo,
-      email: user.correo_electronico,
-      role: user.rol,
-      is_verified: user.is_verified,
-      telefono: user.telefono_contacto || '',
+      id: profile.id_usuario,
+      name: profile.nombre_completo,
+      email: authenticated.user.email,
+      role: profile.rol,
+      telefono: profile.telefono || '',
     },
   });
+}
+
+function sendJson(res, statusCode, payload) {
+  res.writeHead(statusCode, { 'Content-Type': 'application/json; charset=utf-8' });
+  res.end(JSON.stringify(payload));
 }
 
 module.exports = { register, verify, login, updateProfile };

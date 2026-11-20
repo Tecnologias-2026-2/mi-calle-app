@@ -2,8 +2,6 @@ const statusOptions = [...document.querySelectorAll('input[name="report-status"]
 const statusCards = [...document.querySelectorAll(".status-option")];
 const steps = [...document.querySelectorAll(".step-item")];
 const feedback = document.querySelector(".update-feedback");
-const discardReasonContainer = document.querySelector(".discard-reason");
-const discardReason = document.querySelector("#discard-reason");
 
 function showSelectedStatus(status) {
   const selectedIndex = statusOptions.findIndex((option) => option.value === status);
@@ -18,8 +16,6 @@ function showSelectedStatus(status) {
     step.classList.toggle("is-current", selectedIndex >= 0 && index === selectedIndex);
   });
 
-  discardReasonContainer.hidden = status !== "descartado";
-  discardReason.required = status === "descartado";
 }
 
 statusOptions.forEach((option) => {

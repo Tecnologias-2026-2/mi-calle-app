@@ -133,17 +133,21 @@
                 <span class="step-marker"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg></span>
                 <span class="step-label">Pendiente</span>
               </li>
-              <li class="step-item is-current" data-step="proceso">
+              <li class="step-item" data-step="en_revision">
                 <span class="step-marker">2</span>
+                <span class="step-label">En revisión</span>
+              </li>
+              <li class="step-item is-current" data-step="en_proceso">
+                <span class="step-marker">3</span>
                 <span class="step-label">En proceso</span>
               </li>
-              <li class="step-item" data-step="resuelto">
-                <span class="step-marker">3</span>
-                <span class="step-label">Resuelto</span>
+              <li class="step-item" data-step="reparado">
+                <span class="step-marker">4</span>
+                <span class="step-label">Reparado</span>
               </li>
             </ol>
 
-            <div class="step-connector" aria-hidden="true"><span></span><span></span></div>
+            <div class="step-connector" aria-hidden="true"><span></span><span></span><span></span></div>
 
             <fieldset class="status-options">
               <legend>Elige el estado para este reporte</legend>
@@ -154,32 +158,27 @@
                 <span class="option-color option-amber" aria-hidden="true"></span>
               </label>
               <label class="status-option is-selected">
-                <input type="radio" name="report-status" value="proceso" checked>
+                <input type="radio" name="report-status" value="en_revision">
+                <span class="option-check" aria-hidden="true"></span>
+                <span class="option-copy"><strong>En revisión</strong><small>El reporte está siendo evaluado.</small></span>
+                <span class="option-color option-amber" aria-hidden="true"></span>
+              </label>
+              <label class="status-option">
+                <input type="radio" name="report-status" value="en_proceso" checked>
                 <span class="option-check" aria-hidden="true"></span>
                 <span class="option-copy"><strong>En proceso</strong><small>El equipo está trabajando en la solución.</small></span>
                 <span class="option-color option-blue" aria-hidden="true"></span>
               </label>
               <label class="status-option">
-                <input type="radio" name="report-status" value="resuelto">
+                <input type="radio" name="report-status" value="reparado">
                 <span class="option-check" aria-hidden="true"></span>
-                <span class="option-copy"><strong>Resuelto</strong><small>La incidencia fue atendida y solucionada.</small></span>
+                <span class="option-copy"><strong>Reparado</strong><small>La incidencia fue atendida y solucionada.</small></span>
                 <span class="option-color option-green" aria-hidden="true"></span>
-              </label>
-              <label class="status-option status-option--discard">
-                <input type="radio" name="report-status" value="descartado">
-                <span class="option-check" aria-hidden="true"></span>
-                <span class="option-copy"><strong>Descartar reporte</strong><small>El caso no puede continuar por información insuficiente o inválida.</small></span>
-                <span class="option-color option-red" aria-hidden="true"></span>
               </label>
             </fieldset>
 
             <label class="update-note-label" for="status-note">Nota de actualización <span>(opcional)</span></label>
             <textarea class="update-note" id="status-note" rows="3" placeholder="Agrega información sobre el avance del reporte..."></textarea>
-
-            <div class="discard-reason" hidden>
-              <label class="update-note-label" for="discard-reason">Razón del descarte <span>(obligatoria)</span></label>
-              <textarea class="update-note" id="discard-reason" rows="3" placeholder="Explica por qué se descarta este reporte..."></textarea>
-            </div>
 
             <div class="update-feedback" role="status" aria-live="polite" hidden></div>
             <div class="update-actions">
@@ -192,10 +191,16 @@
             <p class="notify-note"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4"/></svg>Con el servicio conectado, el ciudadano recibirá una notificación sobre el cambio.</p>
           </article>
         </section>
+        <section class="panel report-history" aria-labelledby="admin-history-title">
+          <h2 id="admin-history-title">Historial de estados</h2>
+          <ol id="admin-report-history" aria-live="polite"></ol>
+        </section>
         <footer class="content-footer"><span>© 2024 Mi Calle</span><span>Construyendo calles más seguras, juntos.</span></footer>
       </div>
     </main>
   </div>
+  <script src="../../demo-service.js"></script>
+  <script src="../../frontend-services.js"></script>
   <script src="reports.js"></script>
   <script src="admin-ui.js"></script>
   <script src="admin-service.js"></script>

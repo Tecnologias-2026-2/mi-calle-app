@@ -10,7 +10,9 @@ window.MiCalleAuth = (() => {
 
     function decodePayload(token) {
         try {
-            const payload = token.split(".")[0];
+            const segments = token.split(".");
+            if (segments.length !== 3) return null;
+            const payload = segments[1];
             const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
             return JSON.parse(window.atob(normalized.padEnd(Math.ceil(normalized.length / 4) * 4, "=")));
         } catch {
@@ -23,9 +25,11 @@ window.MiCalleAuth = (() => {
             window.localStorage.removeItem(key);
             window.sessionStorage.removeItem(key);
         });
+        window.MiCalleDemo?.logout();
     }
 
     function getToken() {
+        if (window.MiCalleDemo?.isEnabled()) return null;
         const token = readStorage(SESSION_KEY);
         const payload = token && typeof token === "string" ? decodePayload(token) : null;
         if (!payload || !payload.sub || !payload.exp || Number(payload.exp) <= Date.now()) {
@@ -36,6 +40,9 @@ window.MiCalleAuth = (() => {
     }
 
     function getUser() {
+        if (window.MiCalleDemo?.isEnabled()) {
+          return window.MiCalleServices?.getCurrentSession()?.user || null;
+        }
         try {
             const savedUser = readStorage(USER_KEY);
             if (savedUser) return JSON.parse(savedUser);
@@ -49,12 +56,27 @@ window.MiCalleAuth = (() => {
     }
 
     function redirectToLogin(message) {
-        clearSession();
+        if (window.MiCalleDemo?.isEnabled()) {
+          window.MiCalleDemo.logout();
+        } else {
+          clearSession();
+        }
         const separator = LOGIN_URL.includes("?") ? "&" : "?";
-        window.location.replace(`${LOGIN_URL}${separator}session=${encodeURIComponent(message)}`);
+        const demoQuery = window.MiCalleDemo?.isEnabled() ? "&demo=1" : "";
+        window.location.replace(
+          `${LOGIN_URL}${separator}session=${encodeURIComponent(message)}${demoQuery}`,
+        );
     }
 
     function requireSession() {
+        if (window.MiCalleDemo?.isEnabled()) {
+          const demoSession = window.MiCalleServices?.getCurrentSession();
+          if (demoSession?.mode === "demo" && demoSession.user.role === "ciudadano") {
+            return { token: null, user: demoSession.user, demo: true };
+          }
+          redirectToLogin("required");
+          return null;
+        }
         const token = getToken();
         if (!token) {
             redirectToLogin("required");
@@ -64,6 +86,14 @@ window.MiCalleAuth = (() => {
     }
 
     async function request(path, options = {}) {
+        if (window.MiCalleDemo?.isEnabled()) {
+          const demoSession = window.MiCalleDemo.getSession();
+          if (demoSession?.role !== "ciudadano") {
+            redirectToLogin("required");
+            throw new Error("Se requiere una sesión de ciudadano demo.");
+          }
+          return window.MiCalleDemo.request(path, options);
+        }
         const token = getToken();
         if (!token) {
             redirectToLogin("expired");
@@ -137,7 +167,11 @@ window.MiCalleAuth = (() => {
             if (!element.closest(".logo")) {
                 element.addEventListener("click", (event) => {
                     event.preventDefault();
-                    clearSession();
+                    if (window.MiCalleDemo?.isEnabled()) {
+                        window.MiCalleServices?.logout();
+                    } else {
+                        clearSession();
+                    }
                     window.location.replace(LOGIN_URL);
                 });
             }

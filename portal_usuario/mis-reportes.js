@@ -7,21 +7,17 @@ function escapeReportHTML(value) {
 }
 
 function getStatus(report) {
-    const key = String(report.estado_atencion || report.estado || "reportado").toLowerCase();
     const statuses = {
-        reportado: ["Reportado", "estado-azul"],
         pendiente: ["Pendiente", "estado-rojo"],
-        "en revisión": ["En revisión", "estado-rojo"],
         en_revision: ["En revisión", "estado-rojo"],
-        "en proceso": ["En proceso", "estado-amarillo"],
-        resuelto: ["Resuelto", "estado-verde"],
+        en_proceso: ["En proceso", "estado-amarillo"],
         reparado: ["Reparado", "estado-verde"]
     };
-    return statuses[key] || statuses.reportado;
+    return statuses[report.status] || statuses.pendiente;
 }
 
 function formatDate(report) {
-    const value = report.fecha_creacion || report.created_at || report.fecha;
+    const value = report.createdAt;
     if (!value) return "Sin fecha";
     const date = new Date(value);
     return Number.isNaN(date.getTime()) ? "Sin fecha" : date.toLocaleDateString("es-CO");
@@ -30,15 +26,9 @@ function formatDate(report) {
 function renderSummary(reports) {
     const counts = {
         total: reports.length,
-        reportado: reports.filter((report) => ["reportado", "pendiente"].includes(
-            String(report.estado_atencion || report.estado || "").toLowerCase()
-        )).length,
-        proceso: reports.filter((report) => ["en revisión", "en_revision", "en proceso"].includes(
-            String(report.estado_atencion || report.estado || "").toLowerCase()
-        )).length,
-        resuelto: reports.filter((report) => ["resuelto", "reparado"].includes(
-            String(report.estado_atencion || report.estado || "").toLowerCase()
-        )).length
+        reportado: reports.filter((report) => report.status === "pendiente").length,
+        proceso: reports.filter((report) => ["en_revision", "en_proceso"].includes(report.status)).length,
+        resuelto: reports.filter((report) => report.status === "reparado").length
     };
     Object.entries(counts).forEach(([key, value]) => {
         document.querySelector(`[data-report-count="${key}"]`).textContent = value;
@@ -57,14 +47,19 @@ function renderRows(reports) {
 
     tablaBody.replaceChildren(...reports.map((report) => {
         const [label, className] = getStatus(report);
-        const title = report.tipo_problema || report.categoria || report.tipo || "Reporte ciudadano";
-        const location = report.direccion_texto || report.ubicacion || "Sin ubicación";
+        const title = report.type || "Reporte ciudadano";
+        const location = report.location.address || "Sin ubicación";
+        const detailLink = document.createElement("a");
+        detailLink.href = `reporte-detalle.html?id=${encodeURIComponent(report.id)}`;
+        detailLink.textContent = title;
+        detailLink.setAttribute("aria-label", `Ver detalle de ${title}`);
         const row = document.createElement("tr");
         row.innerHTML = `
-            <td>${escapeReportHTML(title)}</td>
+            <td></td>
             <td>${escapeReportHTML(location)}</td>
             <td>${escapeReportHTML(formatDate(report))}</td>
             <td><span class="estado ${className}">${label}</span></td>`;
+        row.querySelector("td").append(detailLink);
         return row;
     }));
 }
@@ -72,10 +67,7 @@ function renderRows(reports) {
 async function loadMyReports() {
     tablaBody.innerHTML = '<tr><td colspan="4">Cargando tus reportes...</td></tr>';
     try {
-        const response = await MiCalleAuth.request("/reportes?mine=true");
-        const data = await response.json().catch(() => ({}));
-        if (!response.ok) throw new Error(data.error || `Error HTTP ${response.status}`);
-        if (!Array.isArray(data)) throw new Error("La respuesta del servidor no contiene reportes.");
+        const data = await MiCalleServices.getMyReports();
         renderSummary(data);
         renderRows(data);
     } catch (error) {
@@ -85,3 +77,7 @@ async function loadMyReports() {
 }
 
 loadMyReports();
+MiCalleServices.subscribeMyReports((reports) => {
+    renderSummary(reports);
+    renderRows(reports);
+});

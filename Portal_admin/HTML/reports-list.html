@@ -91,9 +91,9 @@
           <select id="report-status-filter" aria-label="Filtrar por estado">
             <option value="">Todos</option>
             <option value="pendiente">Pendiente</option>
-            <option value="proceso">En proceso</option>
-            <option value="resuelto">Resuelto</option>
-            <option value="descartado">Descartado</option>
+            <option value="en_revision">En revisión</option>
+            <option value="en_proceso">En proceso</option>
+            <option value="reparado">Reparado</option>
           </select>
           <label class="filter-label" for="report-category-filter">Categoría</label>
           <select id="report-category-filter" aria-label="Filtrar por categoría">
@@ -107,6 +107,8 @@
       </div>
     </main>
   </div>
+  <script src="../../demo-service.js"></script>
+  <script src="../../frontend-services.js"></script>
   <script src="admin-ui.js"></script>
   <script src="admin-service.js"></script>
 </body>

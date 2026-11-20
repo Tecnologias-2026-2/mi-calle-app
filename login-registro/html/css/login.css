@@ -505,3 +505,13 @@
     padding: 20px 16px;
   }
 }
+
+.demo-access {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.demo-access[hidden] {
+  display: none;
+}

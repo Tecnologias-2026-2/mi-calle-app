@@ -1651,7 +1651,7 @@ h1 {
 }
 
 .step-connector span {
-  width: calc(50% - 17px);
+  width: calc(33.333% - 17px);
   height: 1px;
   background: #e8edf5;
 }
@@ -2158,4 +2158,32 @@ h1 {
   .option-copy small {
     max-width: 230px;
   }
+}
+
+.report-history {
+  margin-top: 20px;
+  padding: 22px;
+}
+
+.report-history li {
+  margin: 9px 0;
+  color: #536273;
+}
+
+.admin-evidence-image {
+  display: block;
+  width: 100%;
+  max-height: 330px;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.demo-access {
+  display: grid;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.demo-access[hidden] {
+  display: none;
 }
