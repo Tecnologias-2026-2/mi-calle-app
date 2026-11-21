@@ -1899,27 +1899,6 @@ h1 {
   color: #748197;
 }
 
-.notify-note {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin: 12px 0 0;
-  color: #98a4b4;
-  font-size: 8px;
-  line-height: 1.5;
-}
-
-.notify-note svg {
-  width: 12px;
-  height: 12px;
-  flex: 0 0 auto;
-  fill: none;
-  stroke: #8d9bb0;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  stroke-width: 1.6;
-}
-
 .reports-list-content .page-heading {
   align-items: flex-end;
 }
@@ -2267,12 +2246,3 @@ h1 {
   border-radius: 12px;
 }
 
-.demo-access {
-  display: grid;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.demo-access[hidden] {
-  display: none;
-}

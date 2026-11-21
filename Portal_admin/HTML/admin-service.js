@@ -119,46 +119,34 @@ function connectStatusUpdate(reports, refreshReports) {
   });
 }
 
-function showAdminGate(message, provider) {
+function showAdminGate(message) {
   const content = document.querySelector(".dashboard-content");
   if (!content) return;
   const notice = document.createElement("section");
   notice.className = "panel";
   const title = document.createElement("h1");
-  title.textContent = provider === "demo"
-    ? "Panel administrativo de demostración"
-    : "Acceso administrativo";
+  title.textContent = "Acceso administrativo";
   const description = document.createElement("p");
   description.textContent = message;
   const login = document.createElement("a");
-  login.href = provider === "demo"
-    ? "../../login-registro/html/login-admin.html?demo=1"
-    : "../../login-registro/html/login-admin.html";
-  login.textContent = provider === "demo"
-    ? "Acceder como administrador demo"
-    : "Iniciar sesión como administrador";
+  login.href = "../../login-registro/html/login-admin.html";
+  login.textContent = "Iniciar sesión como administrador";
   notice.append(title, description, login);
   content.replaceChildren(notice);
 }
 
 async function initializeAdminService() {
   try {
-    const provider = window.MiCalleServices.provider;
     const session = window.MiCalleServices.getCurrentSession();
     if (session?.user.role !== "administrador") {
-      showAdminGate(
-        provider === "demo"
-          ? "La sesión de administrador demo no está activa. Este flujo no representa autorización real."
-          : "Inicia sesión con una cuenta cuyo rol sea administrador.",
-        provider,
-      );
+      showAdminGate("Inicia sesión con una cuenta cuyo rol sea administrador.");
       return;
     }
 
     const adminName = document.querySelector(".user-copy strong");
     const adminRole = document.querySelector(".user-copy small");
     if (adminName) adminName.textContent = session.user.name || "Administrador";
-    if (adminRole) adminRole.textContent = provider === "demo" ? "Datos locales" : "Administrador";
+    if (adminRole) adminRole.textContent = "Administrador";
     document.querySelector(".logout-button")?.addEventListener("click", () => {
       window.MiCalleServices.logout();
     });

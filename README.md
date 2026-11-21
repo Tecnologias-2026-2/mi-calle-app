@@ -95,7 +95,6 @@ Portal_admin/
 ├── CSS/
 │   └── dashboard.css
 └── HTML/
-    ├── admin-mock-data.json
     ├── admin-service.js
     ├── admin-ui.js
     ├── index.html
@@ -103,20 +102,20 @@ Portal_admin/
     └── reports.html
 ```
 
-`admin-mock-data.json` contiene las estadísticas base y los reportes de ejemplo.
 `admin-ui.js` renderiza las tarjetas, los indicadores y la lista; `admin-service.js`
-conecta filtros y cambios de estado, y persiste estos últimos en `localStorage`.
+carga reportes y guarda cambios de estado mediante `frontend-services.js`, con la
+sesión autenticada del backend.
 
 🚀 8. Instalación y Ejecución
 
-Para que el navegador pueda leer el JSON mediante `fetch`, ejecuta el proyecto
-desde un servidor HTTP local (no abras los HTML directamente con `file://`).
-Desde la raíz del proyecto, inicia:
+Abre la aplicación desde un servidor HTTP para que el navegador pueda comunicarse
+con el backend y gestionar la sesión correctamente (no abras los HTML directamente
+con `file://`).
 
 ```powershell
 python -m http.server 8000
 ```
 
-Abre `http://localhost:8000/Portal_admin/HTML/index.html`. Los cambios de estado
-se simulan localmente y permanecen en el mismo navegador mediante `localStorage`;
-no se envían a un servidor real.
+Abre `http://localhost:8000/login-registro/html/bienvenida.html` e inicia sesión
+con una cuenta registrada. Los reportes y cambios administrativos se consultan y
+guardan en el backend autenticado.

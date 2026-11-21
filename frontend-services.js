@@ -5,11 +5,9 @@
   if (!root || !root.document) return;
 
   root.MiCalleServices = createServices({
-    demo: root.MiCalleDemo,
     fetch: root.fetch.bind(root),
     localStorage: root.localStorage,
     sessionStorage: root.sessionStorage,
-    location: root.location,
   });
 })(typeof window === "undefined" ? null : window, function createServices(options = {}) {
   /**
@@ -20,16 +18,14 @@
    * reporter?: {id: string|null, name: string|null, phone: string|null}}} ReportDto
    * @typedef {{id: string|null, status: string, changedAt: string|null,
    * observation: string}} HistoryDto
-   * @typedef {{mode: "demo"|"render", user: {id: string|null, name: string|null,
+   * @typedef {{mode: "render", user: {id: string|null, name: string|null,
    * email: string|null, role: string|null, phone: string|null},
    * expiresAt: string|null}} SessionDto
-   * @typedef {{ok: true, data: *, provider: "demo"|"render"}} OperationResultDto
+   * @typedef {{ok: true, data: *, provider: "render"}} OperationResultDto
    */
-  const demo = options.demo;
   const fetchRequest = options.fetch || globalThis.fetch;
   const localStorage = options.localStorage;
   const sessionStorage = options.sessionStorage;
-  const location = options.location || { search: "" };
   const API_BASE_URL = "https://mi-calle-app-backend.onrender.com";
   const SESSION_KEY = "mi-calle-session";
   const REFRESH_TOKEN_KEY = "mi-calle-refresh-token";
@@ -44,24 +40,6 @@
       this.status = status;
       this.code = code;
     }
-  }
-
-  function getProvider() {
-    const requestedProvider = new URLSearchParams(location.search || "").get("provider");
-    if (requestedProvider === "supabase") {
-      throw new ServiceError("El proveedor Supabase todavía no está implementado.", null, "provider_unavailable");
-    }
-    if (requestedProvider && !["demo", "render"].includes(requestedProvider)) {
-      throw new ServiceError(`Proveedor frontend no reconocido: ${requestedProvider}.`, null, "provider_unavailable");
-    }
-    const demoEnabled = Boolean(demo?.isEnabled());
-    if (requestedProvider === "demo" && !demoEnabled) {
-      throw new ServiceError("El proveedor demo requiere activación explícita con ?demo=1.", null, "provider_not_enabled");
-    }
-    if (requestedProvider === "render" && demoEnabled) {
-      throw new ServiceError("La selección Render no puede coexistir con el modo demo activado.", null, "provider_conflict");
-    }
-    return demoEnabled ? "demo" : "render";
   }
 
   function normalizeStatus(value) {
@@ -136,11 +114,11 @@
     return report;
   }
 
-  function normalizeSession(user, mode) {
+  function normalizeSession(user) {
     if (!user) return null;
     const role = user.role || user.rol || null;
     return {
-      mode,
+      mode: "render",
       user: {
         id: user.id || user.id_usuario || null,
         name: user.nombre_completo || user.name || null,
@@ -152,8 +130,8 @@
     };
   }
 
-  function responseDto(data, provider = getProvider()) {
-    return { ok: true, data, provider };
+  function responseDto(data) {
+    return { ok: true, data, provider: "render" };
   }
 
   function readLegacySession() {
@@ -170,17 +148,11 @@
     } catch (error) {
       throw new ServiceError(`No se pudo leer el usuario guardado: ${error.message}`, null, "invalid_session");
     }
-    const normalized = normalizeSession(user, "render");
+    const normalized = normalizeSession(user);
     return normalized ? { ...normalized, accessToken: token, refreshToken } : null;
   }
 
   function getCurrentSession() {
-    const provider = getProvider();
-    if (provider === "demo") {
-      const session = demo.getSession();
-      if (!session || session.mode !== "demo") return null;
-      return normalizeSession({ ...session.user, role: session.role }, "demo");
-    }
     const session = readLegacySession();
     if (!session) return null;
     const publicSession = { ...session };
@@ -299,14 +271,6 @@
   }
 
   async function login(credentials = {}) {
-    const provider = getProvider();
-    if (provider === "demo") {
-      if (!credentials.role) {
-        throw new ServiceError("Usa el acceso de ciudadano o administrador demo.", null, "demo_login_requires_role");
-      }
-      const session = demo.loginAs(credentials.role);
-      return responseDto(normalizeSession({ ...session.user, role: session.role }, "demo"), provider);
-    }
     const result = await legacyFetch("/api/auth/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -324,14 +288,10 @@
       throw new ServiceError("La cuenta no tiene rol de administrador.", 403, "forbidden");
     }
     persistSession(result);
-    return responseDto(normalizeSession(result.user, "render"), provider);
+    return responseDto(normalizeSession(result.user));
   }
 
   async function register(input = {}) {
-    const provider = getProvider();
-    if (provider === "demo") {
-      throw new ServiceError("El registro real está desactivado en modo demo.", null, "operation_unavailable");
-    }
     const result = await legacyFetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -346,52 +306,25 @@
       message: result.message || "",
       user: result.user || null,
       authenticated: Boolean(result.user && getSessionTokens(result).accessToken),
-    }, provider);
+    });
   }
 
   async function logout() {
-    const provider = getProvider();
-    if (provider === "demo") {
-      demo.logout();
-      return responseDto(null, provider);
-    }
     clearStoredSession();
-    return responseDto(null, provider);
+    return responseDto(null);
   }
 
   async function getPublicReports() {
-    const provider = getProvider();
-    const data = provider === "demo"
-      ? (await demo.initialize(), demo.getPublicReports())
-      : asArray(await legacyFetch("/reportes"), "reportes públicos");
+    const data = asArray(await legacyFetch("/reportes"), "reportes públicos");
     return data.map((report) => normalizeReport(report));
   }
 
   async function getMyReports() {
-    const provider = getProvider();
-    if (provider === "demo") {
-      const session = getCurrentSession();
-      if (session?.user.role !== "ciudadano") {
-        throw new ServiceError("Se requiere una sesión de ciudadano demo.", 403, "forbidden");
-      }
-      await demo.initialize();
-      return demo.getUserReports().map((report) => normalizeReport(report));
-    }
     const data = asArray(await legacyFetch("/reportes?mine=true", {}, true), "mis reportes");
     return data.map((report) => normalizeReport(report));
   }
 
   async function getAdminReports() {
-    const provider = getProvider();
-    if (provider === "demo") {
-      const session = getCurrentSession();
-      if (session?.user.role !== "administrador") {
-        throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
-      }
-      await demo.initialize();
-      return demo.getReports().map((report) => normalizeReport(report, { includeReporter: true }));
-    }
-
     requireAdministratorSession();
     const reports = asArray(await legacyFetch("/reportes", {}, true), "reportes administrativos");
     return Promise.all(reports.map(async (report) => {
@@ -410,14 +343,6 @@
   }
 
   async function getAdminStatistics(reports = null) {
-    const provider = getProvider();
-    if (provider === "demo") {
-      if (getCurrentSession()?.user.role !== "administrador") {
-        throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
-      }
-      await demo.initialize();
-      return demo.getStatistics();
-    }
     requireAdministratorSession();
     const sourceReports = reports === null
       ? asArray(await legacyFetch("/reportes", {}, true), "estadísticas administrativas")
@@ -438,18 +363,6 @@
   }
 
   async function getReportById(id) {
-    const provider = getProvider();
-    if (provider === "demo") {
-      await demo.initialize();
-      const report = demo.getReportById(id);
-      if (report && normalizeReport(report).status !== "descartado") return normalizeReport(report);
-      const session = getCurrentSession();
-      if (session?.user.role === "ciudadano") {
-        const ownReports = await getMyReports();
-        return ownReports.find((item) => item.id === String(id)) || null;
-      }
-      return null;
-    }
     try {
       const report = await legacyFetch(`/reportes/${encodeURIComponent(id)}`);
       return normalizeReport(report);
@@ -467,11 +380,6 @@
   }
 
   async function getReportHistory(id) {
-    const provider = getProvider();
-    if (provider === "demo") {
-      await demo.initialize();
-      return demo.getHistory(id).map((entry) => normalizeHistory(entry));
-    }
     const publicHistory = asArray(
       await legacyFetch(`/reportes/${encodeURIComponent(id)}/historial`),
       "historial del reporte",
@@ -495,7 +403,6 @@
   }
 
   async function createReport(input = {}) {
-    const provider = getProvider();
     const payload = {
       type: String(input.type || input.tipo_problema || "").trim(),
       description: String(input.description || input.descripcion || "").trim(),
@@ -506,17 +413,6 @@
       },
       photoFile: input.photoFile || input.fotografia || null,
     };
-    if (provider === "demo") {
-      const report = await demo.createReport({
-        tipo_problema: payload.type,
-        descripcion: payload.description,
-        direccion_texto: payload.location.address,
-        latitud: payload.location.latitude,
-        longitud: payload.location.longitude,
-        photoFile: payload.photoFile,
-      });
-      return responseDto({ report: normalizeReport(report), reportId: report.id_reporte }, provider);
-    }
 
     const form = new FormData();
     form.append("tipo", payload.type);
@@ -531,19 +427,11 @@
     return responseDto({
       reportId: reportId == null ? null : String(reportId),
       report: reportId == null ? null : normalizeReport({ ...payload, id: reportId }),
-    }, provider);
+    });
   }
 
   async function updateReportStatus(id, status, observation = "") {
-    const provider = getProvider();
     const nextStatus = normalizeStatus(status);
-    if (provider === "demo") {
-      if (getCurrentSession()?.user.role !== "administrador") {
-        throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
-      }
-      const report = demo.updateReport(id, nextStatus, observation);
-      return responseDto(normalizeReport(report, { includeReporter: true }), provider);
-    }
 
     requireAdministratorSession();
     const reports = asArray(await legacyFetch("/reportes", {}, true), "reportes administrativos");
@@ -565,22 +453,10 @@
     return responseDto(normalizeReport({
       ...currentReport,
       estado_atencion: nextStatus
-    }), provider);
+    }));
   }
 
   async function saveAdminObservation(id, observation, status = null) {
-    const provider = getProvider();
-    if (provider === "demo") {
-      if (getCurrentSession()?.user.role !== "administrador") {
-        throw new ServiceError("Se requiere una sesión de administrador demo.", 403, "forbidden");
-      }
-      const report = demo.getReportById(id);
-      if (!report) throw new ServiceError(`No se encontró el reporte ${id}.`, 404, "not_found");
-      const nextStatus = status ? normalizeStatus(status) : normalizeReport(report).status;
-      const updated = demo.updateReport(id, nextStatus, observation);
-      return responseDto(normalizeReport(updated, { includeReporter: true }), provider);
-    }
-
     requireAdministratorSession();
     if (!status) {
       throw new ServiceError(
@@ -593,15 +469,7 @@
   }
 
   async function updateAdminProfile({ name, phone } = {}) {
-    const provider = getProvider();
     requireAdministratorSession();
-    if (provider === "demo") {
-      throw new ServiceError(
-        "La edición del perfil requiere una sesión administrativa real.",
-        null,
-        "operation_unavailable",
-      );
-    }
 
     const result = await legacyFetch("/api/users/me", {
       method: "PUT",
@@ -615,7 +483,7 @@
       throw new ServiceError("La respuesta de actualización no contiene el usuario.", null, "invalid_response");
     }
 
-    const session = normalizeSession(result.user, provider);
+    const session = normalizeSession(result.user);
     if (!session) {
       throw new ServiceError("No se pudo normalizar el perfil actualizado.", null, "invalid_response");
     }
@@ -623,42 +491,12 @@
       throw new ServiceError("No se pudo guardar el perfil actualizado en este navegador.", null, "storage_unavailable");
     }
     localStorage.setItem(USER_KEY, JSON.stringify(result.user));
-    return responseDto(session.user, provider);
-  }
-
-  function subscribePublicReports(callback) {
-    if (getProvider() !== "demo") return () => {};
-    return demo.subscribe((reports) => callback(
-      reports
-        .map((report) => normalizeReport(report))
-        .filter((report) => report.status !== "descartado"),
-    ));
-  }
-
-  function subscribeMyReports(callback) {
-    if (getProvider() !== "demo") return () => {};
-    return demo.subscribe(() => {
-      getMyReports().then(callback).catch((error) => console.error("No se pudieron actualizar Mis reportes.", error));
-    });
-  }
-
-  function subscribeAdminReports(callback) {
-    if (getProvider() !== "demo") return () => {};
-    return demo.subscribe(() => {
-      getAdminReports().then(callback).catch((error) => console.error("No se pudo actualizar el panel administrativo.", error));
-    });
-  }
-
-  async function resetDemoData() {
-    if (getProvider() !== "demo") {
-      throw new ServiceError("El restablecimiento solo está disponible en modo demo.", null, "operation_unavailable");
-    }
-    await demo.reset();
+    return responseDto(session.user);
   }
 
   return {
     ServiceError,
-    get provider() { return getProvider(); },
+    get provider() { return "render"; },
     normalizeReport,
     normalizeHistory,
     login,
@@ -675,9 +513,5 @@
     updateReportStatus,
     saveAdminObservation,
     updateAdminProfile,
-    subscribePublicReports,
-    subscribeMyReports,
-    subscribeAdminReports,
-    resetDemoData,
   };
 });
