@@ -108,7 +108,15 @@
                     <p id="estado-fotografia" class="estado-formulario" role="status" aria-live="polite">
                         No has seleccionado una fotografía.
                     </p>
-                    <img id="vista-previa-fotografia" alt="Vista previa de la fotografía seleccionada" hidden>
+                    <div id="contenedor-vista-previa-fotografia" class="contenedor-vista-previa-fotografia" hidden>
+                        <img id="vista-previa-fotografia" alt="Vista previa de la fotografía seleccionada">
+                        <div class="acciones-fotografia">
+                            <label for="input-foto" class="boton-fotografia">Reemplazar fotografía</label>
+                            <button id="quitar-fotografia" class="boton-fotografia boton-fotografia--secundario" type="button">
+                                Quitar fotografía
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Ubicación -->

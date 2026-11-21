@@ -38,13 +38,6 @@ function coordenadasReporte(reporte) {
         : null;
 }
 
-function fechaReporte(reporte) {
-    const value = reporte.createdAt;
-    if (!value) return "Sin fecha";
-    const date = new Date(value);
-    return Number.isNaN(date.getTime()) ? "Sin fecha" : date.toLocaleDateString("es-CO");
-}
-
 function prepararFiltroCategorias() {
     const categorias = [...new Set(reportesDisponibles.map(categoriaReporte))]
         .sort((a, b) => a.localeCompare(b, "es"));
@@ -66,7 +59,9 @@ function crearDetalleMarcador(reporte) {
     const titulo = document.createElement("strong");
     titulo.textContent = categoriaReporte(reporte);
     const descripcion = document.createElement("p");
-    descripcion.textContent = reporte.description || "Sin descripción";
+    const textoDescripcion = [reporte.description, reporte.descripcion]
+        .find((value) => typeof value === "string" && value.trim());
+    descripcion.textContent = textoDescripcion ? textoDescripcion.trim() : "Este reporte aún no tiene descripción.";
     const enlace = document.createElement("a");
     enlace.href = `reporte-detalle.html?id=${encodeURIComponent(reporte.id)}`;
     enlace.textContent = "Ver detalle e historial";
@@ -99,25 +94,6 @@ function renderizarLista(reportes) {
     listaReportes.replaceChildren(fragment);
 }
 
-function seleccionarReporte(reporte) {
-    document.querySelector("#detalle-reporte").textContent = categoriaReporte(reporte);
-    document.querySelector("#detalle-ubicacion").textContent =
-        reporte.location.address || "Ubicación por confirmar";
-    document.querySelector("#detalle-fecha").textContent = fechaReporte(reporte);
-    const estado = estadoNormalizado(reporte);
-    const estadoElement = document.querySelector("#detalle-estado");
-    estadoElement.textContent = etiquetaEstado(estado);
-    estadoElement.className = `estado ${estado === "reparado" ? "estado-verde" : estado === "en_proceso" ? "estado-amarillo" : "estado-azul"}`;
-    const enlace = document.createElement("a");
-    enlace.href = `reporte-detalle.html?id=${encodeURIComponent(reporte.id)}`;
-    enlace.textContent = "Abrir detalle e historial";
-    const detailContainer = document.querySelector(".info-detalle");
-    const previousLink = detailContainer.querySelector("[data-detail-link]");
-    previousLink?.remove();
-    enlace.dataset.detailLink = "true";
-    detailContainer.append(enlace);
-}
-
 function renderizarMapa(reportes) {
     marcadores.clearLayers();
     let ubicacionesValidas = 0;
@@ -127,7 +103,6 @@ function renderizarMapa(reportes) {
         ubicacionesValidas += 1;
         const marcador = L.marker(coordenadas).addTo(marcadores);
         marcador.bindPopup(crearDetalleMarcador(reporte));
-        marcador.on("click", () => seleccionarReporte(reporte));
     });
     mapa.getContainer().setAttribute("aria-busy", "false");
     contadorReportes.textContent = `${reportes.length} reportes · ${ubicacionesValidas} con ubicación`;

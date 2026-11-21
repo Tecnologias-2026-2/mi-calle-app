@@ -2,12 +2,17 @@ const formularioReporte = document.querySelector("#formulario-reporte");
 const inputFotografia = document.querySelector("#input-foto");
 const estadoFotografia = document.querySelector("#estado-fotografia");
 const vistaPreviaFotografia = document.querySelector("#vista-previa-fotografia");
+const contenedorVistaPreviaFotografia = document.querySelector("#contenedor-vista-previa-fotografia");
+const zonaSubirFotografia = document.querySelector(".zona-subir-archivo");
+const botonQuitarFotografia = document.querySelector("#quitar-fotografia");
 const estadoUbicacion = document.querySelector("#estado-ubicacion");
 const inputLatitud = document.querySelector("#input-lat");
 const inputLongitud = document.querySelector("#input-lng");
 const inputDireccion = document.querySelector("#direccion-texto");
 const mapaFormulario = L.map("mapa").setView([4.711, -74.0721], 13);
 let marcadorSeleccionado = null;
+let fotografiaSeleccionada = null;
+let urlVistaPreviaFotografia = null;
 
 L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     maxZoom: 19,
@@ -47,26 +52,60 @@ mapaFormulario.on("locationerror", () => {
     estadoUbicacion.textContent = "Haz clic en el mapa para seleccionar la ubicación.";
 });
 
+function limpiarVistaPreviaFotografia() {
+    if (urlVistaPreviaFotografia) {
+        URL.revokeObjectURL(urlVistaPreviaFotografia);
+        urlVistaPreviaFotografia = null;
+    }
+    vistaPreviaFotografia.removeAttribute("src");
+    contenedorVistaPreviaFotografia.hidden = true;
+    zonaSubirFotografia.hidden = false;
+}
+
+function mostrarVistaPreviaFotografia(archivo) {
+    if (urlVistaPreviaFotografia) URL.revokeObjectURL(urlVistaPreviaFotografia);
+    urlVistaPreviaFotografia = URL.createObjectURL(archivo);
+    vistaPreviaFotografia.src = urlVistaPreviaFotografia;
+    contenedorVistaPreviaFotografia.hidden = false;
+    zonaSubirFotografia.hidden = true;
+}
+
+document.querySelector(".acciones-fotografia label").addEventListener("click", () => {
+    // Permite seleccionar de nuevo el mismo archivo y recibir el evento change.
+    inputFotografia.value = "";
+});
+
+botonQuitarFotografia.addEventListener("click", () => {
+    fotografiaSeleccionada = null;
+    inputFotografia.value = "";
+    limpiarVistaPreviaFotografia();
+    estadoFotografia.textContent = "No has seleccionado una fotografía.";
+    estadoFotografia.dataset.error = "false";
+});
+
 inputFotografia.addEventListener("change", () => {
     const [archivo] = inputFotografia.files;
     if (!archivo) {
-        estadoFotografia.textContent = "No has seleccionado una fotografía.";
-        vistaPreviaFotografia.hidden = true;
+        if (!fotografiaSeleccionada) {
+            estadoFotografia.textContent = "No has seleccionado una fotografía.";
+            limpiarVistaPreviaFotografia();
+        }
         return;
     }
 
     if (!["image/jpeg", "image/png"].includes(archivo.type) || archivo.size > 5 * 1024 * 1024) {
         inputFotografia.value = "";
+        fotografiaSeleccionada = null;
+        limpiarVistaPreviaFotografia();
         estadoFotografia.textContent = "La fotografía debe ser JPG o PNG y pesar máximo 5 MB.";
         estadoFotografia.dataset.error = "true";
-        vistaPreviaFotografia.hidden = true;
         return;
     }
 
+    fotografiaSeleccionada = archivo;
     estadoFotografia.textContent = `Fotografía seleccionada: ${archivo.name}`;
     estadoFotografia.dataset.error = "false";
-    vistaPreviaFotografia.src = URL.createObjectURL(archivo);
-    vistaPreviaFotografia.hidden = false;
+    mostrarVistaPreviaFotografia(archivo);
 });
 
 formularioReporte.addEventListener("submit", async (evento) => {
@@ -85,7 +124,7 @@ formularioReporte.addEventListener("submit", async (evento) => {
         descripcion: String(datosFormulario.get("descripcion") || "").trim(),
         estado_atencion: "Reportado"
     };
-    const fotografia = datosFormulario.get("fotografia");
+    const fotografia = fotografiaSeleccionada;
 
     if (!latitudIngresada || !longitudIngresada
         || !Number.isFinite(reporte.latitud) || !Number.isFinite(reporte.longitud)) {

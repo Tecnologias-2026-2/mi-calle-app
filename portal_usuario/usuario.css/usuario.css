@@ -664,6 +664,53 @@ textarea::placeholder {
     color: var(--texto-claro);
 }
 
+.zona-subir-archivo[hidden],
+.contenedor-vista-previa-fotografia[hidden] {
+    display: none;
+}
+
+.contenedor-vista-previa-fotografia {
+    width: 100%;
+    min-width: 0;
+}
+
+.contenedor-vista-previa-fotografia img {
+    display: block;
+    width: 100%;
+    height: 280px;
+    max-height: 280px;
+    object-fit: contain;
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+
+.acciones-fotografia {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.boton-fotografia {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    border: 1px solid var(--azul);
+    border-radius: 8px;
+    background: var(--azul);
+    color: #fff;
+    font: inherit;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.boton-fotografia--secundario {
+    background: #fff;
+    color: var(--azul);
+}
+
 /* --- Interruptor (toggle switch) --- */
 .switch {
     position: relative;
@@ -1390,60 +1437,6 @@ textarea::placeholder {
 .punto-revision  { background-color: var(--naranja); }
 .punto-reparado  { background-color: var(--verde); }
 
-/* Tarjeta de detalle del reporte */
-.tarjeta-detalle-reporte {
-    background-color: white;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-    border: 1px solid #eef2f6;
-    display: flex;
-    gap: 25px;
-    max-width: 450px;
-    margin: 0 auto;
-    align-items: flex-start;
-}
-
-.imagen-detalle {
-    width: 130px;
-    height: 130px;
-    background-color: #f7fafc;
-    border: 2px solid var(--borde);
-    border-radius: 10px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: var(--azul);
-    font-size: 2rem;
-    flex-shrink: 0;
-}
-
-.info-detalle {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex-grow: 1;
-}
-
-.fila-detalle {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-}
-
-.label-detalle {
-    font-size: 0.75rem;
-    color: var(--texto-claro);
-    font-weight: 500;
-}
-
-.fila-detalle strong {
-    font-size: 0.85rem;
-    color: var(--texto-subtitulo);
-    font-weight: 500;
-}
-
-
 /* ==========================================================================
    7. BARRA DE SCROLL
    ========================================================================== */
@@ -1571,17 +1564,6 @@ textarea::placeholder {
         gap: 15px;
     }
 
-    .tarjeta-detalle-reporte {
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        max-width: 100%;
-    }
-
-    .fila-detalle {
-        align-items: center;
-    }
-
         /* Header en móvil */
     .header-usuario {
         flex-wrap: wrap;
@@ -1662,16 +1644,23 @@ textarea::placeholder {
 
 #lista-reportes-publicos {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 12px;
+    grid-template-columns: minmax(0, 1fr);
+    align-content: start;
+    gap: 8px;
+    max-height: min(920px, calc(100vh - 340px));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 6px;
 }
 
 .reporte-publico-item {
     display: grid;
     gap: 8px;
-    padding: 14px;
+    min-height: 84px;
+    padding: 12px;
     border: 1px solid var(--borde-suave);
     border-radius: 10px;
+    box-sizing: border-box;
 }
 
 .reporte-publico-item h3,
