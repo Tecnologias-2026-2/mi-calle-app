@@ -2428,3 +2428,7 @@ textarea:focus-visible {
 .leaflet-container .leaflet-popup-content {
     font-size: 1rem;
 }
+
+.leaflet-tile-pane {
+  filter: saturate(0.75) brightness(1.03) contrast(0.95);
+}
