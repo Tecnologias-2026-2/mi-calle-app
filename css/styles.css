@@ -1,25 +1,37 @@
-/* =========================================
-   FONDO AZUL DIFUMINADO
-   ========================================= */
+:root {
+    color: #1a2744;
+    font-family: "Nunito Sans", sans-serif;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    --color-primary: #3585f5;
+    --color-primary-dark: #2874f0;
+    --color-text: #1a2744;
+    --color-muted: #7a90b8;
+    --color-input: #f5f9ff;
+    --color-border: #ddeeff;
+}
 
 body {
-    /* 1. Color base (por si acaso) */
-    background-color: #F0F4FF; 
-    
-    /* 2. Altura mínima para cubrir toda la pantalla */
     min-height: 100vh;
-    
-    /* 3. Degradado Lineal: De arriba (oscuro) a abajo (claro) */
-    background-image: linear-gradient(
-        to bottom,          /* Dirección: hacia abajo */
-        #C7D2FE 0%,         /* Arriba: Azul más oscuro */
-        #E0E7FF 30%,        /* Transición */
-        #F0F4FF 100%        /* Abajo: Azul muy clarito (casi blanco) */
-    );
-    
-    /* 4. Fijar el fondo para que no se mueva al hacer scroll */
+    margin: 0;
+    background: linear-gradient(175deg, #e3f1ff 0%, #f5faff 35%, #fff 100%);
     background-attachment: fixed;
-    
-    /* 5. Asegurar que el fondo cubra todo */
-    background-size: cover; 
+    color: var(--color-text);
+    font-family: "Nunito Sans", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: "Nunito", sans-serif;
 }

@@ -99,19 +99,19 @@
    ========================================================================== */
 :root {
     /* Azules */
-    --azul: #1D6ADB;
-    --azul-hover: #1552a8;
-    --azul-claro: #ebf4ff;
-    --azul-fondo: #f0f6ff;
+    --azul: #3585f5;
+    --azul-hover: #2874f0;
+    --azul-claro: #edf5ff;
+    --azul-fondo: #f5f9ff;
     --azul-suave: #eef5ff;
 
     /* Textos */
-    --texto: #414C65;
-    --texto-titulo: #1a202c;
+    --texto: #4a5565;
+    --texto-titulo: #1a2744;
     --texto-subtitulo: #2d3748;
     --texto-medio: #4a5568;
-    --texto-gris: #718096;
-    --texto-claro: #a0aec0;
+    --texto-gris: #7a90b8;
+    --texto-claro: #95a7c7;
 
     /* Estados */
     --rojo: #e53e3e;
@@ -120,10 +120,10 @@
     --naranja: #f6ad55;
 
     /* Fondos y bordes */
-    --fondo-pagina: #f4f7fc;
-    --fondo-input: #f8fafc;
-    --borde: #e2e8f0;
-    --borde-suave: #f0f0f0;
+    --fondo-pagina: #f5f9ff;
+    --fondo-input: #f5f9ff;
+    --borde: #ddeeff;
+    --borde-suave: #e8f0fa;
 }
 
 
@@ -139,7 +139,7 @@
 body {
     width: 100%;
     overflow-x: hidden;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     color: var(--texto);
     background-color: var(--fondo-pagina);
 }
@@ -519,7 +519,7 @@ body {
     padding: 12px 15px 12px 40px;   /* Espacio extra a la izquierda para el icono */
     border: 1px solid var(--borde);
     border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     font-size: 0.85rem;
     color: var(--texto);
     background-color: var(--fondo-input);
@@ -567,7 +567,7 @@ body {
     padding: 12px 15px;
     border: 1px solid var(--borde);
     border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     font-size: 0.85rem;
     color: var(--texto);
     background-color: var(--fondo-input);
@@ -589,7 +589,7 @@ body {
     padding: 12px 15px;
     border: 1px solid var(--borde);
     border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     font-size: 0.85rem;
     color: var(--texto);
     background-color: var(--fondo-input);
@@ -608,7 +608,7 @@ textarea {
     padding: 12px 15px;
     border: 1px solid var(--borde);
     border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     font-size: 0.85rem;
     color: var(--texto);
     background-color: var(--fondo-input);
@@ -800,7 +800,7 @@ textarea::placeholder {
     text-decoration: none;
     padding: 14px 20px;
     border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
     cursor: pointer;
@@ -828,7 +828,7 @@ textarea::placeholder {
     text-decoration: none;
     padding: 12px 24px;
     border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
@@ -847,7 +847,7 @@ textarea::placeholder {
     text-decoration: none;
     padding: 12px 24px;
     border-radius: 8px;
-    font-family: 'Poppins', sans-serif;
+    font-family: "Nunito Sans", sans-serif;
     font-size: 0.85rem;
     font-weight: 500;
     cursor: pointer;
@@ -1679,4 +1679,433 @@ textarea::placeholder {
 
 .detalle-publico-reporte li {
     margin: 8px 0;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-family: "Nunito Sans", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+.titulo-bienvenida,
+.subtitulo,
+.logo-texto h2 {
+    font-family: "Nunito", sans-serif;
+}
+
+.header-usuario {
+    border-bottom: 1px solid var(--borde);
+    box-shadow: 0 4px 16px rgba(26, 39, 68, 0.045);
+}
+
+.tarjeta-blanco,
+.tarjeta-resumen-inicio,
+.tarjeta-reporte,
+.tarjeta-notificacion,
+.reporte-publico-item {
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(54, 91, 142, 0.07);
+}
+
+.estado,
+.badge {
+    font-family: "Nunito", sans-serif;
+    font-weight: 800;
+}
+
+.btn-guardar,
+.btn-cancelar,
+.btn-perfil-primario,
+.btn-perfil-peligro,
+.btn-accion-rapida {
+    border-radius: 10px;
+    font-family: "Nunito Sans", sans-serif;
+    font-weight: 700;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid rgba(53, 133, 245, 0.35);
+    outline-offset: 3px;
+}
+
+.detalle-pagina {
+    max-width: 1040px;
+}
+
+.detalle-volver {
+    display: inline-flex;
+    width: fit-content;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 18px;
+    padding: 10px 15px;
+    border: 1px solid var(--borde);
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 4px 12px rgba(26, 39, 68, 0.04);
+    color: var(--texto-medio);
+    font-weight: 700;
+    text-decoration: none;
+    transition: color 160ms ease, border-color 160ms ease, transform 160ms ease;
+}
+
+.detalle-volver:hover {
+    transform: translateX(-2px);
+    border-color: var(--azul);
+    color: var(--azul);
+}
+
+.detalle-nav-logout {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 15px;
+    border: 1px solid #f4dada;
+    border-radius: 10px;
+    background: #fff7f7;
+    color: #b42318;
+    font: inherit;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.detalle-nav-logout:hover {
+    background: #fff0f0;
+}
+
+.detalle-nav-logout[hidden],
+#detalle-contenido[hidden],
+#detalle-cargando[hidden],
+#detalle-coordenadas[hidden],
+#detalle-fotografia[hidden],
+#detalle-sin-fotografia[hidden] {
+    display: none;
+}
+
+.detalle-publico-reporte {
+    width: 100%;
+    padding: clamp(20px, 4vw, 36px);
+    border-color: var(--borde);
+    border-radius: 18px;
+    box-shadow: 0 14px 36px rgba(26, 39, 68, 0.08);
+}
+
+.detalle-cargando {
+    display: flex;
+    min-height: 180px;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    color: var(--texto-gris);
+}
+
+.detalle-contenido {
+    display: grid;
+    gap: 22px;
+}
+
+.detalle-encabezado {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--borde-suave);
+}
+
+.detalle-eyebrow {
+    margin: 0 0 6px;
+    color: var(--azul);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+}
+
+.detalle-encabezado h1 {
+    margin: 0;
+    color: var(--texto-titulo);
+    font-size: clamp(1.6rem, 3vw, 2.15rem);
+    line-height: 1.2;
+}
+
+.detalle-estado {
+    display: inline-flex;
+    flex: 0 0 auto;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 13px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-family: "Nunito", sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.detalle-estado i {
+    font-size: 0.58rem;
+}
+
+.detalle-estado--pendiente {
+    border-color: #f3e4bd;
+    background: #fff8e9;
+    color: #986a18;
+}
+
+.detalle-estado--en_revision {
+    border-color: #d7e8ff;
+    background: #edf5ff;
+    color: #2874f0;
+}
+
+.detalle-estado--en_proceso {
+    border-color: #e0dcff;
+    background: #f3f1ff;
+    color: #6554c0;
+}
+
+.detalle-estado--reparado {
+    border-color: #d4efdf;
+    background: #edf9f3;
+    color: #25845c;
+}
+
+.detalle-descripcion {
+    margin: 0;
+    padding: 15px 18px;
+    border-left: 4px solid var(--azul);
+    border-radius: 0 10px 10px 0;
+    background: var(--azul-fondo);
+    color: var(--texto-medio);
+    font-size: 1rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.detalle-columnas {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 16px;
+}
+
+.detalle-seccion {
+    min-width: 0;
+    padding: 20px;
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    background: #fff;
+}
+
+.detalle-seccion h2 {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 17px;
+    color: var(--texto-titulo);
+    font-size: 1.1rem;
+}
+
+.detalle-seccion h2 i {
+    color: var(--azul);
+    font-size: 0.95rem;
+}
+
+.detalle-metadatos dl {
+    display: grid;
+    gap: 16px;
+    margin: 0;
+}
+
+.detalle-metadatos dl > div {
+    display: grid;
+    gap: 5px;
+}
+
+.detalle-metadatos dt,
+.detalle-coordenadas {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--texto-gris);
+    font-size: 0.82rem;
+}
+
+.detalle-metadatos dt i,
+.detalle-coordenadas i {
+    width: 16px;
+    color: var(--azul);
+    text-align: center;
+}
+
+.detalle-metadatos dd {
+    margin: 0 0 0 24px;
+    color: var(--texto-titulo);
+    font-size: 0.95rem;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.detalle-fotografia-marco {
+    display: grid;
+    min-height: 220px;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid var(--borde);
+    border-radius: 12px;
+    background: #f5f9ff;
+}
+
+.detalle-publico-reporte #detalle-fotografia {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    max-height: 420px;
+    margin: 0;
+    object-fit: contain;
+    border-radius: 0;
+}
+
+#detalle-fotografia[hidden] {
+    display: none;
+}
+
+.detalle-fotografia-marco p {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    margin: 0;
+    padding: 24px;
+    color: var(--texto-gris);
+    text-align: center;
+}
+
+.detalle-fotografia-marco p i {
+    color: #9ab6de;
+    font-size: 1.8rem;
+}
+
+.detalle-timeline {
+    position: relative;
+    display: grid;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.detalle-timeline::before {
+    position: absolute;
+    top: 13px;
+    bottom: 13px;
+    left: 7px;
+    width: 2px;
+    background: #dceaff;
+    content: "";
+}
+
+.detalle-timeline-item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 16px minmax(0, 1fr);
+    gap: 14px;
+    margin: 0;
+    padding: 0 0 20px;
+}
+
+.detalle-timeline-item:last-child {
+    padding-bottom: 0;
+}
+
+.detalle-timeline-marcador {
+    z-index: 1;
+    width: 16px;
+    height: 16px;
+    margin-top: 3px;
+    border: 3px solid #fff;
+    border-radius: 50%;
+    background: var(--azul);
+    box-shadow: 0 0 0 2px #cfe2ff;
+}
+
+.detalle-timeline-item--reparado .detalle-timeline-marcador {
+    background: #38a169;
+    box-shadow: 0 0 0 2px #ccebd9;
+}
+
+.detalle-timeline-item--en_proceso .detalle-timeline-marcador {
+    background: #6554c0;
+    box-shadow: 0 0 0 2px #e0dcff;
+}
+
+.detalle-timeline-contenido {
+    min-width: 0;
+    padding: 0 0 2px;
+}
+
+.detalle-timeline-cabecera {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 5px 14px;
+}
+
+.detalle-timeline-cabecera strong {
+    color: var(--texto-titulo);
+    font-family: "Nunito", sans-serif;
+    font-weight: 800;
+}
+
+.detalle-timeline-cabecera time {
+    color: var(--texto-gris);
+    font-size: 0.8rem;
+}
+
+.detalle-timeline-observacion {
+    margin: 6px 0 0;
+    padding: 10px 12px;
+    border-radius: 9px;
+    background: #f5f9ff;
+    color: var(--texto-medio);
+    font-size: 0.9rem;
+    line-height: 1.55;
+    overflow-wrap: anywhere;
+}
+
+.detalle-timeline-vacio {
+    margin: 0;
+    color: var(--texto-gris);
+    list-style: none;
+}
+
+@media (max-width: 700px) {
+    .detalle-columnas {
+        grid-template-columns: 1fr;
+    }
+
+    .detalle-encabezado {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .detalle-publico-reporte {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    .detalle-nav-logout {
+        justify-content: center;
+    }
 }

@@ -29,7 +29,7 @@
 
 html {
   scroll-behavior: smooth;
-  scrollbar-color: #1d6adb #f1f1f1;
+  scrollbar-color: #3585f5 #f1f1f1;
   scrollbar-width: thin;
 }
 
@@ -42,12 +42,12 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1d6adb;
+  background: #3585f5;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1552a8;
+  background: #2874f0;
 }
 
 body {
@@ -55,11 +55,23 @@ body {
   min-height: 100vh;
   margin: 0;
   background: #fff;
+  font-family: "Nunito Sans", sans-serif;
 }
 
 button,
-input {
+input,
+select,
+textarea {
   font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Nunito", sans-serif;
 }
 
 a {

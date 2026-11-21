@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalle del reporte | Mi Calle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap">
     <link rel="stylesheet" href="../../css/styles.css">
     <link rel="stylesheet" href="../usuario.css/usuario.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -12,35 +15,84 @@
     <header class="header-usuario">
         <a href="../../login-registro/html/landing.html" class="logo">
             <div class="logo-icono"><i class="fa-solid fa-house"></i></div>
-            <div class="logo-texto"><h2>Mi Calle</h2><span>Reportador Ciudadano</span></div>
+            <div class="logo-texto"><h2>Mi Calle</h2><span id="detalle-marca-contexto">Reportador Ciudadano</span></div>
         </a>
-        <nav class="menu-navegacion">
-            <a href="mapa.html">Reportes públicos</a>
-            <a href="../../login-registro/html/bienvenida.html">Acceso ciudadano</a>
+        <button id="btn-menu" class="btn-hamburguesa" type="button" aria-label="Abrir menú" aria-expanded="false" aria-controls="menu-navegacion">
+            <i class="fa-solid fa-bars" aria-hidden="true"></i>
+        </button>
+        <nav id="menu-navegacion" class="menu-navegacion" aria-label="Navegación principal">
+            <a href="mapa.html">Mapa público</a>
+            <a id="detalle-nav-portal" href="index.html" hidden>Mi portal</a>
+            <a id="detalle-nav-login" href="../../login-registro/html/bienvenida.html">Acceso ciudadano</a>
+            <button id="detalle-cerrar-sesion" class="detalle-nav-logout" type="button" hidden>
+                <i class="fa-solid fa-arrow-right-from-bracket" aria-hidden="true"></i>
+                Cerrar sesión
+            </button>
         </nav>
     </header>
-    <main class="dashboard-inicio">
-        <a class="btn-cancelar" href="mapa.html">Volver a reportes</a>
+
+    <main class="dashboard-inicio detalle-pagina">
+        <a id="detalle-volver" class="detalle-volver" href="mapa.html">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            <span>Volver al mapa</span>
+        </a>
+
         <section class="tarjeta-blanco detalle-publico-reporte" aria-live="polite">
-            <p id="detalle-cargando">Cargando detalle del reporte…</p>
-            <div id="detalle-contenido" hidden>
-                <h1 id="detalle-titulo"></h1>
-                <p><strong>Estado:</strong> <span id="detalle-estado"></span></p>
-                <p><strong>Ubicación:</strong> <span id="detalle-ubicacion"></span></p>
-                <p><strong>Fecha:</strong> <span id="detalle-fecha"></span></p>
-                <p id="detalle-descripcion"></p>
-                <img id="detalle-fotografia" alt="Fotografía del reporte" hidden>
-                <p id="detalle-sin-fotografia" hidden>Este reporte no tiene una fotografía disponible en esta sesión.</p>
-                <p id="detalle-coordenadas" hidden></p>
-                <section aria-labelledby="historial-titulo">
-                    <h2 id="historial-titulo">Historial de estados</h2>
-                    <ol id="historial-estados"></ol>
+            <p id="detalle-cargando" class="detalle-cargando">
+                <span class="loading-spinner" aria-hidden="true"></span>
+                Cargando detalle del reporte…
+            </p>
+            <div id="detalle-contenido" class="detalle-contenido" hidden>
+                <header class="detalle-encabezado">
+                    <div>
+                        <p class="detalle-eyebrow">REPORTE DE LA COMUNIDAD</p>
+                        <h1 id="detalle-titulo"></h1>
+                    </div>
+                    <span id="detalle-estado" class="detalle-estado"></span>
+                </header>
+                <p id="detalle-descripcion" class="detalle-descripcion"></p>
+
+                <div class="detalle-columnas">
+                    <section class="detalle-seccion detalle-metadatos" aria-labelledby="detalle-informacion-titulo">
+                        <h2 id="detalle-informacion-titulo"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> Información del reporte</h2>
+                        <dl>
+                            <div>
+                                <dt><i class="fa-solid fa-location-dot" aria-hidden="true"></i> Ubicación</dt>
+                                <dd id="detalle-ubicacion"></dd>
+                            </div>
+                            <div>
+                                <dt><i class="fa-regular fa-calendar" aria-hidden="true"></i> Fecha de reporte</dt>
+                                <dd id="detalle-fecha"></dd>
+                            </div>
+                            <div id="detalle-coordenadas" class="detalle-coordenadas" hidden>
+                                <dt><i class="fa-solid fa-map-pin" aria-hidden="true"></i> Coordenadas</dt>
+                                <dd id="detalle-coordenadas-valor"></dd>
+                            </div>
+                        </dl>
+                    </section>
+
+                    <section class="detalle-seccion detalle-fotografia-seccion" aria-labelledby="detalle-fotografia-titulo">
+                        <h2 id="detalle-fotografia-titulo"><i class="fa-regular fa-image" aria-hidden="true"></i> Fotografía</h2>
+                        <div class="detalle-fotografia-marco">
+                            <img id="detalle-fotografia" alt="Fotografía del reporte" hidden>
+                            <p id="detalle-sin-fotografia" hidden>
+                                <i class="fa-regular fa-image" aria-hidden="true"></i>
+                                Este reporte no tiene una fotografía disponible.
+                            </p>
+                        </div>
+                    </section>
+                </div>
+
+                <section class="detalle-seccion detalle-historial" aria-labelledby="historial-titulo">
+                    <h2 id="historial-titulo"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> Historial de estados</h2>
+                    <ol id="historial-estados" class="detalle-timeline"></ol>
                 </section>
             </div>
         </section>
     </main>
     <script src="../../demo-service.js"></script>
     <script src="../../frontend-services.js"></script>
+    <script src="../menu.js"></script>
     <script src="../reporte-detalle.js"></script>
 </body>
 </html>

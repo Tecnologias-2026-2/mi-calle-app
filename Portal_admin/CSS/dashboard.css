@@ -1,11 +1,11 @@
 :root {
-  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  font-family: "Nunito Sans", sans-serif;
   color: #17243b;
   background: #f3f8ff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --blue: #347ff0;
-  --muted: #8995a9;
+  --blue: #3585f5;
+  --muted: #7a90b8;
   --panel-shadow: 0 8px 24px rgba(54, 91, 142, 0.045);
 }
 

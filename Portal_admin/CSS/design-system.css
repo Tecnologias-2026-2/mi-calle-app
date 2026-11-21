@@ -1,0 +1,168 @@
+:root {
+  --blue: #3585f5;
+  --muted: #7a90b8;
+  --panel-shadow: 0 8px 24px rgba(54, 91, 142, 0.07);
+  color: #1a2744;
+  font-family: "Nunito Sans", sans-serif;
+}
+
+body {
+  color: #1a2744;
+  font-family: "Nunito Sans", sans-serif;
+  background: radial-gradient(ellipse at 94% 4%, rgba(221, 239, 255, 0.72), transparent 30%), #f5f9ff;
+}
+
+button,
+input,
+select,
+textarea {
+  font-family: "Nunito Sans", sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+.brand-copy strong,
+.mobile-brand strong {
+  font-family: "Nunito", sans-serif;
+}
+
+.panel,
+.stat-card {
+  border-color: #ddeeff;
+  border-radius: 14px;
+  box-shadow: var(--panel-shadow);
+}
+
+.nav-link {
+  border-radius: 10px;
+  font-size: 13px;
+}
+
+.nav-link:hover {
+  background: #f0f6ff;
+  color: #2874f0;
+}
+
+.nav-link.is-active {
+  background: #3585f5;
+  box-shadow: 0 5px 12px rgba(53, 133, 245, 0.2);
+}
+
+.main-nav .nav-count,
+.report-list-status,
+.current-status strong,
+.role-badge,
+.eyebrow,
+.stat-change {
+  font-family: "Nunito", sans-serif;
+  font-weight: 800;
+}
+
+.report-list-status {
+  border-radius: 999px;
+  font-size: 10px;
+}
+
+.report-list-status--blue {
+  background: #edf5ff;
+  color: #2874f0;
+}
+
+.report-list-status--amber {
+  background: #fff7e8;
+  color: #9c6a13;
+}
+
+.report-list-status--green {
+  background: #edf9f3;
+  color: #25845c;
+}
+
+.report-list-status--red {
+  background: #fff1f1;
+  color: #b42318;
+}
+
+.current-status strong,
+.role-badge {
+  border: 1px solid #ddeeff;
+  border-radius: 999px;
+  background: #f5f9ff;
+  color: #2874f0;
+}
+
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  border-color: #ddeeff;
+  border-radius: 10px;
+}
+
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 3px solid rgba(53, 133, 245, 0.35);
+  outline-offset: 3px;
+}
+
+.confirm-button,
+.identity-edit,
+.profile-save-button,
+.security-save-button {
+  border-radius: 10px;
+  background: #3585f5;
+  box-shadow: 0 5px 12px rgba(53, 133, 245, 0.18);
+  font-family: "Nunito Sans", sans-serif;
+  font-weight: 700;
+}
+
+.confirm-button:hover,
+.identity-edit:hover,
+.profile-save-button:hover,
+.security-save-button:hover {
+  background: #2874f0;
+}
+
+.cancel-button,
+.select-button,
+.icon-button,
+.more-button {
+  border-radius: 10px;
+}
+
+table {
+  overflow: hidden;
+  border: 1px solid #ddeeff;
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 12px;
+  background: #fff;
+}
+
+th {
+  background: #f5f9ff;
+  color: #1a2744;
+  font-family: "Nunito", sans-serif;
+  font-weight: 800;
+}
+
+td {
+  border-bottom: 1px solid #e8f0fa;
+  color: #4a5565;
+}
+
+tbody tr:hover {
+  background: #f5f9ff;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+  }
+}
