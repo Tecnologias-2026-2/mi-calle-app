@@ -1,23 +1,23 @@
+@import url("./design-system.css");
+
 :root {
-    color: #1a2744;
+    color: var(--text-primary);
     font-family: "Nunito Sans", sans-serif;
     font-synthesis: none;
     text-rendering: optimizeLegibility;
-    --color-primary: #3585f5;
-    --color-primary-dark: #2874f0;
-    --color-text: #1a2744;
-    --color-muted: #7a90b8;
-    --color-input: #f5f9ff;
-    --color-border: #ddeeff;
+    --color-text: var(--text-primary);
+    --color-muted: var(--text-muted);
+    --color-input: var(--bg-page);
 }
 
 body {
     min-height: 100vh;
     margin: 0;
-    background: linear-gradient(175deg, #e3f1ff 0%, #f5faff 35%, #fff 100%);
-    background-attachment: fixed;
+    background-color: var(--bg-page);
     color: var(--color-text);
     font-family: "Nunito Sans", sans-serif;
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
 button,

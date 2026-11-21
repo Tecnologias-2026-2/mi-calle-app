@@ -1,8 +1,8 @@
 const reportStatus = {
-    pendiente: { label: "Pendiente", className: "estado-rojo" },
-    en_revision: { label: "En revisión", className: "estado-rojo" },
-    en_proceso: { label: "En proceso", className: "estado-amarillo" },
-    reparado: { label: "Reparado", className: "estado-verde" }
+    pendiente: { label: "Pendiente", className: "estado-pendiente" },
+    en_revision: { label: "En revisión", className: "estado-revision" },
+    en_proceso: { label: "En proceso", className: "estado-proceso" },
+    reparado: { label: "Reparado", className: "estado-reparado" }
 };
 const formatReportCategory = window.MiCalleReportFormatters.formatCategory;
 

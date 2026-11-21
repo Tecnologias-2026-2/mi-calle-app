@@ -1,3 +1,5 @@
+@import url("../../css/design-system.css");
+
 .estado-vacio {
     display: grid;
     gap: 0.45rem;
@@ -98,32 +100,28 @@
    1. VARIABLES
    ========================================================================== */
 :root {
-    /* Azules */
-    --azul: #3585f5;
-    --azul-hover: #2874f0;
-    --azul-claro: #edf5ff;
-    --azul-fondo: #f5f9ff;
-    --azul-suave: #eef5ff;
+    --azul: var(--color-primary);
+    --azul-hover: var(--color-primary-dark);
+    --azul-claro: #dceeff;
+    --azul-fondo: var(--bg-page);
+    --azul-suave: #dceeff;
 
-    /* Textos */
-    --texto: #4a5565;
-    --texto-titulo: #1a2744;
-    --texto-subtitulo: #2d3748;
-    --texto-medio: #4a5568;
-    --texto-gris: #7a90b8;
-    --texto-claro: #95a7c7;
+    --texto: var(--text-secondary);
+    --texto-titulo: var(--text-primary);
+    --texto-subtitulo: var(--text-primary);
+    --texto-medio: var(--text-secondary);
+    --texto-gris: var(--text-muted);
+    --texto-claro: var(--text-muted);
 
-    /* Estados */
-    --rojo: #e53e3e;
-    --verde: #38a169;
-    --amarillo: #d69e2e;
-    --naranja: #f6ad55;
+    --rojo: var(--color-danger);
+    --verde: var(--color-success);
+    --amarillo: var(--color-warning);
+    --naranja: var(--color-secondary);
 
-    /* Fondos y bordes */
-    --fondo-pagina: #f5f9ff;
-    --fondo-input: #f5f9ff;
-    --borde: #ddeeff;
-    --borde-suave: #e8f0fa;
+    --fondo-pagina: var(--bg-page);
+    --fondo-input: var(--bg-page);
+    --borde: var(--color-border);
+    --borde-suave: var(--color-border);
 }
 
 
@@ -142,6 +140,8 @@ body {
     font-family: "Nunito Sans", sans-serif;
     color: var(--texto);
     background-color: var(--fondo-pagina);
+    font-size: 1rem;
+    line-height: 1.5;
 }
 
 #mapa,
@@ -407,11 +407,11 @@ body {
    5.2 Tarjetas
    -------------------------------------------------------------------------- */
 .tarjeta-blanco {
-    background-color: white;
-    border-radius: 12px;
+    background-color: var(--bg-card);
+    border: var(--border-card);
+    border-radius: 18px;
     padding: 25px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.02);
-    border: 1px solid #eef2f6;
+    box-shadow: var(--shadow-card);
     margin-bottom: 30px;
 }
 
@@ -419,15 +419,20 @@ body {
    5.3 Estados (etiquetas de colores)
    -------------------------------------------------------------------------- */
 .estado {
-    font-size: 0.7rem;
+    font-size: 0.8125rem;
     padding: 4px 12px;
-    border-radius: 20px;
-    font-weight: 500;
+    border-radius: 999px;
+    font-weight: 800;
 }
 
-.estado-azul  { background-color: var(--azul-claro); color: var(--azul); }
-.estado-rojo  { background-color: #fff5f5;           color: var(--rojo); }
-.estado-verde { background-color: #f0fff4;           color: var(--verde); }
+.estado-azul,
+.estado-proceso { background-color: var(--color-secondary); color: var(--color-secondary-ink); }
+.estado-rojo,
+.estado-pendiente { background-color: var(--color-danger); color: var(--color-danger-ink); }
+.estado-amarillo,
+.estado-revision { background-color: var(--color-warning); color: var(--color-warning-ink); }
+.estado-verde,
+.estado-reparado { background-color: var(--color-success); color: var(--color-success-ink); }
 
 /* --------------------------------------------------------------------------
    5.4 Tarjetas de resumen (Total, Reportados, En proceso, Resueltos)
@@ -439,12 +444,13 @@ body {
 }
 
 .tarjeta-resumen-inicio {
-    background-color: white;
-    border-radius: 10px;
+    background-color: var(--bg-card);
+    border: var(--border-card);
+    border-radius: 18px;
     padding: 15px;
     display: flex;
     flex-direction: column;
-    border: 1px solid #eef2f6;
+    box-shadow: var(--shadow-card);
 }
 
 .tarjeta-resumen-inicio .numero-inicio {
@@ -1429,10 +1435,10 @@ textarea::placeholder {
     display: inline-block;
 }
 
-.punto-pendiente { background-color: var(--amarillo); }
-.punto-revision  { background-color: var(--azul); }
-.punto-proceso   { background-color: #6554c0; }
-.punto-reparado  { background-color: var(--verde); }
+.punto-pendiente { background-color: var(--color-danger); }
+.punto-revision  { background-color: var(--color-warning); }
+.punto-proceso   { background-color: var(--color-secondary); }
+.punto-reparado  { background-color: var(--color-success); }
 
 /* ==========================================================================
    7. BARRA DE SCROLL
@@ -1858,27 +1864,27 @@ textarea:focus-visible {
 }
 
 .detalle-estado--pendiente {
-    border-color: #f3e4bd;
-    background: #fff8e9;
-    color: #986a18;
+    border-color: var(--color-danger);
+    background: var(--color-danger);
+    color: var(--color-danger-ink);
 }
 
 .detalle-estado--en_revision {
-    border-color: #d7e8ff;
-    background: #edf5ff;
-    color: #2874f0;
+    border-color: var(--color-warning);
+    background: var(--color-warning);
+    color: var(--color-warning-ink);
 }
 
 .detalle-estado--en_proceso {
-    border-color: #e0dcff;
-    background: #f3f1ff;
-    color: #6554c0;
+    border-color: var(--color-secondary);
+    background: var(--color-secondary);
+    color: var(--color-secondary-ink);
 }
 
 .detalle-estado--reparado {
-    border-color: #d4efdf;
-    background: #edf9f3;
-    color: #25845c;
+    border-color: var(--color-success);
+    background: var(--color-success);
+    color: var(--color-success-ink);
 }
 
 .detalle-descripcion {
@@ -2039,13 +2045,13 @@ textarea:focus-visible {
 }
 
 .detalle-timeline-item--reparado .detalle-timeline-marcador {
-    background: #38a169;
+    background: var(--color-success);
     box-shadow: 0 0 0 2px #ccebd9;
 }
 
 .detalle-timeline-item--en_proceso .detalle-timeline-marcador {
-    background: #6554c0;
-    box-shadow: 0 0 0 2px #e0dcff;
+    background: var(--color-secondary);
+    box-shadow: 0 0 0 2px rgb(42 157 244 / 24%);
 }
 
 .detalle-timeline-contenido {
@@ -2110,9 +2116,10 @@ textarea:focus-visible {
     }
 }
 
-.reporte-marker-icon {
-    border: 0 !important;
-    background: transparent !important;
+.leaflet-container .leaflet-div-icon.reporte-marker-icon {
+    border: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
 .reporte-marker {
@@ -2131,19 +2138,19 @@ textarea:focus-visible {
 }
 
 .reporte-marker--pendiente {
-    color: #d69e2e;
+    color: var(--color-danger);
 }
 
 .reporte-marker--en_revision {
-    color: #3585f5;
+    color: var(--color-warning);
 }
 
 .reporte-marker--en_proceso {
-    color: #6554c0;
+    color: var(--color-secondary);
 }
 
 .reporte-marker--reparado {
-    color: #38a169;
+    color: var(--color-success);
 }
 
 .reporte-marker-icon:hover svg {
@@ -2151,21 +2158,21 @@ textarea:focus-visible {
     filter: drop-shadow(0 5px 5px rgba(26, 39, 68, 0.35));
 }
 
-.leaflet-popup.reporte-popup .leaflet-popup-content-wrapper {
-    border: 1px solid var(--borde);
-    border-radius: 14px;
-    background: #fff;
-    box-shadow: 0 10px 28px rgba(26, 39, 68, 0.16);
+.leaflet-container .leaflet-popup.reporte-popup .leaflet-popup-content-wrapper {
+    border: var(--border-card);
+    border-radius: 18px;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
 }
 
-.leaflet-popup.reporte-popup .leaflet-popup-content {
+.leaflet-container .leaflet-popup.reporte-popup .leaflet-popup-content {
     min-width: 200px;
     margin: 14px 16px;
     font-family: "Nunito Sans", sans-serif;
 }
 
-.leaflet-popup.reporte-popup .leaflet-popup-tip {
-    background: #fff;
+.leaflet-container .leaflet-popup.reporte-popup .leaflet-popup-tip {
+    background: var(--bg-card);
     box-shadow: 2px 2px 4px rgba(26, 39, 68, 0.08);
 }
 
@@ -2190,43 +2197,43 @@ textarea:focus-visible {
     border: 1px solid transparent;
     border-radius: 999px;
     font-family: "Nunito", sans-serif;
-    font-size: 0.72rem;
+    font-size: 0.8125rem;
     font-weight: 800;
     white-space: nowrap;
 }
 
 .reporte-popup-estado--pendiente,
 .reporte-publico-badge--pendiente {
-    border-color: #f3e4bd;
-    background: #fff8e9;
-    color: #986a18;
+    border-color: var(--color-danger);
+    background: var(--color-danger);
+    color: var(--color-danger-ink);
 }
 
 .reporte-popup-estado--en_revision,
 .reporte-publico-badge--en_revision {
-    border-color: #d7e8ff;
-    background: #edf5ff;
-    color: #2874f0;
+    border-color: var(--color-warning);
+    background: var(--color-warning);
+    color: var(--color-warning-ink);
 }
 
 .reporte-popup-estado--en_proceso,
 .reporte-publico-badge--en_proceso {
-    border-color: #e0dcff;
-    background: #f3f1ff;
-    color: #6554c0;
+    border-color: var(--color-secondary);
+    background: var(--color-secondary);
+    color: var(--color-secondary-ink);
 }
 
 .reporte-popup-estado--reparado,
 .reporte-publico-badge--reparado {
-    border-color: #d4efdf;
-    background: #edf9f3;
-    color: #25845c;
+    border-color: var(--color-success);
+    background: var(--color-success);
+    color: var(--color-success-ink);
 }
 
 .reporte-popup-contenido p {
     margin: 0;
     color: var(--texto-medio);
-    font-size: 0.86rem;
+    font-size: 0.9375rem;
     line-height: 1.5;
     overflow-wrap: anywhere;
 }
@@ -2234,7 +2241,7 @@ textarea:focus-visible {
 .reporte-popup-enlace,
 .reporte-publico-enlace {
     color: var(--azul);
-    font-size: 0.82rem;
+    font-size: 0.875rem;
     font-weight: 800;
     text-decoration: none;
     white-space: nowrap;
@@ -2256,23 +2263,23 @@ textarea:focus-visible {
 }
 
 .reporte-publico-icono--pendiente {
-    background: #fff8e9;
-    color: #b78320;
+    background: rgb(255 104 118 / 18%);
+    color: var(--color-danger-ink);
 }
 
 .reporte-publico-icono--en_revision {
-    background: #edf5ff;
-    color: #3585f5;
+    background: rgb(255 213 79 / 28%);
+    color: var(--color-warning-ink);
 }
 
 .reporte-publico-icono--en_proceso {
-    background: #f3f1ff;
-    color: #6554c0;
+    background: rgb(42 157 244 / 18%);
+    color: var(--color-secondary-ink);
 }
 
 .reporte-publico-icono--reparado {
-    background: #edf9f3;
-    color: #25845c;
+    background: rgb(76 175 80 / 18%);
+    color: var(--color-success-ink);
 }
 
 .reporte-publico-informacion {
@@ -2286,7 +2293,7 @@ textarea:focus-visible {
     margin: 0;
     color: var(--texto-titulo);
     font-family: "Nunito", sans-serif;
-    font-size: 0.92rem;
+    font-size: 1rem;
     font-weight: 800;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -2295,17 +2302,17 @@ textarea:focus-visible {
 .reporte-publico-informacion p {
     overflow: hidden;
     margin: 0;
-    color: var(--texto-gris);
-    font-size: 0.8rem;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .reporte-publico-enlace {
     padding: 7px 10px;
-    border: 1px solid #d7e8ff;
-    border-radius: 9px;
-    background: #f5f9ff;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    background: var(--bg-page);
 }
 
 @media (max-width: 600px) {
@@ -2338,4 +2345,86 @@ textarea:focus-visible {
         justify-content: flex-start;
         gap: 12px 18px;
     }
+}
+
+.tarjeta-blanco,
+.tarjeta-resumen-inicio,
+.tarjeta-reporte,
+.tarjeta-notificacion,
+.detalle-publico-reporte,
+.reporte-publico-item {
+    border: var(--border-card);
+    border-radius: 18px;
+    background-color: var(--bg-card);
+    box-shadow: var(--shadow-card);
+}
+
+.btn-guardar,
+.btn-cancelar,
+.btn-perfil-primario,
+.btn-perfil-peligro,
+.reporte-publico-enlace {
+    border-radius: 999px;
+    font-size: 1rem;
+}
+
+.btn-perfil-peligro,
+.btn-perfil-peligro:hover {
+    border-color: var(--color-danger);
+    background: var(--color-danger);
+    color: var(--color-danger-ink);
+}
+
+.campo-formulario input,
+.campo-formulario select,
+.campo-formulario textarea,
+.input-con-icono input,
+.select-con-flecha select {
+    font-size: 1rem;
+}
+
+.reporte-publico-badge {
+    font-size: 0.875rem;
+}
+
+.descripcion-tarjeta,
+.tarjeta-resumen-inicio .etiqueta-inicio,
+.campo-formulario label,
+.descripcion-formulario,
+.estado-formulario,
+.zona-subir-archivo span,
+.boton-fotografia,
+.texto-opcion strong,
+.texto-opcion span,
+.contador-reportes,
+.item-leyenda,
+.tabla-reportes th,
+.tabla-reportes td,
+.detalle-metadatos dt,
+.detalle-coordenadas,
+.detalle-metadatos dd,
+.detalle-timeline-cabecera time,
+.detalle-timeline-observacion {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+}
+
+.estado,
+.detalle-estado,
+.reporte-popup-estado,
+.reporte-publico-badge {
+    font-size: 0.875rem;
+}
+
+.contenedor-mapa,
+.contenedor-formulario-reporte,
+.detalle-seccion {
+    border: var(--border-card);
+    border-radius: 18px;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
+}
+
+.leaflet-container .leaflet-popup-content {
+    font-size: 1rem;
 }

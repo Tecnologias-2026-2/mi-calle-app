@@ -1,12 +1,14 @@
+@import url("../../css/design-system.css");
+
 :root {
   font-family: "Nunito Sans", sans-serif;
-  color: #17243b;
-  background: #f3f8ff;
+  color: var(--text-primary);
+  background: var(--bg-page);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --blue: #3585f5;
-  --muted: #7a90b8;
-  --panel-shadow: 0 8px 24px rgba(54, 91, 142, 0.045);
+  --blue: var(--color-primary);
+  --muted: var(--text-muted);
+  --panel-shadow: var(--shadow-card);
 }
 
 * {
@@ -17,7 +19,9 @@ body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background: radial-gradient(ellipse at 94% 4%, rgba(221, 239, 255, 0.72), transparent 30%), #f4f9ff;
+  background-color: var(--bg-page);
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 button,
@@ -131,7 +135,7 @@ a:focus-visible {
 }
 
 .nav-link.is-active {
-  background: #347ff0;
+  background: var(--color-primary);
   box-shadow: 0 5px 12px rgba(52, 127, 240, 0.18);
   color: #fff;
 }
@@ -510,7 +514,7 @@ a:focus-visible {
 .dashboard-content {
   position: relative;
   isolation: isolate;
-  max-width: 1510px;
+  max-width: 1280px;
   margin: 0 auto;
   padding: 35px 42px 21px;
 }
@@ -844,12 +848,12 @@ h1 {
   height: var(--bar-height);
   border-radius: 4px 4px 0 0;
   background: linear-gradient(180deg, #83b4fa, #5b98f2);
-  transition: filter 150ms ease, transform 150ms ease;
+  transition: filter 150ms ease, width 150ms ease;
 }
 
 .bar-column:hover .bar {
   filter: saturate(1.25);
-  transform: scaleX(1.08);
+  width: 24px;
 }
 
 .bar-label {
@@ -889,7 +893,7 @@ h1 {
   flex: 0 0 auto;
   place-items: center;
   border-radius: 50%;
-  background: conic-gradient(#347ff0 0deg 150deg, #38bd84 150deg 255deg, #f2b743 255deg 360deg);
+  background: conic-gradient(var(--color-primary) 0deg 150deg, var(--color-success) 150deg 255deg, var(--color-warning) 255deg 360deg);
   transform: rotate(-90deg);
 }
 
@@ -958,15 +962,15 @@ h1 {
 }
 
 .dot-blue {
-  background: #347ff0;
+  background: var(--color-primary);
 }
 
 .dot-green {
-  background: #38bd84;
+  background: var(--color-success);
 }
 
 .dot-amber {
-  background: #f2b743;
+  background: var(--color-warning);
 }
 
 .dot-red {
@@ -1025,7 +1029,7 @@ h1 {
 }
 
 .fill-blue {
-  background: #347ff0;
+  background: var(--color-primary);
 }
 
 .fill-indigo {
@@ -1266,7 +1270,7 @@ h1 {
 }
 
 .report-content {
-  max-width: 1320px;
+  max-width: 1280px;
 }
 
 .report-heading {
@@ -1490,7 +1494,6 @@ h1 {
 .cloud-two {
   top: 26px;
   right: 15%;
-  transform: scale(0.78);
 }
 
 .road-skyline {
@@ -1624,8 +1627,8 @@ h1 {
 
 .step-item.is-complete .step-marker,
 .step-item.is-current .step-marker {
-  border-color: #347ff0;
-  background: #347ff0;
+  border-color: var(--color-primary);
+  background: var(--color-primary);
   color: #fff;
   box-shadow: 0 3px 8px rgba(52, 127, 240, 0.2);
 }
@@ -1733,8 +1736,8 @@ h1 {
 }
 
 .status-option.is-selected .option-check {
-  border-color: #347ff0;
-  background: #347ff0;
+  border-color: var(--color-primary);
+  background: var(--color-primary);
 }
 
 .status-option.is-selected .option-check::after {
@@ -1868,8 +1871,8 @@ h1 {
 
 .confirm-button {
   flex: 1;
-  border: 1px solid #347ff0;
-  background: #347ff0;
+  border: 1px solid var(--color-primary);
+  background: var(--color-primary);
   box-shadow: 0 4px 9px rgba(52, 127, 240, 0.16);
   color: #fff;
 }
@@ -2029,11 +2032,11 @@ h1 {
   width: 48px;
   height: 48px;
   border-radius: 8px;
-  background: #edf4ff;
+  background: #dceeff;
   object-fit: cover;
 }
 
-.report-list-icon--blue { background: #edf4ff; color: #347ff0; }
+.report-list-icon--blue { background: #dceeff; color: var(--color-primary); }
 .report-list-icon--amber { background: #fff8e9; color: #d29a2f; }
 .report-list-icon--green { background: #edfaf3; color: #42a878; }
 .report-list-icon--red { background: #fff0f0; color: #dc626b; }
@@ -2070,7 +2073,7 @@ h1 {
   white-space: nowrap;
 }
 
-.report-list-status--blue { background: #edf4ff; color: #347ff0; }
+.report-list-status--blue { background: var(--color-secondary); color: var(--color-secondary-ink); }
 .report-list-status--amber { background: #fff8e9; color: #b78320; }
 .report-list-status--green { background: #edfaf3; color: #329565; }
 .report-list-status--red { background: #fff0f0; color: #c95560; }
@@ -2098,7 +2101,7 @@ h1 {
   height: 1em;
   flex: 0 0 auto;
   border: 2px solid rgba(52, 127, 240, 0.22);
-  border-top-color: #347ff0;
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: loading-spin 700ms linear infinite;
   content: "";
@@ -2117,7 +2120,7 @@ h1 {
   height: 1em;
   flex: 0 0 auto;
   border: 2px solid rgba(52, 127, 240, 0.22);
-  border-top-color: #347ff0;
+  border-top-color: var(--color-primary);
   border-radius: 50%;
   animation: loading-spin 700ms linear infinite;
 }
@@ -2150,7 +2153,7 @@ h1 {
 }
 
 .report-list-arrow {
-  color: #347ff0;
+  color: var(--color-primary);
   font-size: 16px;
   font-weight: 650;
 }

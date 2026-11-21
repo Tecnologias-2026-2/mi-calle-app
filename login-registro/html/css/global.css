@@ -1,26 +1,25 @@
+@import url("../../../css/design-system.css");
+
 :root {
   color-scheme: light;
   font-family: "Nunito Sans", sans-serif;
-  color: #1a2744;
-  background: #fff;
+  color: var(--text-primary);
+  background: var(--bg-page);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  --color-primary: #3585f5;
-  --color-primary-dark: #2874f0;
-  --color-text: #1a2744;
-  --color-muted: #7a90b8;
-  --color-input: #f5f9ff;
-  --color-border: #ddeeff;
+  --color-text: var(--text-primary);
+  --color-muted: var(--text-muted);
+  --color-input: var(--bg-page);
 
-  --landing-blue: #3585f5;
-  --landing-deep-blue: #2b7fff;
-  --landing-ink: #1e2939;
-  --landing-body: #4a5565;
-  --landing-muted: #6b7280;
-  --landing-line: rgb(53 133 245 / 12%);
+  --landing-blue: var(--color-primary);
+  --landing-deep-blue: var(--color-primary-dark);
+  --landing-ink: var(--text-primary);
+  --landing-body: var(--text-secondary);
+  --landing-muted: var(--text-muted);
+  --landing-line: rgb(21 101 192 / 14%);
 }
 
 * {
@@ -29,7 +28,8 @@
 
 html {
   scroll-behavior: smooth;
-  scrollbar-color: #3585f5 #f1f1f1;
+  font-size: 16px;
+  scrollbar-color: var(--color-primary) #f1f1f1;
   scrollbar-width: thin;
 }
 
@@ -42,20 +42,22 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #3585f5;
+  background: var(--color-primary);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #2874f0;
+  background: var(--color-primary-dark);
 }
 
 body {
   min-width: 320px;
   min-height: 100vh;
   margin: 0;
-  background: #fff;
+  background-color: var(--bg-page);
   font-family: "Nunito Sans", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 button,
@@ -107,7 +109,7 @@ a {
 .landing-footer__icon {
   width: 36px;
   height: 36px;
-  border-radius: 12px;
+  border-radius: 18px;
 }
 
 .site-footer__brand,
@@ -137,7 +139,7 @@ a {
   margin: 0;
   padding: 10px 14px;
   border-radius: 12px;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.4;
   text-align: center;

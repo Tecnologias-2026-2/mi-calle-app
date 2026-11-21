@@ -18,6 +18,7 @@ const iconosEstado = {
     reparado: "fa-circle-check"
 };
 const formatoCategoria = window.MiCalleReportFormatters.formatCategory;
+const crearIconoMarcador = window.MiCalleMapIcons.createStatusIcon;
 let reportesDisponibles = [];
 
 L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
@@ -89,17 +90,6 @@ function crearDetalleMarcador(reporte) {
     enlace.textContent = "Ver detalle e historial";
     detalle.append(titulo, estado, descripcion, enlace);
     return detalle;
-}
-
-function crearIconoMarcador(estado) {
-    const iconoSvg = '<svg viewBox="0 0 36 44" aria-hidden="true"><path d="M18 1.5c-8.3 0-15 6.7-15 15 0 10.5 15 25.5 15 25.5s15-15 15-25.5c0-8.3-6.7-15-15-15Z" fill="currentColor" stroke="#fff" stroke-width="2"/><circle cx="18" cy="16.5" r="5.5" fill="#fff"/></svg>';
-    return L.divIcon({
-        className: "reporte-marker-icon",
-        html: `<span class="reporte-marker reporte-marker--${estado}" aria-hidden="true">${iconoSvg}</span>`,
-        iconSize: [36, 44],
-        iconAnchor: [18, 43],
-        popupAnchor: [0, -39]
-    });
 }
 
 function renderizarLista(reportes) {
@@ -193,7 +183,13 @@ filtroCategoria.addEventListener("change", renderizarReportes);
 filtroEstado.addEventListener("change", renderizarReportes);
 mapa.locate({ setView: false, enableHighAccuracy: true, timeout: 10000 });
 mapa.on("locationfound", (evento) => {
-    L.marker(evento.latlng).addTo(mapa).bindPopup("Tú estás aquí");
+    L.circleMarker(evento.latlng, {
+        radius: 8,
+        color: "#1565C0",
+        fillColor: "#2A9DF4",
+        fillOpacity: 1,
+        weight: 3
+    }).addTo(mapa).bindPopup("Tú estás aquí");
 });
 mapa.on("locationerror", () => console.info("Ubicación del usuario no disponible; puedes explorar el mapa."));
 window.MiCalleServices.subscribePublicReports((reports) => {

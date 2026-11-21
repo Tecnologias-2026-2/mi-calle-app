@@ -55,7 +55,7 @@
 }
 
 .brand__tagline {
-  color: #2b7fff;
+  color: var(--color-primary);
   font-size: 13px;
   line-height: 1.2;
 }
@@ -226,10 +226,10 @@
   flex-direction: column;
   gap: 18px;
   padding: 24px;
-  border: 1px solid rgb(53 133 245 / 8%);
-  border-radius: 28px;
+  border: var(--border-card);
+  border-radius: 18px;
   background: #fff;
-  box-shadow: 0 4px 16px rgb(26 39 68 / 6%), 0 20px 60px rgb(53 133 245 / 12%);
+  box-shadow: var(--shadow-card);
 }
 
 .form-field {
@@ -239,8 +239,8 @@
 }
 
 .form-field__label {
-  color: #7a90b8;
-  font-size: 12px;
+  color: var(--text-muted);
+  font-size: 14px;
   font-weight: 700;
   letter-spacing: 0.025em;
   text-transform: uppercase;
@@ -261,14 +261,14 @@
 
 .form-field__control:focus-within {
   border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px rgb(53 133 245 / 12%);
+  box-shadow: 0 0 0 3px rgb(21 101 192 / 12%);
 }
 
 .form-field__icon {
   width: 18px;
   height: 18px;
   flex: 0 0 auto;
-  color: #7a90b8;
+  color: var(--text-muted);
 }
 
 .form-field__control input {
@@ -279,11 +279,11 @@
   outline: 0;
   background: transparent;
   color: var(--color-text);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 .form-field__control input::placeholder {
-  color: rgb(26 39 68 / 50%);
+  color: var(--text-muted);
   opacity: 1;
 }
 
@@ -297,7 +297,7 @@
   border: 0;
   border-radius: 8px;
   background: transparent;
-  color: #7a90b8;
+  color: var(--text-muted);
   cursor: pointer;
 }
 
@@ -311,7 +311,7 @@
 .main-nav__link:focus-visible,
 .submit-button:focus-visible,
 .brand:focus-visible {
-  outline: 3px solid rgb(53 133 245 / 40%);
+  outline: 3px solid rgb(21 101 192 / 40%);
   outline-offset: 3px;
 }
 
@@ -334,7 +334,7 @@
 }
 
 .text-link--forgot {
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 600;
 }
 
@@ -346,13 +346,13 @@
   justify-content: center;
   gap: 8px;
   border: 0;
-  border-radius: 18px;
-  background: linear-gradient(135deg, #4fa0ff 0%, #2874f0 100%);
-  box-shadow: 0 2px 6px rgb(40 116 240 / 20%), 0 8px 24px rgb(40 116 240 / 38%);
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+  box-shadow: 0 2px 6px rgb(13 71 161 / 20%), 0 8px 24px rgb(13 71 161 / 28%);
   color: #fff;
   cursor: pointer;
   font-family: "Nunito", sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -379,7 +379,7 @@
   justify-content: center;
   gap: 6px;
   margin: -4px 0 0;
-  color: #7a90b8;
+  color: var(--text-muted);
   font-size: 14px;
   font-weight: 600;
 }

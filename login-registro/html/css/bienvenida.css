@@ -13,9 +13,9 @@
   align-items: center;
   justify-content: space-between;
   padding: 10px 40px;
-  border-bottom: 1px solid rgb(53 133 245 / 12%);
+  border-bottom: 1px solid rgb(21 101 192 / 14%);
   background: rgb(255 255 255 / 92%);
-  box-shadow: 0 2px 16px rgb(53 133 245 / 8%);
+  box-shadow: 0 2px 16px rgb(21 101 192 / 8%);
 }
 
 .brand,
@@ -50,7 +50,7 @@
 }
 
 .brand__tagline {
-  color: #2b7fff;
+  color: var(--color-primary);
   font-size: 14px;
   line-height: 1.2;
 }
@@ -235,7 +235,7 @@
 }
 
 .access-button--user:hover {
-  background: #2874f0;
+  background: var(--color-primary-dark);
   box-shadow: 0 10px 28px rgb(53 133 245 / 42%);
 }
 

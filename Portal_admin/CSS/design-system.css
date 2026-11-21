@@ -1,15 +1,17 @@
 :root {
-  --blue: #3585f5;
-  --muted: #7a90b8;
-  --panel-shadow: 0 8px 24px rgba(54, 91, 142, 0.07);
-  color: #1a2744;
+  --blue: var(--color-primary);
+  --muted: var(--text-muted);
+  --panel-shadow: var(--shadow-card);
+  color: var(--text-primary);
   font-family: "Nunito Sans", sans-serif;
 }
 
 body {
-  color: #1a2744;
+  color: var(--text-primary);
   font-family: "Nunito Sans", sans-serif;
-  background: radial-gradient(ellipse at 94% 4%, rgba(221, 239, 255, 0.72), transparent 30%), #f5f9ff;
+  background-color: var(--bg-page);
+  font-size: 1rem;
+  line-height: 1.5;
 }
 
 button,
@@ -30,7 +32,7 @@ h4,
 
 .panel,
 .stat-card {
-  border-color: #ddeeff;
+  border-color: var(--color-border);
   border-radius: 14px;
   box-shadow: var(--panel-shadow);
 }
@@ -42,11 +44,11 @@ h4,
 
 .nav-link:hover {
   background: #f0f6ff;
-  color: #2874f0;
+  color: var(--color-primary-dark);
 }
 
 .nav-link.is-active {
-  background: #3585f5;
+  background: var(--color-primary);
   box-shadow: 0 5px 12px rgba(53, 133, 245, 0.2);
 }
 
@@ -67,7 +69,7 @@ h4,
 
 .report-list-status--blue {
   background: #edf5ff;
-  color: #2874f0;
+  color: var(--color-primary-dark);
 }
 
 .report-list-status--amber {
@@ -87,16 +89,16 @@ h4,
 
 .current-status strong,
 .role-badge {
-  border: 1px solid #ddeeff;
+  border: 1px solid var(--color-border);
   border-radius: 999px;
   background: #f5f9ff;
-  color: #2874f0;
+  color: var(--color-primary-dark);
 }
 
 input:not([type="checkbox"]):not([type="radio"]),
 select,
 textarea {
-  border-color: #ddeeff;
+  border-color: var(--color-border);
   border-radius: 10px;
 }
 
@@ -114,7 +116,7 @@ a:focus-visible {
 .profile-save-button,
 .security-save-button {
   border-radius: 10px;
-  background: #3585f5;
+  background: var(--color-primary);
   box-shadow: 0 5px 12px rgba(53, 133, 245, 0.18);
   font-family: "Nunito Sans", sans-serif;
   font-weight: 700;
@@ -124,7 +126,7 @@ a:focus-visible {
 .identity-edit:hover,
 .profile-save-button:hover,
 .security-save-button:hover {
-  background: #2874f0;
+  background: var(--color-primary-dark);
 }
 
 .cancel-button,
@@ -136,7 +138,7 @@ a:focus-visible {
 
 table {
   overflow: hidden;
-  border: 1px solid #ddeeff;
+  border: 1px solid var(--color-border);
   border-collapse: separate;
   border-spacing: 0;
   border-radius: 12px;
@@ -145,7 +147,7 @@ table {
 
 th {
   background: #f5f9ff;
-  color: #1a2744;
+  color: var(--text-primary);
   font-family: "Nunito", sans-serif;
   font-weight: 800;
 }
@@ -166,3 +168,308 @@ tbody tr:hover {
     transition-duration: 0.01ms !important;
   }
 }
+
+html {
+    font-size: 16px;
+  }
+
+  .dashboard-content,
+  .report-content,
+  .profile-content {
+    width: 100%;
+    max-width: 1280px;
+  }
+
+  .panel,
+  .stat-card,
+  .report-details,
+  .update-panel,
+  .identity-card,
+  .profile-form-card,
+  .security-card {
+    border: var(--border-card);
+    border-radius: 18px;
+    background: var(--bg-card);
+    box-shadow: var(--shadow-card);
+  }
+
+  .sidebar {
+    border-right-color: var(--color-border);
+    background: var(--bg-card);
+  }
+
+  .nav-link {
+    border-radius: 999px;
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+  }
+
+  .nav-link:hover {
+    background: #dceeff;
+    color: var(--color-primary-dark);
+  }
+
+  .nav-link.is-active {
+    background: var(--color-primary);
+    color: #fff;
+  }
+
+  .main-nav .nav-count {
+    background: var(--color-secondary);
+    color: var(--text-primary);
+  }
+
+  .page-heading h1,
+  .report-heading h1 {
+    color: var(--text-primary);
+    font-size: clamp(1.75rem, 2.4vw, 2.25rem);
+  }
+
+  .dashboard-content p,
+  .dashboard-content label,
+  .dashboard-content input,
+  .dashboard-content select,
+  .dashboard-content textarea,
+  .dashboard-content table th,
+  .dashboard-content table td,
+  .report-content p,
+  .report-content label,
+  .report-content input,
+  .report-content select,
+  .report-content textarea,
+  .report-content table th,
+  .report-content table td,
+  .profile-content p,
+  .profile-content label,
+  .profile-content input,
+  .profile-content select,
+  .profile-content textarea,
+  .profile-content table th,
+  .profile-content table td {
+    color: var(--text-secondary);
+    font-size: 1rem;
+  }
+
+  .dashboard-content small,
+  .report-content small,
+  .profile-content small,
+  .sidebar .brand-copy small,
+  .sidebar-footer,
+  .nav-caption,
+  .user-copy small {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .dashboard-content input:not([type="checkbox"]):not([type="radio"]),
+  .dashboard-content select,
+  .dashboard-content textarea,
+  .report-content input:not([type="checkbox"]):not([type="radio"]),
+  .report-content select,
+  .report-content textarea,
+  .profile-content input:not([type="checkbox"]):not([type="radio"]),
+  .profile-content select,
+  .profile-content textarea {
+    min-height: 44px;
+    border: 1.5px solid var(--color-border);
+    border-radius: 12px;
+    background-color: #fff;
+    color: var(--text-primary);
+  }
+
+  .dashboard-content table {
+    border: var(--border-card);
+    border-radius: 18px;
+    box-shadow: var(--shadow-card);
+  }
+
+  .dashboard-content th {
+    background: #dceeff;
+    color: var(--text-primary);
+  }
+
+  .dashboard-content td {
+    color: var(--text-secondary);
+  }
+
+  .report-list-status {
+    min-height: 30px;
+    padding: 5px 12px;
+    border: 1px solid transparent;
+    font-size: 0.875rem;
+  }
+
+  .report-list-status--red {
+    border-color: var(--color-danger);
+    background: var(--color-danger);
+    color: var(--color-danger-ink);
+  }
+
+  .report-list-status--amber {
+    border-color: var(--color-warning);
+    background: var(--color-warning);
+    color: var(--color-warning-ink);
+  }
+
+  .report-list-status--blue {
+    border-color: var(--color-secondary);
+    background: var(--color-secondary);
+    color: var(--color-secondary-ink);
+  }
+
+  .report-list-status--green {
+    border-color: var(--color-success);
+    background: var(--color-success);
+    color: var(--color-success-ink);
+  }
+
+  .confirm-button,
+  .identity-edit,
+  .profile-save-button,
+  .security-save-button,
+  .logout-button {
+    min-height: 44px;
+    border: 0;
+    border-radius: 999px;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 1rem;
+  }
+
+  .confirm-button:hover,
+  .identity-edit:hover,
+  .profile-save-button:hover,
+  .security-save-button:hover,
+  .logout-button:hover {
+    background: var(--color-primary-dark);
+  }
+
+  .cancel-button,
+  .select-button {
+    min-height: 42px;
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+  }
+
+  .role-badge,
+  .current-status strong {
+    min-height: 30px;
+    padding: 5px 12px;
+    border-color: var(--color-border);
+    background: #dceeff;
+    color: var(--color-primary-dark);
+    font-size: 0.875rem;
+  }
+
+  .brand-copy strong,
+  .user-copy strong {
+    color: var(--text-primary);
+    font-size: 1rem;
+  }
+
+  .main-nav .nav-count {
+    font-size: 0.875rem;
+  }
+
+  .dashboard-content .eyebrow,
+  .dashboard-content .stat-label,
+  .dashboard-content .stat-note,
+  .dashboard-content .stat-change,
+  .dashboard-content .trend-up,
+  .dashboard-content .panel-heading p,
+  .dashboard-content .date-pill,
+  .dashboard-content .select-button,
+  .dashboard-content .y-axis,
+  .dashboard-content .bar-label,
+  .dashboard-content .donut-center span,
+  .dashboard-content .legend li,
+  .dashboard-content .legend li strong,
+  .dashboard-content .text-link,
+  .dashboard-content .type-name,
+  .dashboard-content .type-row > strong,
+  .dashboard-content .content-footer,
+  .dashboard-content .report-kicker,
+  .dashboard-content .report-id,
+  .dashboard-content .current-status,
+  .dashboard-content .report-facts dt,
+  .dashboard-content .report-description h3,
+  .dashboard-content .photo-caption,
+  .dashboard-content .update-title p,
+  .dashboard-content .step-label,
+  .dashboard-content .status-options legend,
+  .dashboard-content .option-copy strong,
+  .dashboard-content .option-copy small,
+  .dashboard-content .reports-total,
+  .dashboard-content .reports-toolbar-note,
+  .dashboard-content .report-list-date,
+  .dashboard-content .reports-empty,
+  .dashboard-content .admin-data-feedback {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .breadcrumb,
+  .breadcrumb a,
+  .breadcrumb strong {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+  }
+
+  .topbar-popover,
+  .topbar-popover label,
+  .topbar-popover p,
+  .topbar-popover button {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+  }
+
+  .topbar-popover small {
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+
+  .dashboard-content .text-link {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .dashboard-content .panel-heading h2,
+  .dashboard-content .report-card-heading h2,
+  .dashboard-content .update-title h2 {
+    color: var(--text-primary);
+    font-size: 1.25rem;
+  }
+
+  .dashboard-content .stat-value,
+  .dashboard-content .donut-center strong {
+    color: var(--text-primary);
+    font-size: 1.5rem;
+  }
+
+  .dashboard-content .report-facts dd,
+  .dashboard-content .report-description p,
+  .dashboard-content .report-list-main strong {
+    color: var(--text-secondary);
+    font-size: 1rem;
+  }
+
+  .dashboard-content .status-option {
+    font-size: 1rem;
+  }
+
+  .profile-content .identity-meta small,
+  .profile-content .identity-meta strong,
+  .profile-content .profile-field input,
+  .profile-content .profile-field label {
+    color: var(--text-secondary);
+    font-size: 1rem;
+  }
+
+  .profile-content .identity-edit,
+  .profile-content .profile-save-button,
+  .profile-content .security-save-button {
+    font-size: 1rem;
+  }

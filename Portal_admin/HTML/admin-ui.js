@@ -36,7 +36,7 @@ document.addEventListener("keydown", (event) => {
 });
 
 const reportStatus = {
-  pendiente: { label: "Pendiente", color: "amber" },
+  pendiente: { label: "Pendiente", color: "red" },
   en_revision: { label: "En revisión", color: "amber" },
   en_proceso: { label: "En proceso", color: "blue" },
   reparado: { label: "Reparado", color: "green" },
@@ -52,13 +52,13 @@ const severityColors = {
 };
 
 const statusColors = {
-  en_revision: "#e6a42c",
-  en_proceso: "#347ff0",
-  reparado: "#38bd84",
-  proceso: "#347ff0",
-  resuelto: "#38bd84",
-  pendiente: "#f2b743",
-  descartado: "#dc626b",
+  en_revision: "#FFD54F",
+  en_proceso: "#2A9DF4",
+  reparado: "#4CAF50",
+  proceso: "#2A9DF4",
+  resuelto: "#4CAF50",
+  pendiente: "#FF6876",
+  descartado: "#FF6876",
 };
 
 function normalizeStatus(status) {
@@ -252,7 +252,7 @@ function renderPeriodSummary(reports, periodDays = 30) {
 
 function statusColorsName(status) {
   return {
-    pendiente: "amber",
+    pendiente: "red",
     en_revision: "amber",
     en_proceso: "blue",
     reparado: "green",

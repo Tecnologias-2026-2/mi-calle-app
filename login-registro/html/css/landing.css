@@ -258,7 +258,7 @@
   min-height: 245px;
   padding: 28px;
   border: 1px solid rgb(53 133 245 / 10%);
-  border-radius: 20px;
+  border-radius: 18px;
   background: #fff;
   box-shadow: 0 8px 28px rgb(26 39 68 / 6%);
 }
@@ -347,7 +347,7 @@
 
 .call-to-action {
   padding: 88px 24px;
-  background: linear-gradient(135deg, #2b7fff 0%, #1a5fd4 100%);
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: #fff;
   text-align: center;
 }

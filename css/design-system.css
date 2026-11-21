@@ -1,0 +1,80 @@
+:root {
+  color-scheme: light;
+  font-family: "Nunito Sans", sans-serif;
+  color: #102a43;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+
+  --color-primary: #1565c0;
+  --color-primary-dark: #0d47a1;
+  --color-secondary: #2a9df4;
+  --color-success: #4caf50;
+  --color-lime: #aeea00;
+  --color-warning: #ffd54f;
+  --color-danger: #ff6876;
+  --bg-page: #edf4fc;
+  --bg-card: #ffffff;
+  --color-border: #c5dcf3;
+  --border-card: 1.5px solid #c5dcf3;
+  --shadow-card: 0 8px 24px rgba(21, 101, 192, 0.08);
+  --text-primary: #102a43;
+  --text-secondary: #334e68;
+  --text-muted: #526b83;
+  --color-secondary-ink: #102a43;
+  --color-success-ink: #102a43;
+  --color-lime-ink: #102a43;
+  --color-warning-ink: #102a43;
+  --color-danger-ink: #102a43;
+}
+
+html {
+  min-width: 320px;
+  font-size: 16px;
+}
+
+body {
+  min-width: 320px;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text-primary);
+  font-family: "Nunito Sans", sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  background-color: var(--bg-page);
+  background-image:
+    radial-gradient(circle at 8% 10%, rgba(42, 157, 244, 0.07) 0 110px, transparent 112px),
+    radial-gradient(circle at 94% 88%, rgba(174, 234, 0, 0.08) 0 150px, transparent 152px);
+  background-attachment: fixed;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-primary);
+  font-family: "Nunito", sans-serif;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid rgba(21, 101, 192, 0.45);
+  outline-offset: 3px;
+}

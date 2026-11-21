@@ -37,10 +37,10 @@
   justify-content: center;
   gap: 19px;
   padding: 24px 24px 37px;
-  border: 1px solid rgb(53 133 245 / 8%);
-  border-radius: 28px;
+  border: var(--border-card);
+  border-radius: 18px;
   background: #fff;
-  box-shadow: 0 4px 16px rgb(26 39 68 / 6%), 0 20px 60px rgb(53 133 245 / 12%);
+  box-shadow: var(--shadow-card);
 }
 
 .success-button {
@@ -52,7 +52,7 @@
 .success-note {
   align-self: stretch;
   margin: 0;
-  color: #7a90b8;
+  color: var(--text-muted);
   font-size: 14px;
   font-weight: 600;
   line-height: 1.5;

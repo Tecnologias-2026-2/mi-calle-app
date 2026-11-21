@@ -9,10 +9,10 @@ function escapeReportHTML(value) {
 
 function getStatus(report) {
     const statuses = {
-        pendiente: ["Pendiente", "estado-rojo"],
-        en_revision: ["En revisión", "estado-rojo"],
-        en_proceso: ["En proceso", "estado-amarillo"],
-        reparado: ["Reparado", "estado-verde"]
+        pendiente: ["Pendiente", "estado-pendiente"],
+        en_revision: ["En revisión", "estado-revision"],
+        en_proceso: ["En proceso", "estado-proceso"],
+        reparado: ["Reparado", "estado-reparado"]
     };
     return statuses[report.status] || statuses.pendiente;
 }
