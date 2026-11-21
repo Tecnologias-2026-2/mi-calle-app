@@ -532,7 +532,7 @@
     await legacyFetch(`/api/admin/reportes/${encodeURIComponent(id)}/estado`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ estado_atencion: nextStatus, observacion }),
+      body: JSON.stringify({ estado_atencion: nextStatus, observation }),
     }, true);
     return responseDto(normalizeReport({
       ...currentReport,
