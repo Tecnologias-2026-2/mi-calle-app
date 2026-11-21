@@ -17,7 +17,7 @@
    * createdAt: string|null, updatedAt: string|null,
    * location: {latitude: number|null, longitude: number|null, address: string},
    * photo: {url: string|null, storagePath: string|null}, history: HistoryDto[],
-   * reporter?: {id: string|null, name: string|null}}} ReportDto
+   * reporter?: {id: string|null, name: string|null, phone: string|null}}} ReportDto
    * @typedef {{id: string|null, status: string, changedAt: string|null,
    * observation: string}} HistoryDto
    * @typedef {{mode: "demo"|"render", user: {id: string|null, name: string|null,
@@ -121,10 +121,12 @@
 
     if (includeReporter) {
       const name = source.reporter?.name || source.reportadoPor || source.nombre_reportante || null;
-      if (name || source.id_usuario || source.reporter?.id) {
+      const phone = source.reporter?.phone || source.telefono_reportante || source.telefono || null;
+      if (name || phone || source.id_usuario || source.reporter?.id) {
         report.reporter = {
           id: source.reporter?.id || source.id_usuario || null,
           name,
+          phone,
         };
       }
     }
@@ -399,12 +401,16 @@
       return normalizeReport({
         ...report,
         history,
-        reporter: { id: identity.id_usuario, name: identity.nombre_completo },
+        reporter: {
+          id: identity.id_usuario,
+          name: identity.nombre_completo,
+          phone: identity.telefono,
+        },
       }, { includeReporter: true });
     }));
   }
 
-  async function getAdminStatistics() {
+  async function getAdminStatistics(reports = null) {
     const provider = getProvider();
     if (provider === "demo") {
       if (getCurrentSession()?.user.role !== "administrador") {
@@ -414,11 +420,20 @@
       return demo.getStatistics();
     }
     requireAdministratorSession();
+    const sourceReports = reports === null
+      ? asArray(await legacyFetch("/reportes", {}, true), "estadísticas administrativas")
+      : asArray(reports, "estadísticas administrativas");
+    const counts = sourceReports.reduce((result, source) => {
+      const status = normalizeReport(source).status;
+      result.total += 1;
+      result[status] += 1;
+      return result;
+    }, { total: 0, pendiente: 0, en_revision: 0, en_proceso: 0, reparado: 0 });
     return [
-      { id: "total", etiqueta: "Total de reportes", indicador: "Todos los casos", nota: "Reportes recibidos", icono: "blue" },
-      { id: "en_proceso", etiqueta: "En proceso", indicador: "En seguimiento", nota: "Casos en atención", icono: "indigo" },
-      { id: "pendiente", etiqueta: "Pendientes", indicador: "Requieren atención", nota: "Por revisar", icono: "amber" },
-      { id: "reparado", etiqueta: "Reparados", indicador: "Atendidos", nota: "Incidencias solucionadas", icono: "green" },
+      { id: "total", etiqueta: "Total de reportes", indicador: "Todos los casos", nota: "Reportes recibidos", icono: "blue", count: counts.total },
+      { id: "pendiente", etiqueta: "Pendientes", indicador: "Requieren atención", nota: "Por revisar", icono: "amber", count: counts.pendiente },
+      { id: "en_proceso", etiqueta: "En atención", indicador: "En seguimiento", nota: "Casos en revisión o proceso", icono: "indigo", count: counts.en_revision + counts.en_proceso },
+      { id: "reparado", etiqueta: "Reparados", indicador: "Atendidos", nota: "Incidencias solucionadas", icono: "green", count: counts.reparado },
     ];
   }
 
@@ -503,8 +518,10 @@
     }
 
     requireAdministratorSession();
-    const currentReport = await getReportById(id);
-    if (!currentReport) throw new ServiceError(`No se encontró el reporte ${id}.`, 404, "not_found");
+    const reports = asArray(await legacyFetch("/reportes", {}, true), "reportes administrativos");
+    const currentSource = reports.find((report) => String(report.id_reporte || report.id || "") === String(id));
+    if (!currentSource) throw new ServiceError(`No se encontró el reporte ${id}.`, 404, "not_found");
+    const currentReport = normalizeReport(currentSource);
     if (currentReport.status === nextStatus) {
       throw new ServiceError(
         "Selecciona un estado distinto; V11.1 solo registra observaciones junto con ese cambio.",
@@ -517,14 +534,10 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ estado_atencion: nextStatus, observacion }),
     }, true);
-    const [updatedReport, history] = await Promise.all([
-      getReportById(id),
-      getReportHistory(id),
-    ]);
-    if (!updatedReport) {
-      throw new ServiceError(`No se encontró el reporte ${id} después de actualizarlo.`, 404, "not_found");
-    }
-    return responseDto(normalizeReport({ ...updatedReport, history }), provider);
+    return responseDto(normalizeReport({
+      ...currentReport,
+      estado_atencion: nextStatus
+    }), provider);
   }
 
   async function saveAdminObservation(id, observation, status = null) {

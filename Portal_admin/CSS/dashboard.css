@@ -2001,7 +2001,7 @@ h1 {
 .report-list-card {
   display: grid;
   min-height: 68px;
-  grid-template-columns: 34px minmax(0, 1fr) auto 78px 18px;
+  grid-template-columns: 48px minmax(0, 1fr) auto 78px 18px;
   align-items: center;
   gap: 12px;
   padding: 11px 14px;
@@ -2016,12 +2016,21 @@ h1 {
 
 .report-list-icon {
   display: grid;
-  width: 34px;
-  height: 34px;
+  width: 42px;
+  height: 42px;
   place-items: center;
   border-radius: 9px;
   font-size: 12px;
   font-weight: 750;
+}
+
+.report-list-photo {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
+  background: #edf4ff;
+  object-fit: cover;
 }
 
 .report-list-icon--blue { background: #edf4ff; color: #347ff0; }
@@ -2119,6 +2128,14 @@ h1 {
 }
 
 @media (max-width: 760px) {
+  .report-list-card {
+    grid-template-columns: 48px minmax(0, 1fr) auto 14px;
+  }
+
+  .report-list-date {
+    display: none;
+  }
+
   .report-heading {
     gap: 14px;
   }
@@ -2137,6 +2154,17 @@ h1 {
 }
 
 @media (max-width: 480px) {
+  .report-list-card {
+    grid-template-columns: 42px minmax(0, 1fr) auto 12px;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .report-list-photo {
+    width: 42px;
+    height: 42px;
+  }
+
   .report-heading h1 {
     font-size: 21px;
   }

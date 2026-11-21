@@ -36,6 +36,7 @@ function getFilteredReports(reports) {
 
 function renderAdminView(statistics, reports) {
   window.AdminUI.renderKpis(statistics, reports);
+  window.AdminUI.renderPeriodSummary(reports, document.querySelector("#dashboard-period-filter")?.value);
   window.AdminUI.renderStatusSummary(reports);
   window.AdminUI.renderCategorySummary(reports);
   window.AdminUI.renderReports(getFilteredReports(reports), reports.length);
@@ -64,7 +65,12 @@ function connectStatusUpdate(reports, refreshReports) {
   const confirmButton = document.querySelector(".confirm-button");
   if (!confirmButton) return;
 
-  const reportId = new URLSearchParams(window.location.search).get("id") || "MC-024";
+  const reportId = new URLSearchParams(window.location.search).get("id");
+  if (!reportId) {
+    confirmButton.disabled = true;
+    window.AdminUI.showAdminError("Selecciona un reporte desde la lista para consultar sus detalles.");
+    return;
+  }
   const report = reports.find((item) => item.id === reportId);
   if (!report) {
     confirmButton.disabled = true;
@@ -83,7 +89,7 @@ function connectStatusUpdate(reports, refreshReports) {
     confirmButton.disabled = true;
     try {
       const observation = document.querySelector("#status-note")?.value.trim() || "";
-      await window.MiCalleServices.updateReportStatus(reportId, selected.value, observation);
+      await window.MiCalleServices.saveAdminObservation(reportId, observation, selected.value);
       refreshReports(await window.MiCalleServices.getAdminReports());
       const stateLabel = document.querySelector(".current-status strong").textContent;
       showUpdateFeedback(`Estado actualizado a «${stateLabel}».`);
@@ -141,8 +147,8 @@ async function initializeAdminService() {
       window.MiCalleServices.logout();
     });
 
-    const statistics = await window.MiCalleServices.getAdminStatistics();
     const reports = await window.MiCalleServices.getAdminReports();
+    const statistics = await window.MiCalleServices.getAdminStatistics(reports);
     const refreshReports = (nextReports) => {
       reports.splice(0, reports.length, ...nextReports);
       populateCategoryFilter(reports);
@@ -156,6 +162,9 @@ async function initializeAdminService() {
     populateCategoryFilter(reports);
     connectReportFilters(statistics, reports);
     connectStatusUpdate(reports, refreshReports);
+    document.querySelector("#dashboard-period-filter")?.addEventListener("change", () => {
+      renderAdminView(statistics, reports);
+    });
     window.MiCalleServices.subscribeAdminReports(refreshReports);
     renderAdminView(statistics, reports);
   } catch (error) {
