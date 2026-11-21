@@ -1,58 +1,77 @@
 const personalForm = document.querySelector("#personal-form");
-const passwordForm = document.querySelector("#password-form");
 const personalFeedback = document.querySelector("#personal-feedback");
-const passwordFeedback = document.querySelector("#password-feedback");
+const saveButton = personalForm.querySelector(".profile-save-button");
+const fullNameInput = personalForm.elements.name;
+const emailInput = personalForm.elements.email;
+const phoneInput = personalForm.elements.phone;
 
-personalForm.addEventListener("submit", (event) => {
-  event.preventDefault();
+function getInitials(name) {
+  const parts = String(name || "").trim().split(/\s+/).filter(Boolean);
+  return parts.slice(0, 2).map((part) => part[0].toLocaleUpperCase("es")).join("") || "AD";
+}
 
-  if (!personalForm.reportValidity()) {
-    return;
-  }
+function renderProfile(user) {
+  const name = String(user.name || "").trim();
+  const email = String(user.email || "").trim();
+  const phone = String(user.phone || "").trim();
+  const displayName = name || "Administrador";
+  const initials = getInitials(name);
 
-  const formData = new FormData(personalForm);
-  const fullName = formData.get("name").trim();
-  const email = formData.get("email").trim();
-  const initials = fullName
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((namePart) => namePart[0].toLocaleUpperCase("es"));
-
-  document.querySelector(".identity-body h2").textContent = fullName;
+  fullNameInput.value = name;
+  emailInput.value = email;
+  phoneInput.value = phone;
+  document.querySelector(".identity-body h2").textContent = displayName;
   document.querySelector(".identity-email").textContent = email;
-  document.querySelector(".profile-avatar").textContent = initials.join("");
-  document.querySelector(".profile-avatar").setAttribute("aria-label", `Iniciales de ${fullName}`);
-  document.querySelector(".user-copy strong").textContent = fullName;
-  personalFeedback.textContent = "Vista previa actualizada en esta página. Los cambios no se guardaron en un servidor.";
+  document.querySelector("#profile-phone-display").textContent = phone || "No registrado";
+  document.querySelector(".profile-avatar").textContent = initials;
+  document.querySelector(".profile-avatar").setAttribute("aria-label", `Iniciales de ${displayName}`);
+  document.querySelector(".avatar").textContent = initials;
+  document.querySelector(".user-copy strong").textContent = displayName;
+}
+
+function showFeedback(message, isError = false) {
+  personalFeedback.textContent = message;
+  personalFeedback.classList.toggle("is-error", isError);
   personalFeedback.hidden = false;
-});
+}
 
-passwordForm.addEventListener("submit", (event) => {
+try {
+  const session = window.MiCalleServices.getCurrentSession();
+  if (session?.user.role === "administrador") {
+    renderProfile(session.user);
+  }
+} catch (error) {
+  console.error("No se pudo cargar el perfil administrativo.", error);
+  showFeedback(error.message || "No se pudo cargar el perfil.", true);
+}
+
+personalForm.addEventListener("submit", async (event) => {
   event.preventDefault();
+  if (!personalForm.reportValidity()) return;
 
-  if (!passwordForm.reportValidity()) {
-    return;
+  const originalButtonContent = saveButton.innerHTML;
+  saveButton.disabled = true;
+  saveButton.setAttribute("aria-busy", "true");
+  saveButton.innerHTML = '<span class="loading-spinner loading-spinner--light" aria-hidden="true"></span> Guardando cambios...';
+  personalFeedback.hidden = true;
+
+  try {
+    const result = await window.MiCalleServices.updateAdminProfile({
+      name: fullNameInput.value,
+      phone: phoneInput.value,
+    });
+    renderProfile(result.data);
+    showFeedback("Perfil actualizado correctamente.");
+  } catch (error) {
+    console.error("No se pudo actualizar el perfil administrativo.", error);
+    showFeedback(error.message || "No se pudo actualizar el perfil.", true);
+  } finally {
+    saveButton.innerHTML = originalButtonContent;
+    saveButton.disabled = false;
+    saveButton.setAttribute("aria-busy", "false");
   }
-
-  const newPassword = passwordForm.elements.newPassword.value;
-  const confirmPassword = passwordForm.elements.confirmPassword.value;
-
-  if (newPassword !== confirmPassword) {
-    passwordFeedback.textContent = "La nueva contraseña y su confirmación no coinciden.";
-    passwordFeedback.hidden = false;
-    passwordForm.elements.confirmPassword.focus();
-    return;
-  }
-
-  passwordFeedback.textContent = "La contraseña cumple con el formato. No se cambió, porque esta pantalla no está conectada a un servidor.";
-  passwordFeedback.hidden = false;
 });
 
 personalForm.addEventListener("input", () => {
   personalFeedback.hidden = true;
-});
-
-passwordForm.addEventListener("input", () => {
-  passwordFeedback.hidden = true;
 });

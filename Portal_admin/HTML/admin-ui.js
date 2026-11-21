@@ -328,9 +328,31 @@ function renderReportDetails(report) {
     return;
   }
 
-  reportId.textContent = `#${report.id}`;
+  const fullReportId = String(report.id || "");
+  const compactReportId = fullReportId.length > 8
+    ? `#${fullReportId.slice(0, 8)}…`
+    : `#${fullReportId || "ID no disponible"}`;
+  const reportIdLabel = createElement("span", "report-id-value", compactReportId);
+  reportIdLabel.title = fullReportId ? `ID completo: ${fullReportId}` : "ID no disponible";
+  reportId.replaceChildren(reportIdLabel);
+  if (fullReportId) {
+    const copyButton = createElement("button", "report-id-copy", "Copiar");
+    copyButton.type = "button";
+    copyButton.dataset.reportId = fullReportId;
+    copyButton.setAttribute("aria-label", "Copiar identificador completo del reporte");
+    reportId.append(copyButton);
+  }
+
+  const formattedType = String(report.type || "")
+    .replace(/[_-]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ")
+    .toLocaleLowerCase("es");
+  const displayType = formattedType
+    ? formattedType[0].toLocaleUpperCase("es") + formattedType.slice(1)
+    : "Tipo no disponible";
   const facts = document.querySelectorAll(".report-facts dd");
-  facts[0].textContent = report.type;
+  if (facts[0]) facts[0].textContent = displayType;
   const reportDate = report.createdAt ? new Date(report.createdAt) : new Date(Number.NaN);
   facts[1].textContent = Number.isNaN(reportDate.getTime())
     ? "Fecha no disponible"
@@ -349,6 +371,8 @@ function renderReportDetails(report) {
   const currentStatus = document.querySelector(".current-status strong");
   currentStatus.textContent = selectedStatus.label;
   currentStatus.className = `report-list-status report-list-status--${selectedStatus.color}`;
+  const statusIndicator = document.querySelector(".status-indicator");
+  statusIndicator.className = `status-indicator status-indicator--${selectedStatus.color}`;
 
   const selectedOption = document.querySelector(`input[name="report-status"][value="${normalizedStatus}"]`);
   if (selectedOption) {
@@ -381,7 +405,7 @@ function renderReportDetails(report) {
     if (photoUrl) {
       const image = createElement("img", "admin-evidence-image");
       image.src = photoUrl;
-      image.alt = `Fotografía de evidencia: ${report.type}`;
+      image.alt = `Fotografía de evidencia: ${displayType}`;
       photoContainer.replaceChildren(image);
     } else {
       photoContainer.replaceChildren(createElement("p", "photo-caption", "Este reporte no tiene fotografía adjunta."));

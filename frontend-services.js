@@ -577,6 +577,40 @@
     return updateReportStatus(id, status, observation);
   }
 
+  async function updateAdminProfile({ name, phone } = {}) {
+    const provider = getProvider();
+    requireAdministratorSession();
+    if (provider === "demo") {
+      throw new ServiceError(
+        "La edición del perfil requiere una sesión administrativa real.",
+        null,
+        "operation_unavailable",
+      );
+    }
+
+    const result = await legacyFetch("/api/users/me", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nombre_completo: String(name || "").trim(),
+        telefono: String(phone || "").trim(),
+      }),
+    }, true);
+    if (!result.user) {
+      throw new ServiceError("La respuesta de actualización no contiene el usuario.", null, "invalid_response");
+    }
+
+    const session = normalizeSession(result.user, provider);
+    if (!session) {
+      throw new ServiceError("No se pudo normalizar el perfil actualizado.", null, "invalid_response");
+    }
+    if (!localStorage?.setItem) {
+      throw new ServiceError("No se pudo guardar el perfil actualizado en este navegador.", null, "storage_unavailable");
+    }
+    localStorage.setItem(USER_KEY, JSON.stringify(result.user));
+    return responseDto(session.user, provider);
+  }
+
   function subscribePublicReports(callback) {
     if (getProvider() !== "demo") return () => {};
     return demo.subscribe((reports) => callback(reports.map((report) => normalizeReport(report))));
@@ -621,6 +655,7 @@
     createReport,
     updateReportStatus,
     saveAdminObservation,
+    updateAdminProfile,
     subscribePublicReports,
     subscribeMyReports,
     subscribeAdminReports,

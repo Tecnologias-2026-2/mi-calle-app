@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f4f9ff">
-  <meta name="description" content="Administra la información y la seguridad de tu perfil en Mi Calle.">
+  <meta name="theme-color" content="#edf4fc">
+  <meta name="description" content="Consulta y actualiza tu información personal en Mi Calle.">
   <title>Mi perfil | Mi Calle</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,8 +72,8 @@
           <span class="topbar-divider" aria-hidden="true"></span>
           <div class="topbar-menu">
           <button class="user-menu" type="button" aria-label="Cuenta de Administrador">
-            <span class="avatar">CA</span>
-            <span class="user-copy"><strong>Carmen Administrador</strong><small>Super admin</small></span>
+            <span class="avatar">A</span>
+            <span class="user-copy"><strong>Administrador</strong><small>Administrador</small></span>
             <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m7 10 5 5 5-5"/></svg>
           </button>
           <div class="topbar-popover account-menu" hidden>
@@ -89,7 +89,7 @@
           <div>
             <p class="eyebrow">CUENTA DE ADMINISTRADOR</p>
             <h1>Mi perfil</h1>
-            <p class="page-description">Administra tu información personal y la seguridad de tu cuenta.</p>
+            <p class="page-description">Consulta y actualiza tus datos de contacto.</p>
           </div>
         </section>
 
@@ -97,22 +97,16 @@
           <aside class="panel identity-card">
             <div class="identity-cover" aria-hidden="true"><span></span><span></span></div>
             <div class="identity-body">
-              <div class="profile-avatar" aria-label="Iniciales de Carmen Administrador">CA</div>
+              <div class="profile-avatar" aria-label="Iniciales del administrador"></div>
               <span class="role-badge"><span aria-hidden="true"></span> Administrador</span>
-              <h2>Carmen Administrador</h2>
-              <p class="identity-email">carmen.administrador@miccalle.co</p>
+              <h2></h2>
+              <p class="identity-email"></p>
               <div class="identity-divider"></div>
               <div class="identity-meta">
-                <span class="meta-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
-                </span>
-                <span><small>Miembro desde</small><strong>Septiembre de 2024</strong></span>
-              </div>
-              <div class="identity-meta">
                 <span class="meta-icon meta-icon-green" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                  <svg viewBox="0 0 24 24"><path d="M5 4h3l2 5-2 2a14 14 0 0 0 5 5l2-2 5 2v3a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg>
                 </span>
-                <span><small>Ubicación</small><strong>Bogotá, Colombia</strong></span>
+                <span><small>Teléfono</small><strong id="profile-phone-display"></strong></span>
               </div>
               <a class="identity-edit" href="#informacion-personal">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5 4 4M4 20l4-.8L19 8a2.1 2.1 0 0 0-3-3L5 16l-1 4Z"/></svg>
@@ -134,22 +128,15 @@
                 <div class="field-grid">
                   <label class="profile-field" for="full-name">
                     <span>Nombre completo</span>
-                    <input id="full-name" name="name" type="text" value="Carmen Administrador" autocomplete="name" required>
+                    <input id="full-name" name="name" type="text" autocomplete="name" maxlength="100" required>
                   </label>
                   <label class="profile-field" for="email">
                     <span>Correo electrónico</span>
-                    <input id="email" name="email" type="email" value="carmen.administrador@miccalle.co" autocomplete="email" required>
+                    <input id="email" name="email" type="email" autocomplete="email" readonly>
                   </label>
                   <label class="profile-field" for="phone">
                     <span>Teléfono</span>
-                    <input id="phone" name="phone" type="tel" value="+57 300 123 4567" autocomplete="tel">
-                  </label>
-                  <label class="profile-field" for="location">
-                    <span>Ubicación</span>
-                    <span class="input-with-icon">
-                      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
-                      <input id="location" name="location" type="text" value="Bogotá, Colombia" autocomplete="address-level2">
-                    </span>
+                    <input id="phone" name="phone" type="tel" autocomplete="tel" maxlength="20">
                   </label>
                 </div>
                 <div class="profile-form-footer">
@@ -162,49 +149,16 @@
               </form>
             </section>
 
-            <section class="panel profile-form-card security-card">
-              <div class="profile-section-heading">
-                <span class="section-icon section-icon-violet" aria-hidden="true">
-                  <svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 14v3"/></svg>
-                </span>
-                <div><h2>Seguridad</h2><p>Mantén tu cuenta protegida con una contraseña segura.</p></div>
-              </div>
-
-              <form class="profile-form" id="password-form">
-                <div class="field-grid password-fields">
-                  <label class="profile-field" for="current-password">
-                    <span>Contraseña actual</span>
-                    <input id="current-password" name="currentPassword" type="password" placeholder="Ingresa tu contraseña actual" autocomplete="current-password" required>
-                  </label>
-                  <span class="field-spacer" aria-hidden="true"></span>
-                  <label class="profile-field" for="new-password">
-                    <span>Nueva contraseña</span>
-                    <input id="new-password" name="newPassword" type="password" placeholder="Mínimo 8 caracteres" autocomplete="new-password" minlength="8" required>
-                  </label>
-                  <label class="profile-field" for="confirm-password">
-                    <span>Confirmar nueva contraseña</span>
-                    <input id="confirm-password" name="confirmPassword" type="password" placeholder="Repite la nueva contraseña" autocomplete="new-password" minlength="8" required>
-                  </label>
-                </div>
-                <div class="profile-form-footer">
-                  <p class="form-feedback" id="password-feedback" role="status" aria-live="polite" hidden></p>
-                  <button class="profile-save-button security-save-button" type="submit">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z"/><path d="m9 12 2 2 4-4"/></svg>
-                    Actualizar contraseña
-                  </button>
-                </div>
-              </form>
-            </section>
           </div>
         </section>
         <footer class="content-footer"><span>© 2024 Mi Calle</span><span>Construyendo calles más seguras, juntos.</span></footer>
       </div>
     </main>
   </div>
-  <script src="profile.js"></script>
-  <script src="admin-ui.js"></script>
   <script src="../../demo-service.js"></script>
   <script src="../../frontend-services.js"></script>
+  <script src="profile.js"></script>
+  <script src="admin-ui.js"></script>
   <script src="admin-service.js"></script>
 </body>
 </html>

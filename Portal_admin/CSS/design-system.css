@@ -169,6 +169,186 @@ tbody tr:hover {
   }
 }
 
+.report-content .report-card-heading {
+  flex-wrap: wrap;
+}
+
+.report-content .report-card-heading > div {
+  min-width: 0;
+  flex: 1 1 200px;
+}
+
+.report-content .report-id {
+  display: flex;
+  min-width: 0;
+  max-width: 100%;
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 0.4rem;
+  margin-left: auto;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+.report-id-value {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.report-content .report-id-copy {
+  flex: 0 0 auto;
+  padding: 3px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  background: #fff;
+  color: var(--color-primary-dark);
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.report-content .report-id-copy:hover {
+  background: #dceeff;
+}
+
+.report-content .current-status strong.report-list-status--red {
+  border-color: var(--color-danger);
+  background: var(--color-danger);
+  color: var(--color-danger-ink);
+}
+
+.report-content .current-status strong.report-list-status--amber {
+  border-color: var(--color-warning);
+  background: var(--color-warning);
+  color: var(--color-warning-ink);
+}
+
+.report-content .current-status strong.report-list-status--blue {
+  border-color: var(--color-secondary);
+  background: var(--color-secondary);
+  color: var(--color-secondary-ink);
+}
+
+.report-content .current-status strong.report-list-status--green {
+  border-color: var(--color-success);
+  background: var(--color-success);
+  color: var(--color-success-ink);
+}
+
+.report-content .status-indicator.status-indicator--red {
+  background: var(--color-danger);
+}
+
+.report-content .status-indicator.status-indicator--amber {
+  background: var(--color-warning);
+}
+
+.report-content .status-indicator.status-indicator--blue {
+  background: var(--color-secondary);
+}
+
+.report-content .status-indicator.status-indicator--green {
+  background: var(--color-success);
+}
+
+.report-content .step-item[data-step="pendiente"] {
+  --step-color: var(--color-danger);
+  --step-tint: rgba(255, 104, 118, 0.18);
+}
+
+.report-content .step-item[data-step="en_revision"] {
+  --step-color: var(--color-warning);
+  --step-tint: rgba(255, 213, 79, 0.25);
+}
+
+.report-content .step-item[data-step="en_proceso"] {
+  --step-color: var(--color-secondary);
+  --step-tint: rgba(42, 157, 244, 0.18);
+}
+
+.report-content .step-item[data-step="reparado"] {
+  --step-color: var(--color-success);
+  --step-tint: rgba(76, 175, 80, 0.18);
+}
+
+.report-content .step-item.is-complete .step-marker,
+.report-content .step-item.is-current .step-marker {
+  border-color: var(--step-color);
+  background: var(--step-color);
+  color: var(--text-primary);
+}
+
+.report-content .step-item.is-current .step-marker {
+  outline: 4px solid var(--step-tint);
+}
+
+.report-content .step-item.is-current .step-label {
+  color: var(--text-primary);
+}
+
+.report-content .step-connector span.is-complete[data-step="pendiente"] {
+  background: var(--color-danger);
+}
+
+.report-content .step-connector span.is-complete[data-step="en_revision"] {
+  background: var(--color-warning);
+}
+
+.report-content .step-connector span.is-complete[data-step="en_proceso"] {
+  background: var(--color-secondary);
+}
+
+.report-content .status-option[data-status="pendiente"] {
+  --status-color: var(--color-danger);
+  --status-tint: rgba(255, 104, 118, 0.08);
+}
+
+.report-content .status-option[data-status="en_revision"] {
+  --status-color: var(--color-warning);
+  --status-tint: rgba(255, 213, 79, 0.16);
+}
+
+.report-content .status-option[data-status="en_proceso"] {
+  --status-color: var(--color-secondary);
+  --status-tint: rgba(42, 157, 244, 0.08);
+}
+
+.report-content .status-option[data-status="reparado"] {
+  --status-color: var(--color-success);
+  --status-tint: rgba(76, 175, 80, 0.08);
+}
+
+.report-content .status-option.is-selected {
+  border-color: var(--status-color);
+  background: var(--status-tint);
+}
+
+.report-content .status-option.is-selected .option-check {
+  border-color: var(--status-color);
+  background: var(--status-color);
+  color: var(--text-primary);
+}
+
+.report-content .status-option.is-selected .option-check::after {
+  border-color: currentColor;
+}
+
+.report-content .status-option[data-status="pendiente"] .option-color {
+  background: var(--color-danger);
+}
+
+.report-content .status-option[data-status="en_revision"] .option-color {
+  background: var(--color-warning);
+}
+
+.report-content .status-option[data-status="en_proceso"] .option-color {
+  background: var(--color-secondary);
+}
+
+.report-content .status-option[data-status="reparado"] .option-color {
+  background: var(--color-success);
+}
+
 html {
     font-size: 16px;
   }
