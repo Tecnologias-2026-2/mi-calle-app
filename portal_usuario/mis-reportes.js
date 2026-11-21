@@ -1,4 +1,5 @@
 const tablaBody = document.querySelector(".tabla-reportes tbody");
+const formatReportCategory = window.MiCalleReportFormatters.formatCategory;
 
 function escapeReportHTML(value) {
     const element = document.createElement("div");
@@ -53,7 +54,7 @@ function renderRows(reports) {
 
     tablaBody.replaceChildren(...reports.map((report) => {
         const [label, className] = getStatus(report);
-        const title = report.type || "Reporte ciudadano";
+        const title = formatReportCategory(report.type);
         const location = report.location.address || "Sin ubicación";
         const detailLink = document.createElement("a");
         detailLink.href = `reporte-detalle.html?id=${encodeURIComponent(report.id)}`;

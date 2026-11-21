@@ -4,6 +4,7 @@ const reportStatus = {
     en_proceso: { label: "En proceso", className: "estado-amarillo" },
     reparado: { label: "Reparado", className: "estado-verde" }
 };
+const formatReportCategory = window.MiCalleReportFormatters.formatCategory;
 
 function escapeHTML(value) {
     const element = document.createElement("div");
@@ -16,7 +17,7 @@ function getReportStatus(report) {
 }
 
 function reportTitle(report) {
-    return report.type || "Reporte ciudadano";
+    return formatReportCategory(report.type);
 }
 
 function reportDate(report) {

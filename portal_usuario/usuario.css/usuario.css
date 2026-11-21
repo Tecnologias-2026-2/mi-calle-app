@@ -1363,17 +1363,13 @@ textarea::placeholder {
     gap: 6px;
 }
 
-/* Área del mapa (simulada con CSS) */
+/* Área interactiva del mapa Leaflet */
 .area-mapa {
     position: relative;
     width: 100%;
     height: 400px;
     border-radius: 10px;
     background-color: #eef2f7;
-    background-image:
-        linear-gradient(#e0e6ed 2px, transparent 2px),
-        linear-gradient(90deg, #e0e6ed 2px, transparent 2px);
-    background-size: 60px 60px;     /* Cuadrícula que simula las calles */
     overflow: hidden;
     border: 1px solid var(--borde);
 }
@@ -1433,8 +1429,9 @@ textarea::placeholder {
     display: inline-block;
 }
 
-.punto-reportado { background-color: var(--azul); }
-.punto-revision  { background-color: var(--naranja); }
+.punto-pendiente { background-color: var(--amarillo); }
+.punto-revision  { background-color: var(--azul); }
+.punto-proceso   { background-color: #6554c0; }
 .punto-reparado  { background-color: var(--verde); }
 
 /* ==========================================================================
@@ -1647,7 +1644,8 @@ textarea::placeholder {
     grid-template-columns: minmax(0, 1fr);
     align-content: start;
     gap: 8px;
-    max-height: min(920px, calc(100vh - 340px));
+    grid-auto-rows: minmax(64px, auto);
+    max-height: min(720px, max(320px, calc(100vh - 340px)));
     overflow-y: auto;
     overscroll-behavior: contain;
     padding-right: 6px;
@@ -1655,11 +1653,13 @@ textarea::placeholder {
 
 .reporte-publico-item {
     display: grid;
-    gap: 8px;
-    min-height: 84px;
-    padding: 12px;
+    grid-template-columns: 40px minmax(0, 1fr) max-content max-content;
+    align-items: center;
+    gap: 12px;
+    min-height: 64px;
+    padding: 10px 12px;
     border: 1px solid var(--borde-suave);
-    border-radius: 10px;
+    border-radius: 12px;
     box-sizing: border-box;
 }
 
@@ -2107,5 +2107,235 @@ textarea:focus-visible {
 @media (max-width: 600px) {
     .detalle-nav-logout {
         justify-content: center;
+    }
+}
+
+.reporte-marker-icon {
+    border: 0 !important;
+    background: transparent !important;
+}
+
+.reporte-marker {
+    display: block;
+    width: 36px;
+    height: 44px;
+    color: var(--azul);
+}
+
+.reporte-marker svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    filter: drop-shadow(0 3px 4px rgba(26, 39, 68, 0.3));
+    transition: transform 160ms ease, filter 160ms ease;
+}
+
+.reporte-marker--pendiente {
+    color: #d69e2e;
+}
+
+.reporte-marker--en_revision {
+    color: #3585f5;
+}
+
+.reporte-marker--en_proceso {
+    color: #6554c0;
+}
+
+.reporte-marker--reparado {
+    color: #38a169;
+}
+
+.reporte-marker-icon:hover svg {
+    transform: translateY(-2px);
+    filter: drop-shadow(0 5px 5px rgba(26, 39, 68, 0.35));
+}
+
+.leaflet-popup.reporte-popup .leaflet-popup-content-wrapper {
+    border: 1px solid var(--borde);
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(26, 39, 68, 0.16);
+}
+
+.leaflet-popup.reporte-popup .leaflet-popup-content {
+    min-width: 200px;
+    margin: 14px 16px;
+    font-family: "Nunito Sans", sans-serif;
+}
+
+.leaflet-popup.reporte-popup .leaflet-popup-tip {
+    background: #fff;
+    box-shadow: 2px 2px 4px rgba(26, 39, 68, 0.08);
+}
+
+.reporte-popup-contenido {
+    display: grid;
+    justify-items: start;
+    gap: 8px;
+}
+
+.reporte-popup-categoria {
+    color: var(--texto-titulo);
+    font-family: "Nunito", sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.reporte-popup-estado,
+.reporte-publico-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 9px;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-family: "Nunito", sans-serif;
+    font-size: 0.72rem;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.reporte-popup-estado--pendiente,
+.reporte-publico-badge--pendiente {
+    border-color: #f3e4bd;
+    background: #fff8e9;
+    color: #986a18;
+}
+
+.reporte-popup-estado--en_revision,
+.reporte-publico-badge--en_revision {
+    border-color: #d7e8ff;
+    background: #edf5ff;
+    color: #2874f0;
+}
+
+.reporte-popup-estado--en_proceso,
+.reporte-publico-badge--en_proceso {
+    border-color: #e0dcff;
+    background: #f3f1ff;
+    color: #6554c0;
+}
+
+.reporte-popup-estado--reparado,
+.reporte-publico-badge--reparado {
+    border-color: #d4efdf;
+    background: #edf9f3;
+    color: #25845c;
+}
+
+.reporte-popup-contenido p {
+    margin: 0;
+    color: var(--texto-medio);
+    font-size: 0.86rem;
+    line-height: 1.5;
+    overflow-wrap: anywhere;
+}
+
+.reporte-popup-enlace,
+.reporte-publico-enlace {
+    color: var(--azul);
+    font-size: 0.82rem;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.reporte-popup-enlace:hover,
+.reporte-publico-enlace:hover {
+    color: var(--azul-hover);
+    text-decoration: underline;
+}
+
+.reporte-publico-icono {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    place-items: center;
+    border-radius: 11px;
+    font-size: 1rem;
+}
+
+.reporte-publico-icono--pendiente {
+    background: #fff8e9;
+    color: #b78320;
+}
+
+.reporte-publico-icono--en_revision {
+    background: #edf5ff;
+    color: #3585f5;
+}
+
+.reporte-publico-icono--en_proceso {
+    background: #f3f1ff;
+    color: #6554c0;
+}
+
+.reporte-publico-icono--reparado {
+    background: #edf9f3;
+    color: #25845c;
+}
+
+.reporte-publico-informacion {
+    display: grid;
+    min-width: 0;
+    gap: 3px;
+}
+
+.reporte-publico-informacion h3 {
+    overflow: hidden;
+    margin: 0;
+    color: var(--texto-titulo);
+    font-family: "Nunito", sans-serif;
+    font-size: 0.92rem;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.reporte-publico-informacion p {
+    overflow: hidden;
+    margin: 0;
+    color: var(--texto-gris);
+    font-size: 0.8rem;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.reporte-publico-enlace {
+    padding: 7px 10px;
+    border: 1px solid #d7e8ff;
+    border-radius: 9px;
+    background: #f5f9ff;
+}
+
+@media (max-width: 600px) {
+    #lista-reportes-publicos {
+        max-height: min(720px, max(320px, calc(100vh - 300px)));
+    }
+
+    .reporte-publico-item {
+        grid-template-columns: 40px minmax(0, 1fr) max-content;
+        gap: 8px 10px;
+        padding: 10px;
+    }
+
+    .reporte-publico-informacion {
+        grid-column: 2 / 4;
+    }
+
+    .reporte-publico-badge {
+        grid-column: 2;
+        grid-row: 2;
+    }
+
+    .reporte-publico-item > .reporte-publico-enlace {
+        grid-column: 3;
+        grid-row: 2;
+        justify-self: end;
+    }
+
+    .leyenda-mapa {
+        justify-content: flex-start;
+        gap: 12px 18px;
     }
 }

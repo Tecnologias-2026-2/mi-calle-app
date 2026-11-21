@@ -9,42 +9,7 @@ const statusLabels = {
     reparado: "Reparado"
 };
 
-const reportTypeLabels = {
-    hueco: "Bache",
-    huecos: "Bache",
-    bache: "Bache",
-    "hueco en la via": "Bache",
-    semaforo: "Semáforo",
-    "semaforo en mal estado": "Semáforo en mal estado",
-    alcantarilla: "Alcantarilla",
-    "alcantarilla sin tapa": "Alcantarilla sin tapa",
-    senalizacion: "Señalización",
-    "senalizacion danada": "Señalización dañada",
-    alumbrado: "Alumbrado público",
-    "alumbrado publico danado": "Alumbrado público dañado",
-    basura: "Acumulación de basura",
-    "acumulacion de basura": "Acumulación de basura",
-    otro: "Otro problema",
-    otros: "Otros"
-};
-
-function normalizeText(value) {
-    return String(value || "")
-        .trim()
-        .toLocaleLowerCase("es")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .replace(/[_-]+/g, " ")
-        .replace(/\s+/g, " ");
-}
-
-function formatReportType(value) {
-    const raw = String(value || "").trim();
-    const normalized = normalizeText(raw);
-    if (reportTypeLabels[normalized]) return reportTypeLabels[normalized];
-    const formatted = raw.replace(/[_-]+/g, " ");
-    return formatted ? formatted.charAt(0).toLocaleUpperCase("es") + formatted.slice(1) : "";
-}
+const formatReportType = window.MiCalleReportFormatters.formatCategory;
 
 function formatStatus(status) {
     return statusLabels[status] || "Estado actualizado";

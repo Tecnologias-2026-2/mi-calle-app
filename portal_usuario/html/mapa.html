@@ -84,13 +84,14 @@
             </select>
         </div>
 
-        <!-- Área del mapa (simulada con CSS) -->
+        <!-- Mapa interactivo de reportes -->
         <div class="area-mapa" id="mapa" aria-busy="true"></div>
 
         <!-- Leyenda del mapa -->
-        <div class="leyenda-mapa">
-            <div class="item-leyenda"><span class="punto-leyenda punto-reportado"></span> Reportado</div>
+        <div class="leyenda-mapa" aria-label="Estados de los reportes">
+            <div class="item-leyenda"><span class="punto-leyenda punto-pendiente"></span> Pendiente</div>
             <div class="item-leyenda"><span class="punto-leyenda punto-revision"></span> En revisión</div>
+            <div class="item-leyenda"><span class="punto-leyenda punto-proceso"></span> En proceso</div>
             <div class="item-leyenda"><span class="punto-leyenda punto-reparado"></span> Reparado</div>
         </div>
 
@@ -109,6 +110,7 @@
     crossorigin=""></script>
 <script src="../../demo-service.js"></script>
 <script src="../../frontend-services.js"></script>
+<script src="../reporte-formatters.js"></script>
 <script src="../visualizacion.js"></script>
 <script src="../menu.js"></script>
 </body>

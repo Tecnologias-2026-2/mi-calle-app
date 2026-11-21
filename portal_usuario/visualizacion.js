@@ -5,28 +5,37 @@ const listaReportes = document.querySelector("#lista-reportes-publicos");
 const filtroCategoria = document.querySelector("#filtro-categoria");
 const filtroEstado = document.querySelector("#filtro-estado");
 const marcadores = L.layerGroup().addTo(mapa);
+const estadosReporte = {
+    pendiente: "Pendiente",
+    en_revision: "En revisión",
+    en_proceso: "En proceso",
+    reparado: "Reparado"
+};
+const iconosEstado = {
+    pendiente: "fa-clock",
+    en_revision: "fa-magnifying-glass",
+    en_proceso: "fa-screwdriver-wrench",
+    reparado: "fa-circle-check"
+};
+const formatoCategoria = window.MiCalleReportFormatters.formatCategory;
 let reportesDisponibles = [];
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+    maxZoom: 20,
+    subdomains: "abcd",
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
 }).addTo(mapa);
 
 function estadoNormalizado(reporte) {
-    return reporte.status;
+    return estadosReporte[reporte.status] ? reporte.status : "pendiente";
 }
 
 function etiquetaEstado(estado) {
-    return ({
-        pendiente: "Pendiente",
-        en_revision: "En revisión",
-        en_proceso: "En proceso",
-        reparado: "Reparado"
-    })[estado] || "Pendiente";
+    return estadosReporte[estado] || estadosReporte.pendiente;
 }
 
 function categoriaReporte(reporte) {
-    return reporte.type;
+    return formatoCategoria(reporte.type);
 }
 
 function coordenadasReporte(reporte) {
@@ -56,17 +65,41 @@ function reportesFiltrados() {
 
 function crearDetalleMarcador(reporte) {
     const detalle = document.createElement("div");
+    detalle.className = "reporte-popup-contenido";
+
     const titulo = document.createElement("strong");
+    titulo.className = "reporte-popup-categoria";
     titulo.textContent = categoriaReporte(reporte);
+
+    const estado = document.createElement("span");
+    const status = estadoNormalizado(reporte);
+    estado.className = `reporte-popup-estado reporte-popup-estado--${status}`;
+    estado.textContent = etiquetaEstado(status);
+
     const descripcion = document.createElement("p");
     const textoDescripcion = [reporte.description, reporte.descripcion]
         .find((value) => typeof value === "string" && value.trim());
-    descripcion.textContent = textoDescripcion ? textoDescripcion.trim() : "Este reporte aún no tiene descripción.";
+    descripcion.textContent = textoDescripcion
+        ? textoDescripcion.trim()
+        : "Este reporte aún no tiene descripción.";
+
     const enlace = document.createElement("a");
+    enlace.className = "reporte-popup-enlace";
     enlace.href = `reporte-detalle.html?id=${encodeURIComponent(reporte.id)}`;
     enlace.textContent = "Ver detalle e historial";
-    detalle.append(titulo, descripcion, enlace);
+    detalle.append(titulo, estado, descripcion, enlace);
     return detalle;
+}
+
+function crearIconoMarcador(estado) {
+    const iconoSvg = '<svg viewBox="0 0 36 44" aria-hidden="true"><path d="M18 1.5c-8.3 0-15 6.7-15 15 0 10.5 15 25.5 15 25.5s15-15 15-25.5c0-8.3-6.7-15-15-15Z" fill="currentColor" stroke="#fff" stroke-width="2"/><circle cx="18" cy="16.5" r="5.5" fill="#fff"/></svg>';
+    return L.divIcon({
+        className: "reporte-marker-icon",
+        html: `<span class="reporte-marker reporte-marker--${estado}" aria-hidden="true">${iconoSvg}</span>`,
+        iconSize: [36, 44],
+        iconAnchor: [18, 43],
+        popupAnchor: [0, -39]
+    });
 }
 
 function renderizarLista(reportes) {
@@ -77,18 +110,36 @@ function renderizarLista(reportes) {
 
     const fragment = document.createDocumentFragment();
     reportes.forEach((reporte) => {
+        const estado = estadoNormalizado(reporte);
         const tarjeta = document.createElement("article");
         tarjeta.className = "reporte-publico-item";
+
+        const icono = document.createElement("span");
+        icono.className = `reporte-publico-icono reporte-publico-icono--${estado}`;
+        icono.dataset.statusIcon = estado;
+        icono.setAttribute("aria-hidden", "true");
+        const ilustracion = document.createElement("i");
+        ilustracion.className = `fa-solid ${iconosEstado[estado]}`;
+        icono.append(ilustracion);
+
+        const informacion = document.createElement("div");
+        informacion.className = "reporte-publico-informacion";
         const titulo = document.createElement("h3");
         titulo.textContent = categoriaReporte(reporte);
         const direccion = document.createElement("p");
         direccion.textContent = reporte.location.address || "Ubicación por confirmar";
-        const estado = document.createElement("span");
-        estado.textContent = etiquetaEstado(estadoNormalizado(reporte));
+        informacion.append(titulo, direccion);
+
+        const etiqueta = document.createElement("span");
+        etiqueta.className = `reporte-publico-badge reporte-publico-badge--${estado}`;
+        etiqueta.textContent = etiquetaEstado(estado);
+
         const enlace = document.createElement("a");
+        enlace.className = "reporte-publico-enlace";
         enlace.href = `reporte-detalle.html?id=${encodeURIComponent(reporte.id)}`;
         enlace.textContent = "Ver detalle";
-        tarjeta.append(titulo, direccion, estado, enlace);
+
+        tarjeta.append(icono, informacion, etiqueta, enlace);
         fragment.append(tarjeta);
     });
     listaReportes.replaceChildren(fragment);
@@ -101,8 +152,15 @@ function renderizarMapa(reportes) {
         const coordenadas = coordenadasReporte(reporte);
         if (!coordenadas) return;
         ubicacionesValidas += 1;
-        const marcador = L.marker(coordenadas).addTo(marcadores);
-        marcador.bindPopup(crearDetalleMarcador(reporte));
+        const estado = estadoNormalizado(reporte);
+        const marcador = L.marker(coordenadas, {
+            icon: crearIconoMarcador(estado),
+            title: `${categoriaReporte(reporte)} · ${etiquetaEstado(estado)}`
+        }).addTo(marcadores);
+        marcador.bindPopup(crearDetalleMarcador(reporte), {
+            className: "reporte-popup",
+            maxWidth: 300
+        });
     });
     mapa.getContainer().setAttribute("aria-busy", "false");
     contadorReportes.textContent = `${reportes.length} reportes · ${ubicacionesValidas} con ubicación`;
