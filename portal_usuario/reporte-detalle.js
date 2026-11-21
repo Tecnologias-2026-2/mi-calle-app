@@ -13,9 +13,18 @@ function renderHistory(entries) {
 
     list.replaceChildren(...entries.map((entry) => {
         const item = document.createElement("li");
-        const date = entry.changedAt ? new Date(entry.changedAt).toLocaleString("es-CO") : "Fecha no disponible";
+        const status = ({
+            pendiente: "Pendiente",
+            en_revision: "En revisión",
+            en_proceso: "En proceso",
+            reparado: "Reparado"
+        })[entry.status] || entry.status;
+        const parsedDate = entry.changedAt ? new Date(entry.changedAt) : null;
+        const date = parsedDate && !Number.isNaN(parsedDate.getTime())
+            ? parsedDate.toLocaleString("es-CO")
+            : "Fecha no disponible";
         const note = entry.observation ? ` — ${entry.observation}` : "";
-        item.textContent = `${entry.status} · ${date}${note}`;
+        item.textContent = `${status} · ${date}${note}`;
         return item;
     }));
 }

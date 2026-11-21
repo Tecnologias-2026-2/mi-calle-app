@@ -26,6 +26,11 @@ function reportDate(report) {
     return Number.isNaN(date.getTime()) ? "Sin fecha" : date.toLocaleDateString("es-CO");
 }
 
+function latestObservation(report) {
+    const history = Array.isArray(report.history) ? report.history : [];
+    return [...history].reverse().find((entry) => entry.observation)?.observation || "";
+}
+
 function countReports(reports) {
     return {
         total: reports.length,
@@ -68,18 +73,41 @@ function renderRecentReports(reports) {
                     <span>${escapeHTML(reportDate(report))}</span>
                 </div>
                 <span class="estado ${status.className}">${status.label}</span>`;
+            const observation = latestObservation(report);
+            if (observation) {
+                const note = document.createElement("small");
+                note.className = "observacion-reporte";
+                note.textContent = `Última actualización: ${observation}`;
+                item.querySelector(".info-act-inicio").append(note);
+            }
             return item;
         }));
     });
 }
 
-async function loadUserReports() {
+function setReportsLoading(message, { spinner = false } = {}) {
     document.querySelectorAll("[data-reports-loading]").forEach((element) => {
         element.hidden = false;
-        element.textContent = "Cargando...";
+        element.setAttribute("role", "status");
+        element.setAttribute("aria-busy", String(spinner));
+        if (spinner) {
+            const indicator = document.createElement("span");
+            indicator.className = "loading-spinner";
+            indicator.setAttribute("aria-hidden", "true");
+            element.replaceChildren(indicator, document.createTextNode(message));
+        } else {
+            element.textContent = message;
+        }
     });
+}
+
+async function loadUserReports() {
+    setReportsLoading(" Cargando tus reportes...", { spinner: true });
     const data = await MiCalleServices.getMyReports();
-    document.querySelectorAll("[data-reports-loading]").forEach((element) => { element.hidden = true; });
+    document.querySelectorAll("[data-reports-loading]").forEach((element) => {
+        element.hidden = true;
+        element.setAttribute("aria-busy", "false");
+    });
     renderReportStats(data);
     renderRecentReports(data);
     return data;
@@ -87,10 +115,7 @@ async function loadUserReports() {
 
 function showReportsError(error) {
     console.error("No se pudieron cargar los reportes del usuario:", error);
-    document.querySelectorAll("[data-reports-loading]").forEach((element) => {
-        element.hidden = false;
-        element.textContent = "No se pudieron cargar tus reportes. Intenta nuevamente.";
-    });
+    setReportsLoading("No se pudieron cargar tus reportes. Intenta nuevamente.");
     document.querySelectorAll("[data-recent-reports]").forEach((element) => {
         element.innerHTML = `<div class="estado-vacio">
             <strong>No pudimos cargar tus reportes</strong>

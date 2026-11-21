@@ -65,7 +65,7 @@
         <div class="cabecera-mapa">
             <h1>Mapa de reportes</h1>
             <div class="contador-reportes" aria-live="polite">
-                <i class="fa-solid fa-spinner fa-spin"></i> Cargando reportes...
+                <span class="loading-spinner" aria-hidden="true"></span> Cargando reportes...
             </div>
         </div>
         <div class="filtros-reportes-publicos" aria-label="Filtros de reportes">
@@ -95,7 +95,9 @@
 
         <section class="lista-reportes-publicos tarjeta-blanco" aria-labelledby="reportes-publicos-titulo">
             <h2 id="reportes-publicos-titulo">Reportes de la comunidad</h2>
-            <div id="lista-reportes-publicos" aria-live="polite">Cargando reportes...</div>
+            <div id="lista-reportes-publicos" aria-live="polite" aria-busy="true">
+                <span class="loading-spinner" aria-hidden="true"></span> Cargando reportes...
+            </div>
         </section>
     </div>
 

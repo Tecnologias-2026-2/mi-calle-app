@@ -2085,6 +2085,64 @@ h1 {
   font-size: 11px;
 }
 
+.admin-loading {
+  display: flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.admin-loading::before {
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  border: 2px solid rgba(52, 127, 240, 0.22);
+  border-top-color: #347ff0;
+  border-radius: 50%;
+  animation: loading-spin 700ms linear infinite;
+  content: "";
+}
+
+.admin-skeleton {
+  min-height: 129px;
+  background: linear-gradient(100deg, #f1f4f8 30%, #fafbfc 50%, #f1f4f8 70%);
+  background-size: 200% 100%;
+  animation: admin-shimmer 1.4s ease-in-out infinite;
+}
+
+.loading-spinner {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  border: 2px solid rgba(52, 127, 240, 0.22);
+  border-top-color: #347ff0;
+  border-radius: 50%;
+  animation: loading-spin 700ms linear infinite;
+}
+
+.loading-spinner--light {
+  border-color: rgba(255, 255, 255, 0.35);
+  border-top-color: #fff;
+}
+
+@keyframes loading-spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes admin-shimmer {
+  to { background-position: -200% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-spinner,
+  .admin-loading::before,
+  .admin-skeleton {
+    animation-duration: 2.5s;
+  }
+}
+
 .admin-data-feedback {
   border-color: #f3cccc;
   background: #fff7f7;

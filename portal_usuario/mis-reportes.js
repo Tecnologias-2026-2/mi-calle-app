@@ -23,6 +23,11 @@ function formatDate(report) {
     return Number.isNaN(date.getTime()) ? "Sin fecha" : date.toLocaleDateString("es-CO");
 }
 
+function latestObservation(report) {
+    const history = Array.isArray(report.history) ? report.history : [];
+    return [...history].reverse().find((entry) => entry.observation)?.observation || "";
+}
+
 function renderSummary(reports) {
     const counts = {
         total: reports.length,
@@ -36,6 +41,7 @@ function renderSummary(reports) {
 }
 
 function renderRows(reports) {
+    tablaBody.setAttribute("aria-busy", "false");
     if (!reports.length) {
         tablaBody.innerHTML = `<tr><td colspan="4"><div class="estado-vacio">
             <strong>Aún no has creado ningún reporte</strong>
@@ -59,19 +65,40 @@ function renderRows(reports) {
             <td>${escapeReportHTML(location)}</td>
             <td>${escapeReportHTML(formatDate(report))}</td>
             <td><span class="estado ${className}">${label}</span></td>`;
-        row.querySelector("td").append(detailLink);
+        const titleCell = row.querySelector("td");
+        titleCell.append(detailLink);
+        const observation = latestObservation(report);
+        if (observation) {
+            const note = document.createElement("small");
+            note.className = "observacion-reporte";
+            note.textContent = `Última actualización: ${observation}`;
+            titleCell.append(note);
+        }
         return row;
     }));
 }
 
 async function loadMyReports() {
-    tablaBody.innerHTML = '<tr><td colspan="4">Cargando tus reportes...</td></tr>';
+    tablaBody.setAttribute("aria-busy", "true");
+    const loading = document.createElement("span");
+    loading.className = "loading-spinner";
+    loading.setAttribute("aria-hidden", "true");
+    const message = document.createElement("span");
+    message.textContent = "Cargando tus reportes...";
+    const cell = document.createElement("td");
+    cell.colSpan = 4;
+    cell.className = "loading-cell";
+    cell.append(loading, message);
+    const row = document.createElement("tr");
+    row.append(cell);
+    tablaBody.replaceChildren(row);
     try {
         const data = await MiCalleServices.getMyReports();
         renderSummary(data);
         renderRows(data);
     } catch (error) {
         console.error("No se pudieron cargar los reportes del usuario:", error);
+        tablaBody.setAttribute("aria-busy", "false");
         tablaBody.innerHTML = `<tr><td colspan="4">No se pudieron cargar tus reportes. Intenta nuevamente.</td></tr>`;
     }
 }

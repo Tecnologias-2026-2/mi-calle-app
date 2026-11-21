@@ -66,7 +66,7 @@ function crearDetalleMarcador(reporte) {
     const titulo = document.createElement("strong");
     titulo.textContent = categoriaReporte(reporte);
     const descripcion = document.createElement("p");
-    descripcion.textContent = reporte.descripcion || "Sin descripción";
+    descripcion.textContent = reporte.description || "Sin descripción";
     const enlace = document.createElement("a");
     enlace.href = `reporte-detalle.html?id=${encodeURIComponent(reporte.id)}`;
     enlace.textContent = "Ver detalle e historial";
@@ -129,6 +129,7 @@ function renderizarMapa(reportes) {
         marcador.bindPopup(crearDetalleMarcador(reporte));
         marcador.on("click", () => seleccionarReporte(reporte));
     });
+    mapa.getContainer().setAttribute("aria-busy", "false");
     contadorReportes.textContent = `${reportes.length} reportes · ${ubicacionesValidas} con ubicación`;
 }
 
@@ -136,15 +137,20 @@ function renderizarReportes() {
     const filtrados = reportesFiltrados();
     renderizarMapa(filtrados);
     renderizarLista(filtrados);
+    listaReportes.setAttribute("aria-busy", "false");
 }
 
 async function cargarReportes() {
+    mapa.getContainer().setAttribute("aria-busy", "true");
+    listaReportes.setAttribute("aria-busy", "true");
     try {
         reportesDisponibles = await window.MiCalleServices.getPublicReports();
         prepararFiltroCategorias();
         renderizarReportes();
     } catch (error) {
         console.error("No se pudieron cargar los reportes públicos:", error);
+        mapa.getContainer().setAttribute("aria-busy", "false");
+        listaReportes.setAttribute("aria-busy", "false");
         contadorReportes.textContent = "No se pudieron cargar los reportes.";
         listaReportes.textContent = "No se pudieron cargar los reportes. Intenta nuevamente.";
     }

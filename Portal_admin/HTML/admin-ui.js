@@ -98,6 +98,7 @@ function renderKpis(statistics, reports) {
   if (!container) {
     return;
   }
+  container.setAttribute("aria-busy", "false");
 
   const counts = reports.reduce((result, report) => {
     result.total += 1;
@@ -117,7 +118,15 @@ function renderKpis(statistics, reports) {
     card.append(
       top,
       createElement("p", "stat-label", statistic.etiqueta),
-      createElement("div", "stat-value", String(statistic.count ?? counts[normalizeStatus(statistic.id)] ?? 0)),
+      createElement(
+        "div",
+        "stat-value",
+        String(statistic.id === "total"
+          ? counts.total
+          : statistic.id === "en_proceso"
+            ? counts.en_revision + counts.en_proceso
+            : counts[normalizeStatus(statistic.id)] ?? 0),
+      ),
       createElement("p", "stat-note", statistic.nota),
     );
     return card;
@@ -172,6 +181,7 @@ function renderCategorySummary(reports) {
   if (!container) {
     return;
   }
+  container.setAttribute("aria-busy", "false");
 
   const categoryCounts = [...reports.reduce((counts, report) => {
     counts.set(report.type, (counts.get(report.type) || 0) + 1);
@@ -261,6 +271,7 @@ function renderReports(reports, total) {
   if (!container) {
     return;
   }
+  container.setAttribute("aria-busy", "false");
 
   const cards = reports.map((report) => {
     const status = reportStatus[normalizeStatus(report.status)] || reportStatus.pendiente;
@@ -347,6 +358,7 @@ function renderReportDetails(report) {
 
   const historyList = document.querySelector("#admin-report-history");
   if (historyList) {
+    historyList.setAttribute("aria-busy", "false");
     const history = report.history || [];
     if (!history.length) {
       historyList.replaceChildren(createElement("li", "", "Historial no disponible en esta conexión."));
@@ -394,6 +406,51 @@ function showAdminError(message) {
   }
 }
 
+function showAdminLoading() {
+  const reports = document.querySelector("#admin-reports");
+  if (reports) {
+    reports.setAttribute("aria-busy", "true");
+    const loading = createElement("p", "reports-empty admin-loading", "Cargando reportes...");
+    loading.setAttribute("role", "status");
+    reports.replaceChildren(loading);
+  }
+
+  const kpis = document.querySelector("#admin-kpis");
+  if (kpis) {
+    kpis.setAttribute("aria-busy", "true");
+    kpis.replaceChildren(...Array.from({ length: 4 }, () => {
+      const card = createElement("article", "stat-card admin-skeleton");
+      card.setAttribute("aria-hidden", "true");
+      return card;
+    }));
+  }
+
+  const categorySummary = document.querySelector(".type-list");
+  if (categorySummary) {
+    categorySummary.setAttribute("aria-busy", "true");
+    const loading = createElement("p", "reports-empty admin-loading", "Cargando categorías...");
+    loading.setAttribute("role", "status");
+    categorySummary.replaceChildren(loading);
+  }
+
+  const history = document.querySelector("#admin-report-history");
+  if (history) {
+    history.setAttribute("aria-busy", "true");
+    const loading = createElement("li", "admin-loading", "Cargando historial...");
+    loading.setAttribute("role", "status");
+    history.replaceChildren(loading);
+  }
+}
+
+function clearAdminLoading() {
+  ["#admin-reports", "#admin-kpis", ".type-list", "#admin-report-history"].forEach((selector) => {
+    const container = document.querySelector(selector);
+    if (!container) return;
+    container.setAttribute("aria-busy", "false");
+    container.querySelectorAll(".admin-loading, .admin-skeleton").forEach((element) => element.remove());
+  });
+}
+
 function clearAdminError() {
   const feedback = document.querySelector("#admin-data-feedback");
   if (feedback) {
@@ -403,11 +460,13 @@ function clearAdminError() {
 
 window.AdminUI = {
   clearAdminError,
+  clearAdminLoading,
   renderKpis,
   renderPeriodSummary,
   renderCategorySummary,
   renderReportDetails,
   renderReports,
   renderStatusSummary,
+  showAdminLoading,
   showAdminError,
 };

@@ -95,7 +95,10 @@
     const longitudeValue = source.longitud ?? coordinates.longitude ?? coordinates.longitud;
     const latitude = latitudeValue == null || latitudeValue === "" ? null : Number(latitudeValue);
     const longitude = longitudeValue == null || longitudeValue === "" ? null : Number(longitudeValue);
-    const historySource = source.historial_estados || source.history || [];
+    const historySource = source.historial_estados
+      || source.historial_estados_publico
+      || source.history
+      || [];
     const photo = source.photo || {};
     const report = {
       id: String(source.id_reporte || source.id || ""),
@@ -394,13 +397,9 @@
     return Promise.all(reports.map(async (report) => {
       const id = String(report.id_reporte || report.id || "");
       if (!id) throw new ServiceError("Un reporte no contiene identificador.", null, "invalid_response");
-      const [history, identity] = await Promise.all([
-        getReportHistory(id),
-        legacyFetch(`/api/admin/reportes/${encodeURIComponent(id)}/reportante`, {}, true),
-      ]);
+      const identity = await legacyFetch(`/api/admin/reportes/${encodeURIComponent(id)}/reportante`, {}, true);
       return normalizeReport({
         ...report,
-        history,
         reporter: {
           id: identity.id_usuario,
           name: identity.nombre_completo,
@@ -459,9 +458,24 @@
       await demo.initialize();
       return demo.getHistory(id).map((entry) => normalizeHistory(entry));
     }
-    const history = asArray(
+    const publicHistory = asArray(
       await legacyFetch(`/reportes/${encodeURIComponent(id)}/historial`),
       "historial del reporte",
+    );
+    const privateHistory = readLegacySession()?.accessToken
+      ? await getPrivateReportHistory(id)
+      : [];
+    const privateById = new Map(privateHistory.map((entry) => [entry.id, entry]));
+    return publicHistory.map((entry) => normalizeHistory({
+      ...entry,
+      observacion: privateById.get(entry.id_historial)?.observation || entry.observacion,
+    }));
+  }
+
+  async function getPrivateReportHistory(id) {
+    const history = asArray(
+      await legacyFetch(`/api/reportes/${encodeURIComponent(id)}/historial`, {}, true),
+      "observaciones privadas del reporte",
     );
     return history.map((entry) => normalizeHistory(entry));
   }

@@ -113,11 +113,19 @@ const server = http.createServer(async (req, res) => {
       const mine = requestUrl.searchParams.get('mine') === 'true';
       let client = createPublicClient();
       let result;
+      let administrator = null;
       if (mine) {
         const authenticated = await requireSupabaseUser(req, res);
         if (!authenticated) return;
         client = authenticated.client;
         result = await client.rpc('mis_reportes');
+      } else if (req.headers.authorization) {
+        administrator = await requireAdministrator(req, res);
+        if (!administrator) return;
+        client = administrator.client;
+        result = await client
+          .from('reportes_publicos')
+          .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at');
       } else {
         result = await client
           .from('reportes_publicos')
@@ -127,9 +135,36 @@ const server = http.createServer(async (req, res) => {
       if (error) throw error;
 
       const reportes = await enrichReports(client, data || []);
+      if ((mine || administrator) && reportes.length) {
+        const { data: history, error: historyError } = await client.rpc('consultar_historial_reportes', {
+          p_id_reportes: reportes.map((report) => report.id_reporte),
+        });
+        if (historyError) throw historyError;
+        const historyByReportId = groupReportHistory(history || []);
+        reportes.forEach((report) => {
+          report.historial_estados = historyByReportId.get(report.id_reporte) || [];
+        });
+      }
       return sendJson(res, 200, reportes);
     } catch (error) {
       return handleError(res, error, 'Error interno al obtener los reportes.');
+    }
+  }
+
+  else if (req.method === 'GET' && /^\/api\/reportes\/[^/]+\/historial$/.test(pathname)) {
+    try {
+      const idReporte = pathname.split('/')[3];
+      if (!isUuid(idReporte)) return sendJson(res, 400, { error: 'El identificador del reporte no es válido.' });
+      const authenticated = await requireSupabaseUser(req, res);
+      if (!authenticated) return;
+
+      const { data, error } = await authenticated.client.rpc('consultar_historial_reportes', {
+        p_id_reportes: [idReporte],
+      });
+      if (error) throw error;
+      return sendJson(res, 200, data || []);
+    } catch (error) {
+      return handleError(res, error, 'Error interno al obtener el historial privado del reporte.');
     }
   }
 
@@ -422,7 +457,7 @@ async function enrichReports(client, reports) {
   if (!reportIds.length) return [];
 
   const locationIds = [...new Set(reports.map((report) => report.id_ubicacion).filter(Boolean))];
-  const [locationsResult, photosResult] = await Promise.all([
+  const [locationsResult, photosResult, historyResult] = await Promise.all([
     locationIds.length
       ? client
         .from('ubicaciones')
@@ -433,9 +468,15 @@ async function enrichReports(client, reports) {
       .from('fotografias')
       .select('id_reporte, storage_path, fecha_carga')
       .in('id_reporte', reportIds),
+    client
+      .from('historial_estados_publico')
+      .select('id_historial, id_reporte, estado, fecha_cambio')
+      .in('id_reporte', reportIds)
+      .order('fecha_cambio', { ascending: true }),
   ]);
   if (locationsResult.error) throw locationsResult.error;
   if (photosResult.error) throw photosResult.error;
+  if (historyResult.error) throw historyResult.error;
 
   const locationById = new Map(
     (locationsResult.data || []).map((location) => [location.id_ubicacion, location]),
@@ -443,6 +484,7 @@ async function enrichReports(client, reports) {
   const photoByReportId = new Map(
     (photosResult.data || []).map((photo) => [photo.id_reporte, photo]),
   );
+  const historyByReportId = groupReportHistory(historyResult.data || []);
 
   return reports.map((report) => {
     const location = locationById.get(report.id_ubicacion) || null;
@@ -459,8 +501,19 @@ async function enrichReports(client, reports) {
       ...(location || {}),
       ubicacion: location,
       photo,
+      historial_estados: historyByReportId.get(report.id_reporte) || [],
     };
   });
+}
+
+function groupReportHistory(history) {
+  const historyByReportId = new Map();
+  history.forEach((entry) => {
+    const reportHistory = historyByReportId.get(entry.id_reporte) || [];
+    reportHistory.push(entry);
+    historyByReportId.set(entry.id_reporte, reportHistory);
+  });
+  return historyByReportId;
 }
 
 async function requireSupabaseUser(req, res) {

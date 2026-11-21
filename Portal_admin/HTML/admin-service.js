@@ -80,6 +80,7 @@ function connectStatusUpdate(reports, refreshReports) {
   window.AdminUI.renderReportDetails(report);
 
   confirmButton.addEventListener("click", async () => {
+    if (confirmButton.disabled) return;
     const selected = document.querySelector('input[name="report-status"]:checked');
     if (!selected) {
       showUpdateFeedback("Selecciona un estado antes de continuar.", true);
@@ -87,6 +88,9 @@ function connectStatusUpdate(reports, refreshReports) {
     }
 
     confirmButton.disabled = true;
+    confirmButton.setAttribute("aria-busy", "true");
+    const idleButtonContent = confirmButton.innerHTML;
+    confirmButton.innerHTML = '<span class="loading-spinner loading-spinner--light" aria-hidden="true"></span> Guardando cambio...';
     try {
       const observation = document.querySelector("#status-note")?.value.trim() || "";
       await window.MiCalleServices.saveAdminObservation(reportId, observation, selected.value);
@@ -98,7 +102,9 @@ function connectStatusUpdate(reports, refreshReports) {
       console.error("No se pudo guardar el cambio administrativo.", error);
       showUpdateFeedback(error.message || "No se pudo guardar el cambio.", true);
     } finally {
+      confirmButton.innerHTML = idleButtonContent;
       confirmButton.disabled = false;
+      confirmButton.setAttribute("aria-busy", "false");
     }
   });
 }
@@ -147,8 +153,10 @@ async function initializeAdminService() {
       window.MiCalleServices.logout();
     });
 
+    window.AdminUI.showAdminLoading();
     const reports = await window.MiCalleServices.getAdminReports();
     const statistics = await window.MiCalleServices.getAdminStatistics(reports);
+    window.AdminUI.clearAdminLoading();
     const refreshReports = (nextReports) => {
       reports.splice(0, reports.length, ...nextReports);
       populateCategoryFilter(reports);
@@ -169,6 +177,7 @@ async function initializeAdminService() {
     renderAdminView(statistics, reports);
   } catch (error) {
     console.error("No se pudo inicializar el módulo administrativo.", error);
+    window.AdminUI.clearAdminLoading();
     window.AdminUI.showAdminError(`No se pudieron cargar los datos administrativos: ${error.message}`);
   }
 }

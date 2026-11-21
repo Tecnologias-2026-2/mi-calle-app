@@ -73,6 +73,7 @@ formularioReporte.addEventListener("submit", async (evento) => {
     evento.preventDefault();
 
     const botonEnvio = formularioReporte.querySelector("[type=submit]");
+    if (botonEnvio.disabled) return;
     const datosFormulario = new FormData(formularioReporte);
     const latitudIngresada = String(datosFormulario.get("latitud") || "").trim();
     const longitudIngresada = String(datosFormulario.get("longitud") || "").trim();
@@ -104,7 +105,10 @@ formularioReporte.addEventListener("submit", async (evento) => {
         estadoFotografia.dataset.error = "true";
         return;
     }
+    const contenidoOriginalBoton = botonEnvio.innerHTML;
     botonEnvio.disabled = true;
+    botonEnvio.setAttribute("aria-busy", "true");
+    botonEnvio.innerHTML = '<span class="loading-spinner loading-spinner--light" aria-hidden="true"></span> Enviando reporte...';
 
     try {
         await MiCalleServices.createReport({
@@ -123,6 +127,8 @@ formularioReporte.addEventListener("submit", async (evento) => {
         console.error("No se pudo crear el reporte:", error);
         alert(error.message || "No se pudo enviar el reporte. Inténtalo de nuevo.");
     } finally {
+        botonEnvio.innerHTML = contenidoOriginalBoton;
         botonEnvio.disabled = false;
+        botonEnvio.setAttribute("aria-busy", "false");
     }
 });

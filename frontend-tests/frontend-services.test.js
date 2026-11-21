@@ -86,6 +86,23 @@ test("service responses normalize report and history DTOs without public reporte
   assert.equal(typeof report.location.latitude, "number");
 });
 
+test("report normalization preserves observations from public and authenticated history payloads", () => {
+  const { services } = makeHarness();
+  const report = services.normalizeReport({
+    id_reporte: "report-1",
+    estado_atencion: "en_proceso",
+    historial_estados_publico: [{
+      id_historial: "history-1",
+      estado: "en_proceso",
+      fecha_cambio: "2026-11-20T12:00:00Z",
+      observacion: "Intervención programada",
+    }],
+  });
+
+  assert.equal(report.history[0].observation, "Intervención programada");
+  assert.equal(report.history[0].changedAt, "2026-11-20T12:00:00Z");
+});
+
 test("citizen and admin use shared persisted reports and normalized updates", async () => {
   const harness = makeHarness();
   const { demo, services } = harness;
@@ -362,11 +379,39 @@ test("Render admin operations use authenticated report and role-guarded endpoint
             tipo_problema: "bache",
             descripcion: "Daño",
             estado_atencion: status,
+            historial_estados: [{
+              id_historial: "history-1",
+              estado: "en_revision",
+              fecha_cambio: "2026-11-20T12:00:00Z",
+              observacion: "Inspección en curso",
+            }],
+          }],
+        };
+      }
+      if (url.endsWith(`/api/reportes/${id}/historial`)) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => [{
+            id_historial: "history-1",
+            id_reporte: id,
+            estado: "en_revision",
+            fecha_cambio: "2026-11-20T12:00:00Z",
+            observacion: "Inspección en curso",
           }],
         };
       }
       if (url.endsWith(`/reportes/${id}/historial`)) {
-        return { ok: true, status: 200, json: async () => [] };
+        return {
+          ok: true,
+          status: 200,
+          json: async () => [{
+            id_historial: "history-1",
+            id_reporte: id,
+            estado: "en_revision",
+            fecha_cambio: "2026-11-20T12:00:00Z",
+          }],
+        };
       }
       if (url.endsWith(`/api/admin/reportes/${id}/reportante`)) {
         return {
@@ -392,8 +437,11 @@ test("Render admin operations use authenticated report and role-guarded endpoint
 
   const [report] = await services.getAdminReports();
   assert.equal(report.reporter.name, "Ciudadana");
+  assert.equal(report.history[0].observation, "Inspección en curso");
+  assert.equal((await services.getReportHistory(id))[0].observation, "Inspección en curso");
   const protectedReads = calls.filter((call) => (
     call.url.endsWith("/reportes")
+    || call.url.endsWith(`/api/reportes/${id}/historial`)
     || call.url.endsWith(`/api/admin/reportes/${id}/reportante`)
   ));
   assert.ok(protectedReads.every((call) => call.init.headers.get("Authorization") === "Bearer admin-token"));
