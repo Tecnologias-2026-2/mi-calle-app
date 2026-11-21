@@ -34,7 +34,7 @@
   const SESSION_KEY = "mi-calle-session";
   const REFRESH_TOKEN_KEY = "mi-calle-refresh-token";
   const USER_KEY = "mi-calle-user";
-  const allowedStatuses = new Set(["pendiente", "en_revision", "en_proceso", "reparado"]);
+  const allowedStatuses = new Set(["pendiente", "en_revision", "en_proceso", "reparado", "descartado"]);
   let refreshPromise = null;
 
   class ServiceError extends Error {
@@ -427,12 +427,13 @@
       result.total += 1;
       result[status] += 1;
       return result;
-    }, { total: 0, pendiente: 0, en_revision: 0, en_proceso: 0, reparado: 0 });
+    }, { total: 0, pendiente: 0, en_revision: 0, en_proceso: 0, reparado: 0, descartado: 0 });
     return [
       { id: "total", etiqueta: "Total de reportes", indicador: "Todos los casos", nota: "Reportes recibidos", icono: "blue", count: counts.total },
       { id: "pendiente", etiqueta: "Pendientes", indicador: "Requieren atención", nota: "Por revisar", icono: "amber", count: counts.pendiente },
       { id: "en_proceso", etiqueta: "En atención", indicador: "En seguimiento", nota: "Casos en revisión o proceso", icono: "indigo", count: counts.en_revision + counts.en_proceso },
       { id: "reparado", etiqueta: "Reparados", indicador: "Atendidos", nota: "Incidencias solucionadas", icono: "green", count: counts.reparado },
+      { id: "descartado", etiqueta: "Descartados", indicador: "Ocultos del mapa", nota: "Se eliminan en 24 horas", icono: "slate", count: counts.descartado },
     ];
   }
 
@@ -441,13 +442,26 @@
     if (provider === "demo") {
       await demo.initialize();
       const report = demo.getReportById(id);
-      return report ? normalizeReport(report) : null;
+      if (report && normalizeReport(report).status !== "descartado") return normalizeReport(report);
+      const session = getCurrentSession();
+      if (session?.user.role === "ciudadano") {
+        const ownReports = await getMyReports();
+        return ownReports.find((item) => item.id === String(id)) || null;
+      }
+      return null;
     }
     try {
       const report = await legacyFetch(`/reportes/${encodeURIComponent(id)}`);
       return normalizeReport(report);
     } catch (error) {
-      if (error.status === 404) return null;
+      if (error.status === 404) {
+        const session = getCurrentSession();
+        if (session?.user.role === "ciudadano") {
+          const ownReports = await getMyReports();
+          return ownReports.find((report) => report.id === String(id)) || null;
+        }
+        return null;
+      }
       throw error;
     }
   }
@@ -562,7 +576,8 @@
       }
       const report = demo.getReportById(id);
       if (!report) throw new ServiceError(`No se encontró el reporte ${id}.`, 404, "not_found");
-      const updated = demo.updateReport(id, report.estado_atencion, observation);
+      const nextStatus = status ? normalizeStatus(status) : normalizeReport(report).status;
+      const updated = demo.updateReport(id, nextStatus, observation);
       return responseDto(normalizeReport(updated, { includeReporter: true }), provider);
     }
 
@@ -613,7 +628,11 @@
 
   function subscribePublicReports(callback) {
     if (getProvider() !== "demo") return () => {};
-    return demo.subscribe((reports) => callback(reports.map((report) => normalizeReport(report))));
+    return demo.subscribe((reports) => callback(
+      reports
+        .map((report) => normalizeReport(report))
+        .filter((report) => report.status !== "descartado"),
+    ));
   }
 
   function subscribeMyReports(callback) {

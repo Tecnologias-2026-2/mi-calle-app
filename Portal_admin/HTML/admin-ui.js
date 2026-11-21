@@ -40,9 +40,9 @@ const reportStatus = {
   en_revision: { label: "En revisión", color: "amber" },
   en_proceso: { label: "En proceso", color: "blue" },
   reparado: { label: "Reparado", color: "green" },
+  descartado: { label: "Descartado", color: "slate" },
   proceso: { label: "En proceso", color: "blue" },
   resuelto: { label: "Resuelto", color: "green" },
-  descartado: { label: "Descartado", color: "red" },
 };
 
 const severityColors = {
@@ -58,14 +58,13 @@ const statusColors = {
   proceso: "#2A9DF4",
   resuelto: "#4CAF50",
   pendiente: "#FF6876",
-  descartado: "#FF6876",
+  descartado: "#486581",
 };
 
 function normalizeStatus(status) {
   return ({
     proceso: "en_proceso",
     resuelto: "reparado",
-    descartado: "pendiente",
   })[status] || status;
 }
 
@@ -107,7 +106,8 @@ function renderKpis(statistics, reports) {
       result[status] += 1;
     }
     return result;
-  }, { total: 0, pendiente: 0, en_revision: 0, en_proceso: 0, reparado: 0 });
+  }, { total: 0, pendiente: 0, en_revision: 0, en_proceso: 0, reparado: 0, descartado: 0 });
+  container.classList.toggle("has-discarded", statistics.some((statistic) => statistic.id === "descartado"));
 
   container.replaceChildren(...statistics.map((statistic) => {
     const card = createElement("article", "stat-card");
@@ -139,12 +139,13 @@ function renderStatusSummary(reports) {
     return;
   }
 
-  const statusOrder = ["pendiente", "en_revision", "en_proceso", "reparado"];
+  const statusOrder = ["pendiente", "en_revision", "en_proceso", "reparado", "descartado"];
   const statusLabels = {
     pendiente: "Pendientes",
     en_revision: "En revisión",
     en_proceso: "En proceso",
     reparado: "Reparados",
+    descartado: "Descartados",
   };
   const total = reports.length;
   let degrees = 0;
@@ -256,9 +257,9 @@ function statusColorsName(status) {
     en_revision: "amber",
     en_proceso: "blue",
     reparado: "green",
+    descartado: "slate",
     proceso: "blue",
     resuelto: "green",
-    descartado: "red",
   }[status];
 }
 

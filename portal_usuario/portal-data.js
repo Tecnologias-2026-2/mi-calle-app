@@ -2,7 +2,8 @@ const reportStatus = {
     pendiente: { label: "Pendiente", className: "estado-pendiente" },
     en_revision: { label: "En revisión", className: "estado-revision" },
     en_proceso: { label: "En proceso", className: "estado-proceso" },
-    reparado: { label: "Reparado", className: "estado-reparado" }
+    reparado: { label: "Reparado", className: "estado-reparado" },
+    descartado: { label: "Descartado", className: "estado-descartado" }
 };
 const formatReportCategory = window.MiCalleReportFormatters.formatCategory;
 
@@ -30,6 +31,27 @@ function reportDate(report) {
 function latestObservation(report) {
     const history = Array.isArray(report.history) ? report.history : [];
     return [...history].reverse().find((entry) => entry.observation)?.observation || "";
+}
+
+function discardedObservation(report) {
+    const history = Array.isArray(report.history) ? report.history : [];
+    return [...history].reverse().find((entry) => (
+        entry.status === "descartado" && String(entry.observation || "").trim()
+    ))?.observation || latestObservation(report) || "No se registró una observación.";
+}
+
+function createDiscardNotice(report) {
+    const notice = document.createElement("aside");
+    notice.className = "reporte-descartado-aviso";
+    notice.setAttribute("role", "note");
+    const heading = document.createElement("strong");
+    heading.textContent = "Reporte descartado";
+    const observation = document.createElement("p");
+    observation.textContent = `Observación del equipo administrador: ${discardedObservation(report)}`;
+    const explanation = document.createElement("p");
+    explanation.textContent = "Este reporte fue descartado por el equipo administrador y será eliminado automáticamente 24 horas después de su revisión.";
+    notice.append(heading, observation, explanation);
+    return notice;
 }
 
 function countReports(reports) {
@@ -75,7 +97,9 @@ function renderRecentReports(reports) {
                 </div>
                 <span class="estado ${status.className}">${status.label}</span>`;
             const observation = latestObservation(report);
-            if (observation) {
+            if (report.status === "descartado") {
+                item.querySelector(".info-act-inicio").append(createDiscardNotice(report));
+            } else if (observation) {
                 const note = document.createElement("small");
                 note.className = "observacion-reporte";
                 note.textContent = `Última actualización: ${observation}`;

@@ -123,13 +123,22 @@ const server = http.createServer(async (req, res) => {
         administrator = await requireAdministrator(req, res);
         if (!administrator) return;
         client = administrator.client;
+        Promise.resolve()
+          .then(() => supabase.rpc('purgar_reportes_descartados'))
+          .then(({ error: purgeError }) => {
+            if (purgeError) console.error('No se pudieron purgar los reportes descartados.', purgeError);
+          })
+          .catch((purgeError) => {
+            console.error('No se pudieron purgar los reportes descartados.', purgeError);
+          });
         result = await client
-          .from('reportes_publicos')
+          .from('reportes')
           .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at');
       } else {
         result = await client
           .from('reportes_publicos')
-          .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at');
+          .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at')
+          .neq('estado_atencion', 'descartado');
       }
       const { data, error } = result;
       if (error) throw error;
@@ -216,15 +225,18 @@ const server = http.createServer(async (req, res) => {
 
       const body = await readJsonBody(req);
       const estado = String(body?.estado_atencion || body?.estado || '').trim();
-      const allowedStates = new Set(['pendiente', 'en_revision', 'en_proceso', 'reparado']);
+      const allowedStates = new Set(['pendiente', 'en_revision', 'en_proceso', 'reparado', 'descartado']);
       if (!allowedStates.has(estado)) {
         return sendJson(res, 400, { error: 'El estado del reporte no es válido.' });
       }
       const observacion = body?.observacion == null ? null : String(body.observacion);
+      if (estado === 'descartado' && !observacion?.trim()) {
+        return sendJson(res, 400, { error: 'La observación es obligatoria para descartar un reporte.' });
+      }
       const { error } = await authenticated.client.rpc('actualizar_estado_reporte', {
         p_id_reporte: idReporte,
         p_estado: estado,
-        p_observacion: observacion,
+        p_observacion: observacion?.trim() || null,
       });
       if (error) throw error;
       return sendJson(res, 200, { id_reporte: idReporte, estado_atencion: estado });

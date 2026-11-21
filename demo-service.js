@@ -38,7 +38,7 @@
   const STORAGE_KEY = "mi-calle-demo-data-v1";
   const SESSION_KEY = "mi-calle-demo-session-v1";
   const PHOTO_PREFIX = "mi-calle-demo-photo-v1:";
-  const ALLOWED_STATUSES = new Set(["pendiente", "en_revision", "en_proceso", "reparado"]);
+  const ALLOWED_STATUSES = new Set(["pendiente", "en_revision", "en_proceso", "reparado", "descartado"]);
   const localStorage = options.localStorage;
   const sessionStorage = options.sessionStorage;
   const subscribers = new Set();
@@ -169,6 +169,10 @@
       .map(withPhoto);
   }
 
+  function getPublicReports() {
+    return getReports().filter((report) => report.estado_atencion !== "descartado");
+  }
+
   function getSession() {
     const value = sessionStorage.getItem(SESSION_KEY);
     return value ? JSON.parse(value) : null;
@@ -279,6 +283,9 @@
       throw new Error("Inicia sesión como administrador demo para actualizar reportes.");
     }
     const note = String(observation || "").trim();
+    if (nextStatus === "descartado" && !note) {
+      throw new Error("La observación es obligatoria para descartar un reporte.");
+    }
     if (report.estado_atencion === nextStatus && !note) {
       throw new Error("Selecciona un estado distinto o agrega una observación.");
     }
@@ -303,6 +310,7 @@
       { id: "en_proceso", etiqueta: "En proceso", indicador: "En seguimiento", nota: "Casos en atención", icono: "indigo" },
       { id: "pendiente", etiqueta: "Pendientes", indicador: "Requieren atención", nota: "Por revisar", icono: "amber" },
       { id: "reparado", etiqueta: "Reparados", indicador: "Atendidos", nota: "Incidencias solucionadas", icono: "green" },
+      { id: "descartado", etiqueta: "Descartados", indicador: "Ocultos del mapa", nota: "Se eliminan en 24 horas", icono: "slate" },
     ];
   }
 
@@ -318,7 +326,7 @@
       const session = getSession();
       const reports = url.searchParams.get("mine") === "true"
         ? (session?.role === "ciudadano" ? getReports({ ownerId: session.user.id }) : [])
-        : getReports();
+        : getPublicReports();
       return response(reports);
     }
     if ((requestOptions.method || "GET").toUpperCase() === "POST") {
@@ -386,7 +394,7 @@
     logout,
     getSession,
     getReports,
-    getPublicReports: () => getReports(),
+    getPublicReports,
     getUserReports: () => {
       const session = getSession();
       return session?.role === "ciudadano" ? getReports({ ownerId: session.user.id }) : [];

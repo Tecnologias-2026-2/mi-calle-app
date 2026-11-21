@@ -87,12 +87,22 @@ function connectStatusUpdate(reports, refreshReports) {
       return;
     }
 
+    const noteInput = document.querySelector("#status-note");
+    const observation = noteInput?.value.trim() || "";
+    if (selected.value === "descartado" && !observation) {
+      noteInput.setCustomValidity("Escribe la observación que explica por qué se descarta el reporte.");
+      noteInput.reportValidity();
+      noteInput.setCustomValidity("");
+      noteInput.focus();
+      showUpdateFeedback("La observación es obligatoria para descartar el reporte.", true);
+      return;
+    }
+
     confirmButton.disabled = true;
     confirmButton.setAttribute("aria-busy", "true");
     const idleButtonContent = confirmButton.innerHTML;
     confirmButton.innerHTML = '<span class="loading-spinner loading-spinner--light" aria-hidden="true"></span> Guardando cambio...';
     try {
-      const observation = document.querySelector("#status-note")?.value.trim() || "";
       await window.MiCalleServices.saveAdminObservation(reportId, observation, selected.value);
       refreshReports(await window.MiCalleServices.getAdminReports());
       const stateLabel = document.querySelector(".current-status strong").textContent;

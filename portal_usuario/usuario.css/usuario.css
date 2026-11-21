@@ -1061,6 +1061,7 @@ textarea::placeholder {
 .icono-act-inicio.azul     { background-color: var(--azul-claro); color: var(--azul); }
 .icono-act-inicio.amarillo { background-color: #fffaf0;           color: var(--amarillo); }
 .icono-act-inicio.verde    { background-color: #f0fff4;           color: var(--verde); }
+.icono-act-inicio.descartado { background-color: #f0f4f8; color: #486581; }
 
 .info-act-inicio {
     flex-grow: 1;
@@ -2431,4 +2432,57 @@ textarea:focus-visible {
 
 .leaflet-tile-pane {
   filter: saturate(0.75) brightness(1.03) contrast(0.95);
+}
+
+.estado-descartado,
+.detalle-estado--descartado,
+.reporte-popup-estado--descartado,
+.reporte-publico-badge--descartado {
+    border: 1px solid #cbd5e1;
+    background: #f0f4f8;
+    color: #486581;
+}
+
+.detalle-timeline-item--descartado .detalle-timeline-marcador {
+    background: #486581;
+    box-shadow: 0 0 0 2px #d9e2ec;
+}
+
+.reporte-marker--descartado {
+    color: #486581;
+}
+
+.pin-descartado {
+    color: #486581;
+}
+
+.reporte-publico-icono--descartado {
+    background: #f0f4f8;
+    color: #486581;
+}
+
+.reporte-descartado-aviso {
+    display: grid;
+    gap: 6px;
+    margin-top: 12px;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-left: 4px solid #486581;
+    border-radius: 12px;
+    background: #f0f4f8;
+    color: #334e68;
+}
+
+.reporte-descartado-aviso[hidden] {
+    display: none;
+}
+
+.reporte-descartado-aviso strong {
+    color: #486581;
+    font-family: "Nunito", sans-serif;
+}
+
+.reporte-descartado-aviso p {
+    margin: 0;
+    overflow-wrap: anywhere;
 }

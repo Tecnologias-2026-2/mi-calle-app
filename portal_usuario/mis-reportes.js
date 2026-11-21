@@ -12,7 +12,8 @@ function getStatus(report) {
         pendiente: ["Pendiente", "estado-pendiente"],
         en_revision: ["En revisión", "estado-revision"],
         en_proceso: ["En proceso", "estado-proceso"],
-        reparado: ["Reparado", "estado-reparado"]
+        reparado: ["Reparado", "estado-reparado"],
+        descartado: ["Descartado", "estado-descartado"]
     };
     return statuses[report.status] || statuses.pendiente;
 }
@@ -27,6 +28,24 @@ function formatDate(report) {
 function latestObservation(report) {
     const history = Array.isArray(report.history) ? report.history : [];
     return [...history].reverse().find((entry) => entry.observation)?.observation || "";
+}
+
+function createDiscardNotice(report) {
+    const history = Array.isArray(report.history) ? report.history : [];
+    const observationText = [...history].reverse().find((entry) => (
+        entry.status === "descartado" && String(entry.observation || "").trim()
+    ))?.observation || latestObservation(report) || "No se registró una observación.";
+    const notice = document.createElement("aside");
+    notice.className = "reporte-descartado-aviso";
+    notice.setAttribute("role", "note");
+    const heading = document.createElement("strong");
+    heading.textContent = "Reporte descartado";
+    const observation = document.createElement("p");
+    observation.textContent = `Observación del equipo administrador: ${observationText}`;
+    const explanation = document.createElement("p");
+    explanation.textContent = "Este reporte fue descartado por el equipo administrador y será eliminado automáticamente 24 horas después de su revisión.";
+    notice.append(heading, observation, explanation);
+    return notice;
 }
 
 function renderSummary(reports) {
@@ -69,7 +88,9 @@ function renderRows(reports) {
         const titleCell = row.querySelector("td");
         titleCell.append(detailLink);
         const observation = latestObservation(report);
-        if (observation) {
+        if (report.status === "descartado") {
+            titleCell.append(createDiscardNotice(report));
+        } else if (observation) {
             const note = document.createElement("small");
             note.className = "observacion-reporte";
             note.textContent = `Última actualización: ${observation}`;

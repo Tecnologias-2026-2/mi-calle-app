@@ -6,7 +6,8 @@ const statusLabels = {
     pendiente: "Pendiente",
     en_revision: "En revisión",
     en_proceso: "En proceso",
-    reparado: "Reparado"
+    reparado: "Reparado",
+    descartado: "Descartado"
 };
 
 const formatReportType = window.MiCalleReportFormatters.formatCategory;
@@ -125,6 +126,30 @@ function renderHistory(entries) {
     }));
 }
 
+function renderDiscardNotice(report) {
+    const notice = document.querySelector("#detalle-descartado-aviso");
+    if (report.status !== "descartado") {
+        notice.hidden = true;
+        notice.replaceChildren();
+        return;
+    }
+
+    const history = Array.isArray(report.history) ? report.history : [];
+    const observationText = [...history].reverse().find((entry) => (
+        entry.status === "descartado" && String(entry.observation || "").trim()
+    ))?.observation
+        || [...history].reverse().find((entry) => String(entry.observation || "").trim())?.observation
+        || "No se registró una observación.";
+    const heading = document.createElement("strong");
+    heading.textContent = "Reporte descartado";
+    const observation = document.createElement("p");
+    observation.textContent = `Observación del equipo administrador: ${observationText}`;
+    const explanation = document.createElement("p");
+    explanation.textContent = "Este reporte fue descartado por el equipo administrador y será eliminado automáticamente 24 horas después de su revisión.";
+    notice.replaceChildren(heading, observation, explanation);
+    notice.hidden = false;
+}
+
 function renderReport(report) {
     if (!report) throw new Error("No se encontró el reporte solicitado.");
     loading.hidden = true;
@@ -139,6 +164,7 @@ function renderReport(report) {
     statusIcon.setAttribute("aria-hidden", "true");
     status.replaceChildren(statusIcon, document.createTextNode(formatStatus(report.status)));
     status.className = `detalle-estado detalle-estado--${normalizedStatus}`;
+    renderDiscardNotice(report);
 
     document.querySelector("#detalle-ubicacion").textContent =
         report.location.address || "Ubicación no disponible";
@@ -172,7 +198,13 @@ async function loadReport() {
     if (!reportId) throw new Error("Falta el identificador del reporte.");
     const report = await window.MiCalleServices.getReportById(reportId);
     if (!report) throw new Error("No se encontró el reporte solicitado.");
-    report.history = await window.MiCalleServices.getReportHistory(reportId);
+    const hasDiscardObservation = report.status === "descartado"
+        && report.history?.some((entry) => (
+            entry.status === "descartado" && String(entry.observation || "").trim()
+        ));
+    if (!hasDiscardObservation) {
+        report.history = await window.MiCalleServices.getReportHistory(reportId);
+    }
     renderReport(report);
     window.MiCalleServices.subscribePublicReports(async (reports) => {
         const updated = reports.find((item) => item.id === reportId);

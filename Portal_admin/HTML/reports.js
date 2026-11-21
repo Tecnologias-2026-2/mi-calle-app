@@ -4,9 +4,13 @@ const steps = [...document.querySelectorAll(".step-item")];
 const connectors = [...document.querySelectorAll(".step-connector span")];
 const feedback = document.querySelector(".update-feedback");
 const reportIdContainer = document.querySelector(".report-id");
+const statusNote = document.querySelector("#status-note");
+const statusNoteLabel = document.querySelector(".update-note-label");
+const statusNoteRequirement = document.querySelector("#status-note-requirement");
 
 function showSelectedStatus(status) {
   const selectedIndex = statusOptions.findIndex((option) => option.value === status);
+  const observationRequired = status === "descartado";
 
   statusCards.forEach((card) => {
     const input = card.querySelector("input");
@@ -23,6 +27,16 @@ function showSelectedStatus(status) {
     connector.dataset.step = steps[index].dataset.step;
     connector.classList.toggle("is-complete", selectedIndex > index);
   });
+
+  statusNote.required = observationRequired;
+  statusNote.setAttribute("aria-required", String(observationRequired));
+  statusNoteLabel.classList.toggle("is-required", observationRequired);
+  statusNoteRequirement.textContent = observationRequired
+    ? "(obligatoria para descartar)"
+    : "(opcional)";
+  statusNote.placeholder = observationRequired
+    ? "Explica por qué se descarta este reporte..."
+    : "Agrega información sobre el avance del reporte...";
 }
 
 statusOptions.forEach((option) => {
@@ -52,4 +66,9 @@ reportIdContainer?.addEventListener("click", async (event) => {
   } finally {
     copyReportIdButton.disabled = false;
   }
+});
+
+statusNote.addEventListener("input", () => {
+  statusNote.setCustomValidity("");
+  feedback.hidden = true;
 });

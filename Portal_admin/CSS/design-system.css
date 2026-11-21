@@ -653,3 +653,115 @@ html {
   .profile-content .security-save-button {
     font-size: 1rem;
   }
+
+.stats-grid.has-discarded {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.icon-slate {
+  background: #f0f4f8;
+  color: #486581;
+}
+
+.option-slate {
+  background: #486581;
+}
+
+.dot-slate {
+  background: #486581;
+}
+
+.report-list-status--slate,
+.report-content .current-status strong.report-list-status--slate {
+  border-color: #486581;
+  background: #486581;
+  color: #fff;
+}
+
+.report-content .status-indicator.status-indicator--slate {
+  background: #486581;
+}
+
+.report-content .step-item[data-step="descartado"] {
+  --step-color: #486581;
+  --step-tint: rgba(72, 101, 129, 0.2);
+}
+
+.report-content .step-item.is-complete[data-step="descartado"] .step-marker,
+.report-content .step-item.is-current[data-step="descartado"] .step-marker {
+  border-color: #486581;
+  background: #486581;
+  color: #fff;
+}
+
+.report-content .step-connector span.is-complete[data-step="reparado"] {
+  background: var(--color-success);
+}
+
+.report-content .status-option[data-status="descartado"] {
+  --status-color: #486581;
+  --status-tint: #f0f4f8;
+}
+
+.report-content .status-option.is-selected[data-status="descartado"] .option-check {
+  border-color: #486581;
+  background: #486581;
+  color: #fff;
+}
+
+.report-content .status-option[data-status="descartado"] .option-color {
+  background: #486581;
+}
+
+.report-content .status-option--discard {
+  border-color: #cbd5e1;
+}
+
+.report-content .status-option--discard:hover {
+  border-color: #486581;
+}
+
+.report-content .status-steps {
+  gap: 4px;
+}
+
+.report-content .status-steps .step-item {
+  width: auto;
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+.report-content .status-steps .step-label {
+  font-size: 0.75rem;
+  overflow-wrap: anywhere;
+}
+
+.report-content .step-connector span {
+  width: calc(25% - 12px);
+  background: #e8edf5;
+}
+
+.update-note-label.is-required {
+  color: #486581;
+}
+
+.update-note-label.is-required span {
+  color: #486581;
+  font-weight: 800;
+}
+
+.update-note[required] {
+  border-color: #486581;
+}
+
+@media (max-width: 1150px) {
+  .stats-grid.has-discarded {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .stats-grid.has-discarded {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

@@ -15,7 +15,8 @@ const tiposReporte = {
 const estadosReporte = {
     reportado: { texto: "Reportado", pinClase: "pin-azul", estadoClase: "estado-azul" },
     en_revision: { texto: "En revisión", pinClase: "pin-naranja", estadoClase: "estado-rojo" },
-    reparado: { texto: "Reparado", pinClase: "pin-verde", estadoClase: "estado-verde" }
+    reparado: { texto: "Reparado", pinClase: "pin-verde", estadoClase: "estado-verde" },
+    descartado: { texto: "Descartado", pinClase: "pin-descartado", estadoClase: "estado-descartado" }
 };
 
 function formatearFecha(fecha) {

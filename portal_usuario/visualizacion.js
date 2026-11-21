@@ -9,13 +9,15 @@ const estadosReporte = {
     pendiente: "Pendiente",
     en_revision: "En revisión",
     en_proceso: "En proceso",
-    reparado: "Reparado"
+    reparado: "Reparado",
+    descartado: "Descartado"
 };
 const iconosEstado = {
     pendiente: "fa-clock",
     en_revision: "fa-magnifying-glass",
     en_proceso: "fa-screwdriver-wrench",
-    reparado: "fa-circle-check"
+    reparado: "fa-circle-check",
+    descartado: "fa-ban"
 };
 const formatoCategoria = window.MiCalleReportFormatters.formatCategory;
 const crearIconoMarcador = window.MiCalleMapIcons.createStatusIcon;

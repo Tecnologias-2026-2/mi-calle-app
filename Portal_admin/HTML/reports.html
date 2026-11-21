@@ -143,9 +143,13 @@
                 <span class="step-marker">4</span>
                 <span class="step-label">Reparado</span>
               </li>
+              <li class="step-item" data-step="descartado">
+                <span class="step-marker">5</span>
+                <span class="step-label">Descartado</span>
+              </li>
             </ol>
 
-            <div class="step-connector" aria-hidden="true"><span></span><span></span><span></span></div>
+            <div class="step-connector" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
 
             <fieldset class="status-options">
               <legend>Elige el estado para este reporte</legend>
@@ -173,10 +177,16 @@
                 <span class="option-copy"><strong>Reparado</strong><small>La incidencia fue atendida y solucionada.</small></span>
                 <span class="option-color option-green" aria-hidden="true"></span>
               </label>
+              <label class="status-option status-option--discard">
+                <input type="radio" name="report-status" value="descartado">
+                <span class="option-check" aria-hidden="true"></span>
+                <span class="option-copy"><strong>Descartado</strong><small>Reporte falso o con información insuficiente; se ocultará del mapa y se eliminará en 24 horas.</small></span>
+                <span class="option-color option-slate" aria-hidden="true"></span>
+              </label>
             </fieldset>
 
-            <label class="update-note-label" for="status-note">Nota de actualización <span>(opcional)</span></label>
-            <textarea class="update-note" id="status-note" rows="3" placeholder="Agrega información sobre el avance del reporte..."></textarea>
+            <label class="update-note-label" for="status-note">Nota de actualización <span id="status-note-requirement">(opcional)</span></label>
+            <textarea class="update-note" id="status-note" rows="3" aria-describedby="status-note-requirement" placeholder="Agrega información sobre el avance del reporte..."></textarea>
 
             <div class="update-feedback" role="status" aria-live="polite" hidden></div>
             <div class="update-actions">
