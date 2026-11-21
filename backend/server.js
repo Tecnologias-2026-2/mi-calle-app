@@ -254,9 +254,10 @@ const server = http.createServer(async (req, res) => {
 
       idReporte = crypto.randomUUID();
       fotografiaPath = buildPhotoStoragePath(crypto.randomUUID(), image.extension);
+      const fileBlob = new Blob([file.content], { type: image.mimeType });
       const { error: uploadError } = await userClient.storage
         .from('reportes')
-        .upload(fotografiaPath, file.content, {
+        .upload(fotografiaPath, fileBlob, {
           contentType: image.mimeType,
           upsert: false,
         });
