@@ -171,7 +171,6 @@ async function initializeAdminService() {
     document.querySelector("#dashboard-period-filter")?.addEventListener("change", () => {
       renderAdminView(statistics, reports);
     });
-    window.MiCalleServices.subscribeAdminReports(refreshReports);
     renderAdminView(statistics, reports);
   } catch (error) {
     console.error("No se pudo inicializar el módulo administrativo.", error);
