@@ -30,23 +30,37 @@ export async function loginUser({ email, password }) {
 
 export async function registerUser({
   username,
+  phone,
   email,
   password,
   confirmPassword,
 }) {
   const normalizedEmail = email?.trim().toLowerCase();
   const normalizedUsername = username?.trim();
+  const normalizedPhone = phone?.trim();
 
-  if (!normalizedUsername || !normalizedEmail || !password || !confirmPassword) {
+  if (!normalizedUsername || !normalizedPhone || !normalizedEmail || !password || !confirmPassword) {
     return { ok: false, message: authMessages.validation.required };
+  }
+
+  if (normalizedUsername.length < 3) {
+    return { ok: false, message: authMessages.validation.invalidName };
   }
 
   if (!validateEmail(normalizedEmail)) {
     return { ok: false, message: authMessages.validation.invalidEmail };
   }
 
-  if (password.length < 8) {
+  if (!/^\+?[0-9]{7,15}$/.test(normalizedPhone)) {
+    return { ok: false, message: authMessages.validation.invalidPhone };
+  }
+
+  if (password.length < 8 || password.length > 64) {
     return { ok: false, message: authMessages.validation.passwordLength };
+  }
+
+  if (new TextEncoder().encode(password).length > 72) {
+    return { ok: false, message: authMessages.validation.passwordBytes };
   }
 
   if (password !== confirmPassword) {
@@ -56,6 +70,7 @@ export async function registerUser({
   try {
     const result = await window.MiCalleServices.register({
       username: normalizedUsername,
+      phone: normalizedPhone,
       email: normalizedEmail,
       password,
     });

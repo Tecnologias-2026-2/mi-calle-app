@@ -74,9 +74,9 @@
               </p>
             </div>
 
-            <form class="login-form signup-form" action="registro-exitoso.html" method="post">
+            <form class="login-form signup-form" action="registro-exitoso.html" method="post" novalidate>
               <div class="form-field">
-                <label class="form-field__label" for="username">Nombre de usuario</label>
+                <label class="form-field__label" for="username">Nombre completo</label>
                 <div class="form-field__control">
                   <svg class="form-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
                     <circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.7" />
@@ -91,8 +91,30 @@
                     id="username"
                     name="username"
                     type="text"
-                    placeholder="Maria"
-                    autocomplete="username"
+                    placeholder="María Pérez"
+                    autocomplete="name"
+                    minlength="3"
+                    maxlength="100"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div class="form-field">
+                <label class="form-field__label" for="phone">Teléfono</label>
+                <div class="form-field__control">
+                  <svg class="form-field__icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <path d="M7.2 3.5h-2a1.7 1.7 0 0 0-1.7 1.8c.3 8.6 7.2 15.5 15.8 15.8a1.7 1.7 0 0 0 1.8-1.7v-2a1.7 1.7 0 0 0-1.4-1.7l-3.1-.6a1.7 1.7 0 0 0-1.7.7l-.7.9a13.6 13.6 0 0 1-4.8-4.8l.9-.7a1.7 1.7 0 0 0 .7-1.7l-.6-3.1a1.7 1.7 0 0 0-1.7-1.4Z" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+                  </svg>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="+573001234567"
+                    autocomplete="tel"
+                    inputmode="tel"
+                    pattern="\+?[0-9]{7,15}"
+                    maxlength="16"
                     required
                   />
                 </div>
@@ -134,9 +156,10 @@
                     id="password"
                     name="password"
                     type="password"
-                    placeholder="Mínimo 8 caracteres"
+                    placeholder="Entre 8 y 64 caracteres"
                     autocomplete="new-password"
                     minlength="8"
+                    maxlength="64"
                     required
                   />
                   <button class="password-toggle" type="button" aria-label="Mostrar contraseña" aria-pressed="false">
@@ -163,6 +186,7 @@
                     placeholder="Repite tu contraseña"
                     autocomplete="new-password"
                     minlength="8"
+                    maxlength="64"
                     required
                   />
                   <button class="password-toggle" type="button" aria-label="Mostrar contraseña" aria-pressed="false">

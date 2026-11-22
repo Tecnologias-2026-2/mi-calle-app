@@ -206,7 +206,14 @@ async function loadReport() {
         report.history = await window.MiCalleServices.getReportHistory(reportId);
     }
     renderReport(report);
-    window.MiCalleServices.subscribePublicReports(async (reports) => {
+    const session = window.MiCalleServices.getCurrentSession();
+    const isAdmin = session?.user?.role?.toLocaleLowerCase("es") === "administrador";
+    const subscribe = isAdmin
+        ? window.MiCalleServices.subscribeAdminReports
+        : session
+            ? window.MiCalleServices.subscribeUserReports
+            : window.MiCalleServices.subscribePublicReports;
+    subscribe(async (reports) => {
         const updated = reports.find((item) => item.id === reportId);
         if (!updated) return;
         try {
@@ -215,6 +222,8 @@ async function loadReport() {
         } catch (error) {
             console.error("No se pudo actualizar el historial del reporte.", error);
         }
+    }, (error) => {
+        console.error("No se pudo actualizar el detalle del reporte.", error);
     });
 }
 

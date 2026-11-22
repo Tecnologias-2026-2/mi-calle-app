@@ -126,16 +126,13 @@ function setReportsLoading(message, { spinner = false } = {}) {
     });
 }
 
-async function loadUserReports() {
-    setReportsLoading(" Cargando tus reportes...", { spinner: true });
-    const data = await MiCalleServices.getMyReports();
+function renderUserReports(data) {
     document.querySelectorAll("[data-reports-loading]").forEach((element) => {
         element.hidden = true;
         element.setAttribute("aria-busy", "false");
     });
     renderReportStats(data);
     renderRecentReports(data);
-    return data;
 }
 
 function showReportsError(error) {
@@ -149,8 +146,5 @@ function showReportsError(error) {
     });
 }
 
-loadUserReports().catch(showReportsError);
-MiCalleServices.subscribeMyReports((reports) => {
-    renderReportStats(reports);
-    renderRecentReports(reports);
-});
+setReportsLoading(" Cargando tus reportes...", { spinner: true });
+MiCalleServices.subscribeUserReports(renderUserReports, showReportsError);

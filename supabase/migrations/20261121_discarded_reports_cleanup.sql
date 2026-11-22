@@ -98,3 +98,56 @@ END;
 $function$;
 
 COMMIT;
+
+-- 
+
+CREATE OR REPLACE FUNCTION public.actualizar_estado_reporte(
+  p_id_reporte uuid,
+  p_estado text,
+  p_observacion text DEFAULT NULL::text
+)
+RETURNS void
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path TO ''
+AS $function$
+DECLARE
+  v_actor uuid := (SELECT auth.uid());
+BEGIN
+  IF p_id_reporte IS NULL
+     OR p_estado IS NULL
+     OR p_estado NOT IN ('pendiente', 'en_revision', 'en_proceso', 'reparado', 'descartado')
+  THEN
+    RAISE EXCEPTION 'Reporte o estado no valido.';
+  END IF;
+
+  IF p_estado = 'descartado' AND NULLIF(btrim(COALESCE(p_observacion, '')), '') IS NULL THEN
+    RAISE EXCEPTION 'La observacion es obligatoria para descartar un reporte.';
+  END IF;
+
+  IF current_setting('transaction_isolation') <> 'read committed' THEN
+    RAISE EXCEPTION 'La actualizacion requiere aislamiento READ COMMITTED.';
+  END IF;
+
+  PERFORM pg_advisory_xact_lock(hashtextextended('mi_calle:asignacion_rol', 0));
+
+  v_actor := (SELECT auth.uid());
+  IF v_actor IS NULL OR NOT public.es_administrador() THEN
+    RAISE EXCEPTION 'Solo un administrador autenticado puede actualizar reportes.';
+  END IF;
+
+  PERFORM set_config(
+    'app.mi_calle_observacion',
+    COALESCE(p_observacion, ''),
+    true
+  );
+
+  UPDATE public.reportes
+  SET estado_atencion = p_estado
+  WHERE id_reporte = p_id_reporte;
+
+  IF NOT FOUND THEN
+    RAISE EXCEPTION 'Reporte no encontrado.';
+  END IF;
+END;
+$function$;

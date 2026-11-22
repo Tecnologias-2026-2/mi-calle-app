@@ -145,14 +145,7 @@ const server = http.createServer(async (req, res) => {
 
       const reportes = await enrichReports(client, data || []);
       if ((mine || administrator) && reportes.length) {
-        const { data: history, error: historyError } = await client.rpc('consultar_historial_reportes', {
-          p_id_reportes: reportes.map((report) => report.id_reporte),
-        });
-        if (historyError) throw historyError;
-        const historyByReportId = groupReportHistory(history || []);
-        reportes.forEach((report) => {
-          report.historial_estados = historyByReportId.get(report.id_reporte) || [];
-        });
+        await attachPrivateReportHistory(reportes);
       }
       return sendJson(res, 200, reportes);
     } catch (error) {
@@ -167,11 +160,18 @@ const server = http.createServer(async (req, res) => {
       const authenticated = await requireSupabaseUser(req, res);
       if (!authenticated) return;
 
-      const { data, error } = await authenticated.client.rpc('consultar_historial_reportes', {
-        p_id_reportes: [idReporte],
-      });
-      if (error) throw error;
-      return sendJson(res, 200, data || []);
+      if (!await isAdministrator(authenticated)) {
+        const { data: ownReports, error: ownReportsError } = await authenticated.client.rpc('mis_reportes');
+        if (ownReportsError) throw ownReportsError;
+        if (!(ownReports || []).some((report) => (
+          String(report.id_reporte).toLowerCase() === idReporte.toLowerCase()
+        ))) {
+          return sendJson(res, 404, { error: 'Historial privado no disponible para este reporte.' });
+        }
+      }
+
+      const history = await getPrivateReportHistory([idReporte]);
+      return sendJson(res, 200, history);
     } catch (error) {
       return handleError(res, error, 'Error interno al obtener el historial privado del reporte.');
     }
@@ -200,16 +200,55 @@ const server = http.createServer(async (req, res) => {
       const idReporte = pathname.split('/')[2];
       if (!isUuid(idReporte)) return sendJson(res, 400, { error: 'El identificador del reporte no es válido.' });
 
-      const client = createPublicClient();
-      const { data, error } = await client
-        .from('reportes_publicos')
-        .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at')
-        .eq('id_reporte', idReporte)
-        .maybeSingle();
-      if (error) throw error;
+      let client = createPublicClient();
+      let data = null;
+      let includePrivateHistory = false;
+      if (req.headers.authorization) {
+        const authenticated = await requireSupabaseUser(req, res);
+        if (!authenticated) return;
+        client = authenticated.client;
+
+        if (await isAdministrator(authenticated)) {
+          const result = await client
+            .from('reportes')
+            .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at')
+            .eq('id_reporte', idReporte)
+            .maybeSingle();
+          if (result.error) throw result.error;
+          data = result.data;
+          includePrivateHistory = Boolean(data);
+        } else {
+          const { data: ownReports, error: ownReportsError } = await client.rpc('mis_reportes');
+          if (ownReportsError) throw ownReportsError;
+          data = (ownReports || []).find((report) => (
+            String(report.id_reporte).toLowerCase() === idReporte.toLowerCase()
+          )) || null;
+          includePrivateHistory = Boolean(data);
+
+          if (!data) {
+            client = createPublicClient();
+            const result = await client
+              .from('reportes_publicos')
+              .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at')
+              .eq('id_reporte', idReporte)
+              .maybeSingle();
+            if (result.error) throw result.error;
+            data = result.data;
+          }
+        }
+      } else {
+        const result = await client
+          .from('reportes_publicos')
+          .select('id_reporte, id_ubicacion, tipo_problema, descripcion, estado_atencion, fecha_creacion, updated_at')
+          .eq('id_reporte', idReporte)
+          .maybeSingle();
+        if (result.error) throw result.error;
+        data = result.data;
+      }
       if (!data) return sendJson(res, 404, { error: 'Reporte no encontrado.' });
 
       const [report] = await enrichReports(client, [data]);
+      if (includePrivateHistory) await attachPrivateReportHistory([report]);
       return sendJson(res, 200, report);
     } catch (error) {
       return handleError(res, error, 'Error interno al obtener el reporte.');
@@ -528,6 +567,27 @@ function groupReportHistory(history) {
   return historyByReportId;
 }
 
+async function getPrivateReportHistory(reportIds) {
+  const ids = [...new Set(reportIds.filter(Boolean))];
+  if (!ids.length) return [];
+
+  const { data, error } = await supabase
+    .from('historial_estados')
+    .select('id_historial, id_reporte, estado, fecha_cambio, observacion')
+    .in('id_reporte', ids)
+    .order('fecha_cambio', { ascending: true });
+  if (error) throw error;
+  return data || [];
+}
+
+async function attachPrivateReportHistory(reports) {
+  const history = await getPrivateReportHistory(reports.map((report) => report.id_reporte));
+  const historyByReportId = groupReportHistory(history);
+  reports.forEach((report) => {
+    report.historial_estados = historyByReportId.get(report.id_reporte) || [];
+  });
+}
+
 async function requireSupabaseUser(req, res) {
   const authorization = req.headers.authorization || '';
   const token = authorization.startsWith('Bearer ')
@@ -552,17 +612,21 @@ async function requireSupabaseUser(req, res) {
   return { client, user: data.user };
 }
 
-async function requireAdministrator(req, res) {
-  const authenticated = await requireSupabaseUser(req, res);
-  if (!authenticated) return null;
-
+async function isAdministrator(authenticated) {
   const { data: profile, error } = await authenticated.client
     .from('perfiles')
     .select('rol')
     .eq('id_usuario', authenticated.user.id)
     .maybeSingle();
   if (error) throw error;
-  if (profile?.rol !== 'administrador') {
+  return profile?.rol === 'administrador';
+}
+
+async function requireAdministrator(req, res) {
+  const authenticated = await requireSupabaseUser(req, res);
+  if (!authenticated) return null;
+
+  if (!await isAdministrator(authenticated)) {
     sendJson(res, 403, { error: 'La operación requiere un administrador autenticado.' });
     return null;
   }

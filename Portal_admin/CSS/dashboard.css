@@ -570,16 +570,20 @@ h1 {
 
 .date-pill {
   display: flex;
-  min-height: 35px;
+  min-height: 44px;
+  height: auto;
+  max-width: 100%;
   align-items: center;
   gap: 8px;
-  padding: 0 11px;
+  padding: 12px 24px;
   border: 1px solid #e7edf5;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.8);
   color: #68768b;
   font-size: 10px;
-  white-space: nowrap;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  white-space: normal;
   cursor: pointer;
 }
 
@@ -685,13 +689,14 @@ h1 {
 
 .stat-change {
   max-width: 116px;
-  overflow: hidden;
+  min-width: 0;
   padding: 4px 7px;
   border-radius: 5px;
   font-size: 8px;
   font-weight: 650;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .positive {
@@ -713,6 +718,7 @@ h1 {
   margin-bottom: 3px;
   color: #8591a4;
   font-size: 10px;
+  overflow-wrap: anywhere;
 }
 
 .stat-value {
@@ -952,7 +958,9 @@ h1 {
 
 .legend-label {
   gap: 7px;
-  white-space: nowrap;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .legend-dot {
@@ -1007,11 +1015,11 @@ h1 {
 }
 
 .type-name {
-  overflow: hidden;
+  min-width: 0;
   color: #79869a;
   font-size: 9px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .type-track {
@@ -1189,7 +1197,11 @@ h1 {
   }
 
   .date-pill {
-    min-height: 32px;
+    min-height: 44px;
+    height: auto;
+    max-width: 100%;
+    flex-wrap: wrap;
+    white-space: normal;
   }
 
   .charts-grid {
@@ -1348,13 +1360,15 @@ h1 {
 
 .report-id {
   margin-left: auto;
+  max-width: 100%;
   padding: 5px 7px;
   border-radius: 5px;
   background: #f2f6fc;
   color: #78869a;
   font-size: 9px;
   font-weight: 650;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .current-status {
@@ -1368,12 +1382,16 @@ h1 {
 
 .current-status strong {
   margin-left: auto;
+  max-width: 100%;
   padding: 5px 8px;
   border-radius: 6px;
   background: #eef4ff;
   color: #477fe0;
   font-size: 9px;
   font-weight: 650;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .status-indicator {
@@ -2027,29 +2045,28 @@ h1 {
 }
 
 .report-list-main strong {
-  overflow: hidden;
   color: #526078;
   font-size: 11px;
   font-weight: 650;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .report-list-main small,
 .report-list-date {
-  overflow: hidden;
   color: #98a4b4;
   font-size: 9px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .report-list-status {
+  max-width: 100%;
   padding: 5px 9px;
   border-radius: 20px;
   font-size: 8px;
   font-weight: 650;
-  white-space: nowrap;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .report-list-status--blue { background: var(--color-secondary); color: var(--color-secondary-ink); }
@@ -2215,12 +2232,28 @@ h1 {
   }
 
   .step-item {
-    width: 74px;
+    width: auto;
+    min-width: 0;
+    flex: 1 1 0;
   }
 
   .step-connector {
-    margin-right: 44px;
-    margin-left: 44px;
+    display: none;
+  }
+
+  .status-steps {
+    gap: 3px;
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  .step-label {
+    font-size: 8px;
+    overflow-wrap: anywhere;
+  }
+
+  .update-actions {
+    flex-direction: column;
   }
 
   .option-copy small {
@@ -2236,6 +2269,7 @@ h1 {
 .report-history li {
   margin: 9px 0;
   color: #536273;
+  overflow-wrap: anywhere;
 }
 
 .admin-evidence-image {

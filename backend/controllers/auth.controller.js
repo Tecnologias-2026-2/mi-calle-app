@@ -1,12 +1,17 @@
 const { createPublicClient, createUserClient } = require('../config/supabase-user');
+const supabase = require('../config/supabase');
 
 async function register(req, res, body) {
   const name = String(body?.nombre_completo || '').trim();
   const email = String(body?.email || '').trim().toLowerCase();
+  const phone = String(body?.telefono || '').trim();
   const password = String(body?.password || '');
 
-  if (!name || !email || !password) {
-    return sendJson(res, 400, { error: 'Nombre, email y contraseña son obligatorios.' });
+  if (!name || !email || !phone || !password) {
+    return sendJson(res, 400, { error: 'Nombre, teléfono, email y contraseña son obligatorios.' });
+  }
+  if (name.length < 3) {
+    return sendJson(res, 400, { error: 'El nombre completo debe tener al menos 3 caracteres.' });
   }
   if (name.length > 100) {
     return sendJson(res, 400, { error: 'El nombre completo no puede superar 100 caracteres.' });
@@ -14,20 +19,36 @@ async function register(req, res, body) {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return sendJson(res, 400, { error: 'El email no es válido.' });
   }
-  if (password.length < 8) {
-    return sendJson(res, 400, { error: 'La contraseña debe tener al menos 8 caracteres.' });
+  if (!/^\+?[0-9]{7,15}$/.test(phone)) {
+    return sendJson(res, 400, { error: 'El teléfono debe tener de 7 a 15 números y puede iniciar con +.' });
+  }
+  if (password.length < 8 || password.length > 64 || Buffer.byteLength(password, 'utf8') > 72) {
+    return sendJson(res, 400, { error: 'La contraseña debe tener entre 8 y 64 caracteres y no superar 72 bytes.' });
   }
 
   const { data, error } = await createPublicClient().auth.signUp({
     email,
     password,
-    options: { data: { nombre_completo: name } },
+    options: { data: { nombre_completo: name, telefono_contacto: phone } },
   });
   if (error) {
     if (Number(error.status) === 429) {
       return sendJson(res, 429, { error: 'Se alcanzó el límite de registros. Inténtalo más tarde.' });
     }
     return sendJson(res, 400, { error: 'Supabase Auth no pudo completar el registro.' });
+  }
+
+  if (data.user) {
+    const { data: profile, error: profileError } = await supabase
+      .from('perfiles')
+      .update({ telefono: phone })
+      .eq('id_usuario', data.user.id)
+      .select('id_usuario')
+      .maybeSingle();
+    if (profileError) throw profileError;
+    if (!profile) {
+      return sendJson(res, 409, { error: 'El perfil todavía no está disponible para esta cuenta.' });
+    }
   }
 
   const response = {
@@ -133,14 +154,14 @@ async function updateProfile(req, res, body, authenticated) {
   const name = String(body?.nombre_completo || '').trim();
   const phone = String(body?.telefono || '').trim();
 
-  if (!name) {
-    return sendJson(res, 400, { error: 'El nombre completo es obligatorio.' });
+  if (name.length < 3) {
+    return sendJson(res, 400, { error: 'El nombre completo debe tener al menos 3 caracteres.' });
   }
   if (name.length > 100) {
     return sendJson(res, 400, { error: 'El nombre completo no puede superar 100 caracteres.' });
   }
-  if (phone.length > 20) {
-    return sendJson(res, 400, { error: 'El teléfono no puede superar 20 caracteres.' });
+  if (phone && !/^\+?[0-9]{7,15}$/.test(phone)) {
+    return sendJson(res, 400, { error: 'El teléfono debe tener de 7 a 15 números y puede iniciar con +.' });
   }
 
   const { data: profile, error } = await authenticated.client

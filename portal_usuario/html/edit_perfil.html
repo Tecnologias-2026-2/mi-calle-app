@@ -65,12 +65,12 @@
                 
                 <form id="formulario-editar-perfil" novalidate>
                     <div class="campo-formulario">
-                        <label for="nombre-usuario">Nombre de usuario</label>
+                        <label for="nombre-usuario">Nombre completo</label>
                         <div class="input-con-icono">
                             <i class="fa-regular fa-pen-to-square"></i>
                             <input id="nombre-usuario" name="nombre_completo" type="text"
-                                data-user-name value="" placeholder="Escribe tu nombre de usuario"
-                                maxlength="100" required>
+                                data-user-name value="" placeholder="Escribe tu nombre completo"
+                                minlength="3" maxlength="100" required>
                         </div>
                     </div>
 
@@ -88,7 +88,7 @@
                         <div class="input-con-icono">
                             <i class="fa-solid fa-phone"></i>
                             <input id="telefono" name="telefono" type="tel" data-user-phone-input
-                                value="" placeholder="No registrado" maxlength="20">
+                                value="" placeholder="No registrado" pattern="\+?[0-9]{7,15}" maxlength="16">
                         </div>
                     </div>
 

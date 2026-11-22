@@ -44,8 +44,9 @@
 }
 
 .success-button {
-  width: 300px;
+  width: auto;
   max-width: 100%;
+  align-self: stretch;
   text-decoration: none;
 }
 

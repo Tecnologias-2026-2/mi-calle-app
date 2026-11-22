@@ -30,6 +30,67 @@ test("report normalization preserves observations from public and authenticated 
   assert.equal(report.history[0].changedAt, "2026-11-20T12:00:00Z");
 });
 
+test("report subscriptions call their backend endpoints and retain discarded user reports", async () => {
+  const calls = [];
+  const services = createServices({
+    localStorage: createStorage({
+      "mi-calle-session": "subscriber-token",
+      "mi-calle-user": JSON.stringify({ id: "citizen-1", role: "ciudadano" }),
+    }),
+    sessionStorage: createStorage(),
+    fetch: async (url, init = {}) => {
+      calls.push({ url, init });
+      if (url.endsWith("/reportes?mine=true")) {
+        return {
+          ok: true,
+          status: 200,
+          json: async () => [{
+            id_reporte: "discarded-1",
+            estado_atencion: "descartado",
+            historial_estados: [{
+              estado: "descartado",
+              observacion: "No corresponde a un daño vial.",
+            }],
+          }],
+        };
+      }
+      if (url.endsWith("/reportes")) {
+        return { ok: true, status: 200, json: async () => [] };
+      }
+      throw new Error(`Unexpected request ${url}`);
+    },
+  });
+  const subscribeOnce = (subscribe) => new Promise((resolve, reject) => {
+    subscribe(resolve, reject);
+  });
+
+  const [userReport] = await subscribeOnce(services.subscribeUserReports);
+  assert.equal(userReport.id, "discarded-1");
+  assert.equal(userReport.status, "descartado");
+  assert.equal(userReport.history[0].observation, "No corresponde a un daño vial.");
+  assert.equal(calls[0].url, "https://mi-calle-app-backend.onrender.com/reportes?mine=true");
+  assert.equal(calls[0].init.headers.get("Authorization"), "Bearer subscriber-token");
+
+  assert.deepEqual(await subscribeOnce(services.subscribePublicReports), []);
+  assert.equal(calls[1].url, "https://mi-calle-app-backend.onrender.com/reportes");
+
+  const adminCalls = [];
+  const adminServices = createServices({
+    localStorage: createStorage({
+      "mi-calle-session": "admin-token",
+      "mi-calle-user": JSON.stringify({ id: "admin-1", role: "administrador" }),
+    }),
+    sessionStorage: createStorage(),
+    fetch: async (url, init = {}) => {
+      adminCalls.push({ url, init });
+      return { ok: true, status: 200, json: async () => [] };
+    },
+  });
+  assert.deepEqual(await subscribeOnce(adminServices.subscribeAdminReports), []);
+  assert.equal(adminCalls[0].url, "https://mi-calle-app-backend.onrender.com/reportes");
+  assert.equal(adminCalls[0].init.headers.get("Authorization"), "Bearer admin-token");
+});
+
 test("Render adapter preserves current HTTP paths and maps payloads to normalized DTOs", async () => {
   const calls = [];
   const localStorage = createStorage({

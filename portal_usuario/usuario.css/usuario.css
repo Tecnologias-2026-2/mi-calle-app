@@ -299,7 +299,7 @@ body {
 
 /* Inicio y Perfil: dos columnas iguales */
 .layout-principal {
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 40px;
 }
 
@@ -535,6 +535,19 @@ body {
 
 .input-con-icono input:focus {
     border-color: var(--azul);
+}
+
+.input-con-icono input:disabled[data-user-name],
+.input-con-icono input:disabled[data-user-email],
+.input-con-icono input:disabled[data-user-phone-input] {
+    color: var(--texto-titulo);
+    opacity: 1;
+    background: transparent;
+    border-color: transparent;
+    box-shadow: none;
+    cursor: default;
+    user-select: none;
+    pointer-events: none;
 }
 
 /* Icono del ojo (mostrar/ocultar contraseña) a la derecha */
@@ -839,7 +852,8 @@ textarea::placeholder {
     font-weight: 500;
     cursor: pointer;
     transition: background-color 0.3s ease;
-    white-space: nowrap;            /* Evita que el texto se rompa en dos líneas */
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .btn-cancelar:hover {
@@ -859,7 +873,7 @@ textarea::placeholder {
     cursor: pointer;
     border: none;
     transition: all 0.3s ease;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 8px;
 }
@@ -962,27 +976,104 @@ textarea::placeholder {
     background-color: var(--azul-suave);
     border-radius: 12px;
     padding: 20px;
+    display: grid;
+    gap: 16px;
+    min-width: 0;
+}
+
+.tarjeta-ayuda-cabecera {
     display: flex;
-    gap: 15px;
-    align-items: flex-start;
+    align-items: center;
+    gap: 10px;
 }
 
 .icono-ayuda {
     color: var(--azul);
     font-size: 1.5rem;
-    margin-top: 2px;
+    flex: 0 0 auto;
 }
 
 .tarjeta-ayuda h4 {
     font-size: 0.9rem;
     color: var(--texto-titulo);
-    margin-bottom: 5px;
+    margin: 0;
 }
 
-.tarjeta-ayuda p {
+.guia-reporte {
+    display: grid;
+    gap: 14px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.guia-reporte-paso {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    align-items: start;
+    gap: 12px;
+}
+
+.guia-reporte-icono {
+    position: relative;
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border-radius: 12px;
+    font-size: 1rem;
+}
+
+.guia-reporte-icono > span {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    display: grid;
+    width: 19px;
+    height: 19px;
+    place-items: center;
+    border: 2px solid var(--azul-suave);
+    border-radius: 50%;
+    background: var(--guia-color);
+    color: #fff;
+    font-family: "Nunito", sans-serif;
+    font-size: 0.65rem;
+    font-weight: 900;
+}
+
+.guia-reporte-icono--azul {
+    --guia-color: #1565C0;
+    background: rgb(21 101 192 / 12%);
+    color: #1565C0;
+}
+
+.guia-reporte-icono--celeste {
+    --guia-color: #2A9DF4;
+    background: rgb(42 157 244 / 14%);
+    color: #2A9DF4;
+}
+
+.guia-reporte-icono--verde {
+    --guia-color: #4CAF50;
+    background: rgb(76 175 80 / 14%);
+    color: #388e3c;
+}
+
+.guia-reporte-paso h5 {
+    margin: 0 0 3px;
+    color: var(--texto-titulo);
+    font-family: "Nunito", sans-serif;
+    font-size: 0.8rem;
+    font-weight: 800;
+}
+
+.guia-reporte-paso p {
+    margin: 0;
     font-size: 0.75rem;
     color: var(--texto-medio);
     line-height: 1.4;
+    overflow-wrap: anywhere;
 }
 
 
@@ -1857,7 +1948,9 @@ textarea:focus-visible {
     font-family: "Nunito", sans-serif;
     font-size: 0.85rem;
     font-weight: 800;
-    white-space: nowrap;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .detalle-estado i {
@@ -2200,7 +2293,9 @@ textarea:focus-visible {
     font-family: "Nunito", sans-serif;
     font-size: 0.8125rem;
     font-weight: 800;
-    white-space: nowrap;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .reporte-popup-estado--pendiente,
@@ -2245,7 +2340,9 @@ textarea:focus-visible {
     font-size: 0.875rem;
     font-weight: 800;
     text-decoration: none;
-    white-space: nowrap;
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: anywhere;
 }
 
 .reporte-popup-enlace:hover,
@@ -2290,30 +2387,33 @@ textarea:focus-visible {
 }
 
 .reporte-publico-informacion h3 {
-    overflow: hidden;
     margin: 0;
     color: var(--texto-titulo);
     font-family: "Nunito", sans-serif;
     font-size: 1rem;
     font-weight: 800;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 
 .reporte-publico-informacion p {
-    overflow: hidden;
     margin: 0;
     color: var(--text-secondary);
     font-size: 0.9375rem;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    overflow-wrap: anywhere;
 }
 
 .reporte-publico-enlace {
-    padding: 7px 10px;
+    min-height: 44px;
+    height: auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
     border: 1px solid var(--color-border);
     border-radius: 999px;
     background: var(--bg-page);
+    line-height: 1.3;
+    text-align: center;
 }
 
 @media (max-width: 600px) {
@@ -2485,4 +2585,70 @@ textarea:focus-visible {
 .reporte-descartado-aviso p {
     margin: 0;
     overflow-wrap: anywhere;
+}
+
+.btn-guardar,
+.btn-cancelar,
+.btn-perfil-primario,
+.btn-perfil-peligro,
+.btn-accion-rapida,
+.detalle-volver,
+.detalle-nav-logout,
+.reporte-publico-enlace {
+    display: inline-flex;
+    min-width: 0;
+    min-height: 44px;
+    height: auto;
+    width: auto;
+    max-width: 100%;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 24px;
+    overflow: visible;
+    overflow-wrap: anywhere;
+    text-align: center;
+    line-height: 1.3;
+    white-space: normal;
+}
+
+.btn-guardar {
+    flex-grow: 1;
+}
+
+.btn-accion-rapida {
+    flex-direction: column;
+}
+
+.grid-resumen-inicio,
+.grid-resumen-reportes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tarjeta-resumen-inicio,
+.tarjeta-reporte,
+.tarjeta-ayuda,
+.item-actividad-inicio,
+.info-act-inicio {
+    min-width: 0;
+}
+
+.info-act-inicio strong,
+.info-act-inicio span,
+.tarjeta-resumen-inicio .etiqueta-inicio {
+    overflow-wrap: anywhere;
+}
+
+.detalle-encabezado {
+    flex-wrap: wrap;
+}
+
+.detalle-encabezado h1 {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 500px) {
+    .grid-resumen-reportes {
+        grid-template-columns: minmax(0, 1fr);
+    }
 }

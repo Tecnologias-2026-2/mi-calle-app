@@ -100,7 +100,7 @@ function renderRows(reports) {
     }));
 }
 
-async function loadMyReports() {
+function showMyReportsLoading() {
     tablaBody.setAttribute("aria-busy", "true");
     const loading = document.createElement("span");
     loading.className = "loading-spinner";
@@ -114,19 +114,16 @@ async function loadMyReports() {
     const row = document.createElement("tr");
     row.append(cell);
     tablaBody.replaceChildren(row);
-    try {
-        const data = await MiCalleServices.getMyReports();
-        renderSummary(data);
-        renderRows(data);
-    } catch (error) {
-        console.error("No se pudieron cargar los reportes del usuario:", error);
-        tablaBody.setAttribute("aria-busy", "false");
-        tablaBody.innerHTML = `<tr><td colspan="4">No se pudieron cargar tus reportes. Intenta nuevamente.</td></tr>`;
-    }
 }
 
-loadMyReports();
-MiCalleServices.subscribeMyReports((reports) => {
+function showMyReportsError(error) {
+    console.error("No se pudieron cargar los reportes del usuario:", error);
+    tablaBody.setAttribute("aria-busy", "false");
+    tablaBody.innerHTML = `<tr><td colspan="4">No se pudieron cargar tus reportes. Intenta nuevamente.</td></tr>`;
+}
+
+showMyReportsLoading();
+MiCalleServices.subscribeUserReports((reports) => {
     renderSummary(reports);
     renderRows(reports);
-});
+}, showMyReportsError);

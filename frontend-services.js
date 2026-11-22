@@ -297,6 +297,7 @@
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         nombre_completo: input.username,
+        telefono: input.phone || input.telefono,
         email: String(input.email || "").trim().toLowerCase(),
         password: input.password,
       }),
@@ -320,6 +321,10 @@
   }
 
   async function getMyReports() {
+    return getUserReports();
+  }
+
+  async function getUserReports() {
     const data = asArray(await legacyFetch("/reportes?mine=true", {}, true), "mis reportes");
     return data.map((report) => normalizeReport(report));
   }
@@ -364,7 +369,11 @@
 
   async function getReportById(id) {
     try {
-      const report = await legacyFetch(`/reportes/${encodeURIComponent(id)}`);
+      const report = await legacyFetch(
+        `/reportes/${encodeURIComponent(id)}`,
+        {},
+        Boolean(getCurrentSession()),
+      );
       return normalizeReport(report);
     } catch (error) {
       if (error.status === 404) {
@@ -384,9 +393,14 @@
       await legacyFetch(`/reportes/${encodeURIComponent(id)}/historial`),
       "historial del reporte",
     );
-    const privateHistory = readLegacySession()?.accessToken
-      ? await getPrivateReportHistory(id)
-      : [];
+    let privateHistory = [];
+    if (readLegacySession()?.accessToken) {
+      try {
+        privateHistory = await getPrivateReportHistory(id);
+      } catch (error) {
+        if (error.status !== 403 && error.status !== 404) throw error;
+      }
+    }
     const privateById = new Map(privateHistory.map((entry) => [entry.id, entry]));
     return publicHistory.map((entry) => normalizeHistory({
       ...entry,
@@ -400,6 +414,40 @@
       "observaciones privadas del reporte",
     );
     return history.map((entry) => normalizeHistory(entry));
+  }
+
+  function subscribeReports(loader, callback, onError, description) {
+    if (typeof callback !== "function") {
+      throw new TypeError("La suscripción requiere una función de retorno.");
+    }
+    let active = true;
+    loader()
+      .then((reports) => {
+        if (active) callback(reports);
+      })
+      .catch((error) => {
+        if (!active) return;
+        if (typeof onError === "function") {
+          onError(error);
+          return;
+        }
+        console.error(`No se pudieron cargar ${description}:`, error);
+      });
+    return () => {
+      active = false;
+    };
+  }
+
+  function subscribePublicReports(callback, onError) {
+    return subscribeReports(getPublicReports, callback, onError, "los reportes públicos");
+  }
+
+  function subscribeUserReports(callback, onError) {
+    return subscribeReports(getUserReports, callback, onError, "tus reportes");
+  }
+
+  function subscribeAdminReports(callback, onError) {
+    return subscribeReports(getAdminReports, callback, onError, "los reportes administrativos");
   }
 
   async function createReport(input = {}) {
@@ -504,8 +552,13 @@
     logout,
     getCurrentSession,
     getPublicReports,
+    subscribePublicReports,
+    getUserReports,
+    subscribeUserReports,
     getMyReports,
+    subscribeMyReports: subscribeUserReports,
     getAdminReports,
+    subscribeAdminReports,
     getAdminStatistics,
     getReportById,
     getReportHistory,

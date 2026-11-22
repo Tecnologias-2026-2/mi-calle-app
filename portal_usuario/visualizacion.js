@@ -164,24 +164,10 @@ function renderizarReportes() {
     listaReportes.setAttribute("aria-busy", "false");
 }
 
-async function cargarReportes() {
-    mapa.getContainer().setAttribute("aria-busy", "true");
-    listaReportes.setAttribute("aria-busy", "true");
-    try {
-        reportesDisponibles = await window.MiCalleServices.getPublicReports();
-        prepararFiltroCategorias();
-        renderizarReportes();
-    } catch (error) {
-        console.error("No se pudieron cargar los reportes públicos:", error);
-        mapa.getContainer().setAttribute("aria-busy", "false");
-        listaReportes.setAttribute("aria-busy", "false");
-        contadorReportes.textContent = "No se pudieron cargar los reportes.";
-        listaReportes.textContent = "No se pudieron cargar los reportes. Intenta nuevamente.";
-    }
-}
-
 filtroCategoria.addEventListener("change", renderizarReportes);
 filtroEstado.addEventListener("change", renderizarReportes);
+mapa.getContainer().setAttribute("aria-busy", "true");
+listaReportes.setAttribute("aria-busy", "true");
 mapa.locate({ setView: false, enableHighAccuracy: true, timeout: 10000 });
 mapa.on("locationfound", (evento) => {
     L.circleMarker(evento.latlng, {
@@ -197,5 +183,10 @@ window.MiCalleServices.subscribePublicReports((reports) => {
     reportesDisponibles = reports;
     prepararFiltroCategorias();
     renderizarReportes();
+}, (error) => {
+    console.error("No se pudieron cargar los reportes públicos:", error);
+    mapa.getContainer().setAttribute("aria-busy", "false");
+    listaReportes.setAttribute("aria-busy", "false");
+    contadorReportes.textContent = "No se pudieron cargar los reportes.";
+    listaReportes.textContent = "No se pudieron cargar los reportes. Intenta nuevamente.";
 });
-cargarReportes();

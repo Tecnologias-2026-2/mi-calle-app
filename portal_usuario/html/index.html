@@ -119,12 +119,40 @@
             </section>
 
             <!-- Tarjeta de Ayuda -->
-            <section class="tarjeta-ayuda">
-                <i class="fa-regular fa-circle-question icono-ayuda"></i>
-                <div>
-                    <h4>¿Cómo reportar?</h4>
-                    <p>Toma unos minutos de tu tiempo y ayúdanos a reportar problemas en tu comunidad.</p>
+            <section class="tarjeta-ayuda" aria-labelledby="titulo-guia-reporte">
+                <div class="tarjeta-ayuda-cabecera">
+                    <i class="fa-regular fa-circle-question icono-ayuda" aria-hidden="true"></i>
+                    <h4 id="titulo-guia-reporte">¿Cómo reportar?</h4>
                 </div>
+                <ol class="guia-reporte">
+                    <li class="guia-reporte-paso">
+                        <span class="guia-reporte-icono guia-reporte-icono--azul" aria-hidden="true">
+                            <i class="fa-solid fa-location-dot"></i><span>1</span>
+                        </span>
+                        <div>
+                            <h5>Ubica el punto</h5>
+                            <p>Haz clic en el mapa o usa tu ubicación actual para marcar el daño vial.</p>
+                        </div>
+                    </li>
+                    <li class="guia-reporte-paso">
+                        <span class="guia-reporte-icono guia-reporte-icono--celeste" aria-hidden="true">
+                            <i class="fa-solid fa-camera"></i><span>2</span>
+                        </span>
+                        <div>
+                            <h5>Describe y fotografía</h5>
+                            <p>Elige una categoría (Bache, Grieta, Hundimiento, Alcantarilla sin tapa u Otro), escribe una descripción breve y adjunta una foto clara.</p>
+                        </div>
+                    </li>
+                    <li class="guia-reporte-paso">
+                        <span class="guia-reporte-icono guia-reporte-icono--verde" aria-hidden="true">
+                            <i class="fa-solid fa-list-check"></i><span>3</span>
+                        </span>
+                        <div>
+                            <h5>Haz seguimiento</h5>
+                            <p>Consulta en “Mis reportes” el avance de revisión, atención o las observaciones del equipo administrador.</p>
+                        </div>
+                    </li>
+                </ol>
             </section>
 
         </div> <!-- ✅ AQUÍ CIERRA LA COLUMNA DERECHA -->

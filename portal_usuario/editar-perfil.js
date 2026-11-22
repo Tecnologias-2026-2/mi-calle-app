@@ -22,8 +22,15 @@ profileForm.addEventListener("submit", async (event) => {
     const name = usernameInput.value.trim();
     const phone = phoneInput.value.trim();
 
-    if (!name) {
-        showProfileMessage("Escribe tu nombre de usuario.", true);
+    if (name.length < 3) {
+        showProfileMessage("Escribe tu nombre completo con al menos 3 caracteres.", true);
+        usernameInput.focus();
+        return;
+    }
+
+    if (phone && !/^\+?[0-9]{7,15}$/.test(phone)) {
+        showProfileMessage("Ingresa un teléfono válido: de 7 a 15 números y, si quieres, un + al inicio.", true);
+        phoneInput.focus();
         return;
     }
 
