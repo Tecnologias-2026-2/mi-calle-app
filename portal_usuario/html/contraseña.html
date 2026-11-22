@@ -74,42 +74,55 @@
                 <h3 class="subtitulo">Actualiza tu contraseña</h3>
                 <p class="descripcion-formulario">Ingresa tu contraseña actual y define una nueva para proteger tu acceso.</p>
 
-                <form action="#" method="POST">
+                <form id="formulario-cambiar-contrasena" class="form-cambiar-contrasena" novalidate>
+                    <p id="mensaje-cambiar-contrasena" class="mensaje-contrasena" role="status" aria-live="polite" hidden></p>
                     
                     <!-- Contraseña Actual -->
                     <div class="campo-formulario">
-                        <label>Contraseña actual</label>
+                        <label for="contrasena-actual">Contraseña actual</label>
                         <div class="input-con-icono">
                             <i class="fa-solid fa-lock"></i>
-                            <input type="password" placeholder="Contraseña" required>
-                            <i class="fa-regular fa-eye toggle-password"></i>
+                            <input id="contrasena-actual" name="currentPassword" type="password"
+                                autocomplete="current-password" placeholder="Contraseña actual" required>
+                            <button class="toggle-password" type="button" aria-label="Mostrar contraseña actual" aria-pressed="false">
+                                <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Nueva Contraseña -->
                     <div class="campo-formulario">
-                        <label>Nueva contraseña</label>
+                        <label for="nueva-contrasena">Nueva contraseña</label>
                         <div class="input-con-icono">
                             <i class="fa-solid fa-lock"></i>
-                            <input type="password" placeholder="Contraseña" required>
-                            <i class="fa-regular fa-eye toggle-password"></i>
+                            <input id="nueva-contrasena" name="newPassword" type="password"
+                                autocomplete="new-password" minlength="8" maxlength="64"
+                                placeholder="Entre 8 y 64 caracteres" required>
+                            <button class="toggle-password" type="button" aria-label="Mostrar nueva contraseña" aria-pressed="false">
+                                <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Confirmación Nueva Contraseña -->
                     <div class="campo-formulario">
-                        <label>Confirmación Nueva contraseña</label>
+                        <label for="confirmar-nueva-contrasena">Confirmar nueva contraseña</label>
                         <div class="input-con-icono">
                             <i class="fa-solid fa-lock"></i>
-                            <input type="password" placeholder="Contraseña" required>
-                            <i class="fa-regular fa-eye toggle-password"></i>
+                            <input id="confirmar-nueva-contrasena" name="confirmPassword" type="password"
+                                autocomplete="new-password" minlength="8" maxlength="64"
+                                placeholder="Repite tu nueva contraseña" required>
+                            <button class="toggle-password" type="button" aria-label="Mostrar confirmación de contraseña" aria-pressed="false">
+                                <i class="fa-regular fa-eye" aria-hidden="true"></i>
+                            </button>
                         </div>
                     </div>
 
                     <!-- Botones de Acción -->
                     <div class="botones-formulario">
-                        <a href="perfil.html" class="btn-guardar">
-                            <i class="fa-regular fa-floppy-disk"></i>Guardar cambios</a>
+                        <button type="submit" class="btn-guardar">
+                            <i class="fa-regular fa-floppy-disk" aria-hidden="true"></i>Guardar cambios
+                        </button>
                         <a href="perfil.html" class="btn-cancelar">Cancelar</a>
                     </div>
 
@@ -146,34 +159,9 @@
         </div>
     </div>
 </main>
+<script src="../../frontend-services.js"></script>
 <script src="../portal-auth.js"></script>
+<script src="../cambiar-contrasena.js"></script>
 <script src="../menu.js"></script>
-
-<script>
-    // Seleccionamos todos los elementos que tengan la clase 'toggle-password'
-    const togglePasswordIcons = document.querySelectorAll('.toggle-password');
-
-    // Recorremos cada ojito
-    togglePasswordIcons.forEach(icon => {
-        icon.addEventListener('click', function () {
-            // Encontramos el input que está dentro del mismo contenedor
-            const input = this.parentElement.querySelector('input');
-
-            // Verificamos si el input actualmente oculta la contraseña
-            if (input.type === 'password') {
-                input.type = 'text'; // La mostramos
-                // Cambiamos el icono a ojo tachado
-                this.classList.remove('fa-eye');
-                this.classList.add('fa-eye-slash');
-            } else {
-                input.type = 'password'; // La volvemos a ocultar
-                // Cambiamos el icono a ojo normal
-                this.classList.remove('fa-eye-slash');
-                this.classList.add('fa-eye');
-            }
-        });
-    });
-</script>
-
 </body>
 </html>

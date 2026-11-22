@@ -75,6 +75,7 @@
             </div>
 
             <form class="recovery-form" id="recovery-form" action="#" method="post">
+              <p id="recovery-message" class="auth-message" role="status" aria-live="polite" hidden></p>
               <div class="form-field">
                 <label class="form-field__label" for="recovery-email">Correo electrónico</label>
                 <div class="form-field__control">
@@ -127,13 +128,7 @@
       </footer>
     </div>
 
-    <script>
-      const recoveryForm = document.querySelector("#recovery-form");
-
-      recoveryForm.addEventListener("submit", (event) => {
-        event.preventDefault();
-        window.location.href = "correo-enviado.html";
-      });
-    </script>
+    <script src="../../frontend-services.js"></script>
+    <script src="../js/recuperar-contrasena.js"></script>
   </body>
 </html>

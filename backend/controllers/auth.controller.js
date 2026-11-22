@@ -1,5 +1,6 @@
 const { createPublicClient, createUserClient } = require('../config/supabase-user');
 const supabase = require('../config/supabase');
+const { URL } = require('url');
 
 async function register(req, res, body) {
   const name = String(body?.nombre_completo || '').trim();
@@ -150,6 +151,105 @@ async function refresh(req, res, body) {
   });
 }
 
+async function requestPasswordRecovery(req, res, body) {
+  const email = String(body?.email || '').trim().toLowerCase();
+  const redirectTo = String(body?.redirectTo || '');
+
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return sendJson(res, 400, { error: 'Ingresa un correo electrónico válido.' });
+  }
+  if (!isAllowedRecoveryRedirect(redirectTo)) {
+    return sendJson(res, 400, { error: 'La página de recuperación no es un destino permitido.' });
+  }
+
+  const { error } = await createPublicClient({ flowType: 'implicit' }).auth.resetPasswordForEmail(
+    email,
+    { redirectTo },
+  );
+  if (error) {
+    if (isRateLimitError(error)) {
+      return sendJson(res, 429, { error: 'Se alcanzó el límite de correos de recuperación. Espera un momento antes de intentarlo de nuevo.' });
+    }
+    if (['user_not_found', 'email_not_found'].includes(String(error.code || '').toLowerCase())) {
+      return sendJson(res, 200, {
+        message: 'Si existe una cuenta asociada a ese correo, recibirás instrucciones para recuperar tu contraseña.',
+      });
+    }
+    return sendSupabaseError(res, error, 'No se pudo enviar el correo de recuperación.');
+  }
+
+  return sendJson(res, 200, {
+    message: 'Si existe una cuenta asociada a ese correo, recibirás instrucciones para recuperar tu contraseña.',
+  });
+}
+
+async function completePasswordRecovery(req, res, body) {
+  const accessToken = String(body?.accessToken || '');
+  const refreshToken = String(body?.refreshToken || '');
+  const type = String(body?.type || '');
+  const password = String(body?.password || '');
+
+  if (type !== 'recovery' || !accessToken || !refreshToken) {
+    return sendJson(res, 401, { error: 'El enlace de recuperación no es válido o ha expirado. Solicita uno nuevo.' });
+  }
+  if (!isValidPassword(password)) {
+    return sendJson(res, 400, { error: 'La contraseña debe tener entre 8 y 64 caracteres y no superar 72 bytes.' });
+  }
+
+  const authClient = createPublicClient({ flowType: 'implicit' });
+  const { data: sessionData, error: sessionError } = await authClient.auth.setSession({
+    access_token: accessToken,
+    refresh_token: refreshToken,
+  });
+  if (sessionError || !sessionData.session || !sessionData.user) {
+    return sendJson(res, 401, { error: 'El enlace de recuperación no es válido o ha expirado. Solicita uno nuevo.' });
+  }
+
+  const { error } = await authClient.auth.updateUser({ password });
+  if (error) return sendSupabaseError(res, error, 'No se pudo actualizar la contraseña.');
+
+  return sendJson(res, 200, { message: 'Tu contraseña se actualizó correctamente.' });
+}
+
+async function changePassword(req, res, body, authenticated) {
+  const currentPassword = String(body?.currentPassword || '');
+  const newPassword = String(body?.newPassword || '');
+  const email = String(authenticated?.user?.email || '').trim().toLowerCase();
+
+  if (!currentPassword || !newPassword) {
+    return sendJson(res, 400, { error: 'Ingresa tu contraseña actual y la nueva contraseña.' });
+  }
+  if (!email) {
+    return sendJson(res, 400, { error: 'No se encontró el correo de la sesión para verificar tu identidad.' });
+  }
+  if (!isValidPassword(newPassword)) {
+    return sendJson(res, 400, { error: 'La nueva contraseña debe tener entre 8 y 64 caracteres y no superar 72 bytes.' });
+  }
+  if (currentPassword === newPassword) {
+    return sendJson(res, 400, { error: 'La nueva contraseña debe ser diferente de la actual.' });
+  }
+
+  const authClient = createPublicClient();
+  const { data, error: signInError } = await authClient.auth.signInWithPassword({
+    email,
+    password: currentPassword,
+  });
+  if (signInError) {
+    if (isRateLimitError(signInError)) {
+      return sendJson(res, 429, { error: 'Se alcanzó el límite de intentos. Espera un momento antes de intentarlo de nuevo.' });
+    }
+    return sendJson(res, 401, { error: 'La contraseña actual no es correcta.' });
+  }
+  if (!data.session || !data.user || data.user.id !== authenticated.user.id) {
+    return sendJson(res, 401, { error: 'No se pudo verificar tu contraseña actual.' });
+  }
+
+  const { error } = await authClient.auth.updateUser({ password: newPassword });
+  if (error) return sendSupabaseError(res, error, 'No se pudo actualizar la contraseña.');
+
+  return sendJson(res, 200, { message: 'Contraseña actualizada correctamente.' });
+}
+
 async function updateProfile(req, res, body, authenticated) {
   const name = String(body?.nombre_completo || '').trim();
   const phone = String(body?.telefono || '').trim();
@@ -218,4 +318,60 @@ function sendJson(res, statusCode, payload) {
   res.end(JSON.stringify(payload));
 }
 
-module.exports = { register, verify, login, refresh, updateProfile };
+function isValidPassword(password) {
+  return password.length >= 8
+    && password.length <= 64
+    && Buffer.byteLength(password, 'utf8') <= 72;
+}
+
+function isRateLimitError(error) {
+  const details = `${error?.code || ''} ${error?.message || ''}`.toLowerCase();
+  return Number(error?.status) === 429
+    || /rate.?limit|too many requests|over_email_send_rate_limit|over_request_rate_limit/.test(details);
+}
+
+function sendSupabaseError(res, error, fallbackMessage) {
+  if (isRateLimitError(error)) {
+    return sendJson(res, 429, { error: 'Se alcanzó el límite de intentos. Espera un momento antes de intentarlo de nuevo.' });
+  }
+  const status = Number(error?.status);
+  if (status >= 400 && status < 500) {
+    return sendJson(res, status, { error: fallbackMessage });
+  }
+  return sendJson(res, 502, { error: fallbackMessage });
+}
+
+function isAllowedRecoveryRedirect(value) {
+  let redirect;
+  try {
+    redirect = new URL(value);
+  } catch {
+    return false;
+  }
+
+  const allowedOrigins = (process.env.FRONTEND_ORIGINS
+    || 'https://tecnologias-2026-2.github.io')
+    .split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+  const isConfiguredOrigin = allowedOrigins.includes(redirect.origin);
+  const isLocalOrigin = redirect.protocol === 'http:'
+    && ['localhost', '127.0.0.1', '[::1]'].includes(redirect.hostname);
+  return (isConfiguredOrigin || isLocalOrigin)
+    && redirect.pathname.endsWith('/login-registro/html/restablecer-contrasena.html')
+    && !redirect.search
+    && !redirect.hash
+    && !redirect.username
+    && !redirect.password;
+}
+
+module.exports = {
+  register,
+  verify,
+  login,
+  refresh,
+  requestPasswordRecovery,
+  completePasswordRecovery,
+  changePassword,
+  updateProfile,
+};

@@ -19,9 +19,9 @@ function createUserClient(accessToken) {
   });
 }
 
-function createPublicClient() {
+function createPublicClient(authOptions = {}) {
   return createClient(supabaseUrl, publishableKey, {
-    auth: { autoRefreshToken: false, persistSession: false },
+    auth: { autoRefreshToken: false, persistSession: false, ...authOptions },
   });
 }
 

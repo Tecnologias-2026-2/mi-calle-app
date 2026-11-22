@@ -310,6 +310,44 @@
     });
   }
 
+  async function resetPasswordForEmail(email, { redirectTo } = {}) {
+    const result = await legacyFetch("/api/auth/password-recovery", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        email: String(email || "").trim().toLowerCase(),
+        redirectTo: String(redirectTo || ""),
+      }),
+    });
+    return responseDto(result);
+  }
+
+  async function completePasswordRecovery({ accessToken, refreshToken, type, password } = {}) {
+    const result = await legacyFetch("/api/auth/password-recovery/complete", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        accessToken: String(accessToken || ""),
+        refreshToken: String(refreshToken || ""),
+        type: String(type || ""),
+        password: String(password || ""),
+      }),
+    });
+    return responseDto(result);
+  }
+
+  async function changePassword({ currentPassword, newPassword } = {}) {
+    const result = await legacyFetch("/api/auth/password", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        currentPassword: String(currentPassword || ""),
+        newPassword: String(newPassword || ""),
+      }),
+    }, true);
+    return responseDto(result);
+  }
+
   async function logout() {
     clearStoredSession();
     return responseDto(null);
@@ -549,6 +587,9 @@
     normalizeHistory,
     login,
     register,
+    resetPasswordForEmail,
+    completePasswordRecovery,
+    changePassword,
     logout,
     getCurrentSession,
     getPublicReports,

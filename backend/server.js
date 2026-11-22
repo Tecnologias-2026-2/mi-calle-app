@@ -30,7 +30,7 @@ const allowedOrigins = (process.env.FRONTEND_ORIGINS ||
 
 const corsMiddleware = cors({
   origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (!origin || allowedOrigins.includes(origin) || isLocalDevelopmentOrigin(origin)) {
       return callback(null, true);
     }
     return callback(new Error('Origen no permitido por CORS.'));
@@ -81,6 +81,35 @@ const server = http.createServer(async (req, res) => {
       return await authController.refresh(req, res, body);
     } catch (error) {
       return handleError(res, error, 'Error al renovar la sesión.');
+    }
+  }
+
+  if (req.method === 'POST' && pathname === '/api/auth/password-recovery') {
+    try {
+      const body = await readJsonBody(req);
+      return await authController.requestPasswordRecovery(req, res, body);
+    } catch (error) {
+      return handleError(res, error, 'Error al solicitar la recuperación de contraseña.');
+    }
+  }
+
+  if (req.method === 'POST' && pathname === '/api/auth/password-recovery/complete') {
+    try {
+      const body = await readJsonBody(req);
+      return await authController.completePasswordRecovery(req, res, body);
+    } catch (error) {
+      return handleError(res, error, 'Error al restablecer la contraseña.');
+    }
+  }
+
+  if (req.method === 'POST' && pathname === '/api/auth/password') {
+    try {
+      const authenticated = await requireSupabaseUser(req, res);
+      if (!authenticated) return;
+      const body = await readJsonBody(req);
+      return await authController.changePassword(req, res, body, authenticated);
+    } catch (error) {
+      return handleError(res, error, 'Error al cambiar la contraseña.');
     }
   }
 
@@ -501,6 +530,16 @@ function applyCors(req, res) {
       resolve();
     });
   });
+}
+
+function isLocalDevelopmentOrigin(origin) {
+  try {
+    const url = new URL(origin);
+    return url.protocol === 'http:'
+      && ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
+  } catch {
+    return false;
+  }
 }
 
 async function enrichReports(client, reports) {

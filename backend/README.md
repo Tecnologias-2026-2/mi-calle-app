@@ -19,6 +19,7 @@ EMAIL_SERVICE=gmail
 EMAIL_USER=tu-correo@gmail.com
 EMAIL_PASS=tu-app-password
 VERIFICATION_URL=https://tu-backend.onrender.com/verify
+FRONTEND_ORIGINS=https://tecnologias-2026-2.github.io
 PORT=3000
 ```
 
@@ -28,18 +29,24 @@ en HTML, JavaScript del navegador ni repositorios públicos.
 del usuario. El cliente service-role no debe invocar RPC de usuario ni simular
 su identidad.
 
-## Flujos de autenticación heredados
+## Flujos de autenticación con Supabase Auth
 
 - `POST /api/auth/register`: recibe `nombre_completo`, `email` y `password`.
 - `POST /api/auth/login`: recibe `email` y `password`, después de verificar el correo.
+- `POST /api/auth/refresh`: renueva la sesión mediante el refresh token.
+- `POST /api/auth/password-recovery`: recibe `email` y `redirectTo`, y solicita el correo de recuperación.
+- `POST /api/auth/password-recovery/complete`: recibe los tokens de recuperación y la nueva contraseña.
+- `POST /api/auth/password`: requiere `Authorization: Bearer <access_token>`, verifica la contraseña actual y actualiza la nueva.
 - `PUT /api/users/me`: requiere `Authorization: Bearer <session>` y actualiza
-  `nombre_completo` y `telefono_contacto` del usuario autenticado. El teléfono
+  `nombre_completo` y `telefono` del usuario autenticado. El teléfono
   puede ser nulo o estar vacío.
 - `GET /verify?token=...`: verifica el token y activa la cuenta.
 
-Estos endpoints aún representan el sistema HMAC/`public.usuarios` anterior y
-no son compatibles con la arquitectura Auth V11. No deben usarse como prueba
-de compatibilidad con Supabase Auth.
+En Supabase Dashboard, agrega la URL exacta de
+`login-registro/html/restablecer-contrasena.html` a **Authentication → URL
+Configuration → Redirect URLs** para GitHub Pages y para cada origen local de
+desarrollo. El backend limita los destinos de recuperación a los orígenes
+indicados en `FRONTEND_ORIGINS` y a `localhost`/`127.0.0.1`.
 
 ## Reportes V11.1 propuestos
 

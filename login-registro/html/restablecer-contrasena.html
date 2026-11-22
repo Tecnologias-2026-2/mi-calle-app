@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Define una nueva contraseña para tu cuenta de Mi Calle."
+    />
+    <title>Restablecer contraseña | Mi Calle</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700;800&family=Nunito:wght@700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/global.css" />
+    <link rel="stylesheet" href="css/login.css" />
+    <link rel="stylesheet" href="css/restablecer-contrasena.css" />
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <a class="brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="brand__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span class="brand__copy">
+            <span class="brand__name">Mi Calle</span>
+            <span class="brand__tagline">Reportador Ciudadano</span>
+          </span>
+        </a>
+        <nav class="main-nav" aria-label="Navegación principal">
+          <a class="main-nav__link" href="bienvenida.html">Bienvenido</a>
+          <a class="main-nav__link" href="landing.html#sobre-nosotros">Sobre nosotros</a>
+        </nav>
+      </header>
+
+      <main class="main-content">
+        <section class="login-layout reset-layout" aria-labelledby="reset-title">
+          <div class="login-art">
+            <img
+              class="login-art__image"
+              src="assets/login-illustration.png"
+              alt="Ilustración de Mi Calle que representa una ciudad más amable y segura"
+            />
+          </div>
+          <div class="login-layout__divider" aria-hidden="true"></div>
+          <div class="reset-panel">
+            <a class="back-button" href="login-usuario.html">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="m14.5 5-7 7 7 7M8 12h12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+              <span>Volver a iniciar sesión</span>
+            </a>
+
+            <div class="welcome reset-welcome">
+              <span class="welcome__icon" aria-hidden="true">
+                <img src="assets/brand-icon.png" alt="" />
+              </span>
+              <p class="welcome__eyebrow">Mi Calle</p>
+              <h1 class="welcome__title" id="reset-title">Restablecer contraseña</h1>
+              <p class="welcome__description">Elige una contraseña segura para volver a acceder a tu cuenta.</p>
+            </div>
+
+            <p id="reset-state-message" class="auth-message" role="status" aria-live="polite">
+              Verificando el enlace de recuperación...
+            </p>
+
+            <form class="reset-form" id="password-reset-form" hidden>
+              <p id="reset-form-message" class="auth-message" role="status" aria-live="polite" hidden></p>
+              <div class="form-field">
+                <label class="form-field__label" for="new-password">Nueva contraseña</label>
+                <div class="form-field__control">
+                  <input
+                    id="new-password"
+                    name="password"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="64"
+                    placeholder="Entre 8 y 64 caracteres"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-field">
+                <label class="form-field__label" for="confirm-password">Confirmar nueva contraseña</label>
+                <div class="form-field__control">
+                  <input
+                    id="confirm-password"
+                    name="confirmPassword"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    maxlength="64"
+                    placeholder="Repite tu nueva contraseña"
+                    required
+                  />
+                </div>
+              </div>
+              <button class="submit-button" type="submit">
+                <span>Guardar nueva contraseña</span>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="m5 12 4 4L19 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+              </button>
+            </form>
+
+            <div id="reset-invalid" class="reset-state-card" hidden>
+              <h2>Enlace no disponible</h2>
+              <p>El enlace es inválido, ya se utilizó o expiró. Solicita un nuevo correo para continuar.</p>
+              <a class="submit-button reset-state-button" href="recuperar-contrasena.html">
+                Solicitar otro correo
+              </a>
+            </div>
+
+            <div id="reset-success" class="reset-state-card" hidden>
+              <h2>Contraseña actualizada</h2>
+              <p>Ya puedes iniciar sesión con tu nueva contraseña.</p>
+              <a class="submit-button reset-state-button" href="login-usuario.html">
+                Ir a iniciar sesión
+              </a>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <a class="site-footer__brand" href="landing.html" aria-label="Mi Calle, ir al inicio">
+          <span class="site-footer__icon" aria-hidden="true">
+            <img src="assets/brand-icon.png" alt="" />
+          </span>
+          <span>Mi Calle</span>
+        </a>
+        <p class="site-footer__caption">© 2026 Mi Calle — Reportador Ciudadano. Bogotá, Colombia.</p>
+      </footer>
+    </div>
+    <script src="../../frontend-services.js"></script>
+    <script src="../js/restablecer-contrasena.js"></script>
+  </body>
+</html>

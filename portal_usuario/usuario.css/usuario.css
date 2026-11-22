@@ -55,6 +55,28 @@
     cursor: wait;
 }
 
+.mensaje-contrasena {
+    margin: 0 0 16px;
+    padding: 12px 14px;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    line-height: 1.4;
+}
+
+.mensaje-contrasena[hidden] {
+    display: none;
+}
+
+.mensaje-contrasena--error {
+    background: #fff1f1;
+    color: #b42318;
+}
+
+.mensaje-contrasena--success {
+    background: #ecfdf3;
+    color: #067647;
+}
+
 @keyframes loading-spin {
     to { transform: rotate(360deg); }
 }
@@ -551,11 +573,30 @@ body {
 
 /* Icono del ojo (mostrar/ocultar contraseña) a la derecha */
 .input-con-icono .toggle-password {
+    position: absolute;
+    top: 50%;
     right: 15px;
-    left: auto;             /* Sobrescribe el left: 15px de arriba */
+    left: auto;
+    display: grid;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    place-items: center;
+    transform: translateY(-50%);
+    border: 0;
+    background: transparent;
     color: var(--texto-claro);
     cursor: pointer;
     transition: color 0.3s ease;
+}
+
+.input-con-icono button.toggle-password i {
+    position: static;
+    color: inherit;
+}
+
+.form-cambiar-contrasena .input-con-icono input {
+    padding-right: 48px;
 }
 
 .input-con-icono .toggle-password:hover {

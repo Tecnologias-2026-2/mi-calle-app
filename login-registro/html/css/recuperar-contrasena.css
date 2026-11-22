@@ -41,8 +41,9 @@
 }
 
 .recovery-form .submit-button {
-  width: 300px;
+  width: auto;
   max-width: 100%;
+  align-self: stretch;
 }
 
 .recovery-form .form-field {
