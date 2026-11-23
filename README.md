@@ -92,7 +92,7 @@ https://www.figma.com/design/mL1u46HoOR1gWD4mI6yS2f/Mi-calle?node-id=0-1&t=cx6oG
 
 ### Modelo relacional
 
-<!-- Espacio reservado para insertar la imagen del modelo relacional. -->
+<img width="855" height="624" alt="image" src="https://github.com/user-attachments/assets/07c1600f-a301-42cf-a838-a6a3e81a34e8" />
 
 ### Tablas principales
 
