@@ -4,9 +4,9 @@ Mi Calle App
 Aplicación web colaborativa orientada al reporte, seguimiento y gestión de daños en la infraestructura vial (huecos, grietas, alcantarillas sin tapa, etc.), funcionando como puente de comunicación entre la ciudadanía y las entidades responsables del mantenimiento vial.
 
 👥 Integrantes
-Karen Rodríguez – Código
+Karen Rodríguez – 1202852
 Katerin Suarez – Código
-Julián Mendoza – Código
+Julián Mendoza – 1202868
 
 🎯 1. Objetivo General
 
@@ -37,13 +37,19 @@ Mi Calle se utilizará principalmente desde dispositivos móviles y computadores
 - RF08: El sistema deberá permitir a los ciudadanos consultar el historial y estado de sus propios reportes enviados.
 - RF09: El sistema deberá permitir a los administradores actualizar el estado del reporte (*Pendiente*, *En revisión*, *En proceso*, *Reparado*).
 - RF10: El sistema deberá permitir consultar el detalle completo de un reporte (fotografía, ubicación, descripción, fecha y estado).
+- RF11: El sistema deberá permitir a los administradores descartar reportes falsos o con información insuficiente registrando una observación obligatoria, ocultándolos de inmediato del mapa público y eliminándolos automáticamente tras 24 horas.
+- RF12: El sistema deberá permitir a los usuarios ciudadanos recuperar su contraseña mediante correo electrónico y actualizar su contraseña o datos de contacto desde su perfil.
 
 3.2 Requerimientos No Funcionales
 
-Escriban cómo debe comportarse el sistema.
-
-Ejemplo:
-RNF01: La página debe ser responsive.
+- RNF01 (Responsividad): La interfaz deberá adaptarse a dispositivos móviles y de escritorio con un enfoque mobile-first y diseño responsive.
+- RNF02 (Usabilidad y accesibilidad visual): La interfaz deberá utilizar la paleta cromática de Mi Calle y tipografía legible (`Nunito` y `Nunito Sans`), con contraste accesible conforme a WCAG AA.
+- RNF03 (Seguridad y control de acceso): La autenticación se realizará con Supabase Auth y tokens JWT; las contraseñas serán protegidas mediante el mecanismo de hash de Supabase Auth (bcrypt) y las políticas RLS diferenciarán los roles `ciudadano` y `administrador`.
+- RNF04 (Integridad y validación de datos): Los datos deberán validarse en el cliente y el servidor. PostgreSQL aplicará constraints `CHECK`, triggers y RPCs para los tipos de problema, las coordenadas geográficas, el formato del teléfono, el tamaño y tipo de fotografía y la longitud de contraseña (de 8 a 64 caracteres).
+- RNF05 (Arquitectura desacoplada y disponibilidad): La arquitectura separa el frontend estático (GitHub Pages), la API REST (Node.js/Express en Render) y los servicios de base de datos y almacenamiento (Supabase).
+- RNF06 (Gestión eficiente de almacenamiento): Las fotografías de evidencia se almacenarán en Supabase Storage y se gestionarán los archivos huérfanos o asociados a reportes descartados mediante el flujo de limpieza y reconciliación.
+- RNF07 (Rendimiento y retroalimentación): La interfaz mostrará estados de carga (spinners), manejará los errores de forma controlada y ofrecerá visualización de marcadores geográficos con Leaflet y mapas de OpenStreetMap.
+- RNF08 (Mantenibilidad): El código estará organizado por portales y vistas, con servicios compartidos (`frontend-services.js`), backend modular y migraciones SQL versionadas.
 
 🧠 4. Diagramas UML
 
@@ -84,38 +90,107 @@ https://www.figma.com/design/mL1u46HoOR1gWD4mI6yS2f/Mi-calle?node-id=0-1&t=cx6oG
 
 🗄️ 6. Diseño de Base de Datos
 
-Agregar imagen del modelo.
-Tablas principales
+### Modelo relacional
+
+<!-- Espacio reservado para insertar la imagen del modelo relacional. -->
+
+### Tablas principales
+
+Las siguientes tablas corresponden al esquema de PostgreSQL/Supabase y a las restricciones verificadas por las migraciones del repositorio:
+
+| Tabla | Propósito | Llave primaria y relaciones |
+|---|---|---|
+| `perfiles` | Guarda el perfil y el rol (`ciudadano` o `administrador`) asociado a la cuenta. | PK `id_usuario`; FK `id_usuario` → `auth.users(id)` con borrado en cascada. |
+| `ubicaciones` | Guarda la latitud, longitud y dirección textual del incidente. | PK `id_ubicacion`. `reportes.id_ubicacion` referencia esta llave. |
+| `reportes` | Guarda el problema vial, descripción, autor, ubicación, estado y fechas. | PK `id_reporte`; FK `id_usuario` → `perfiles.id_usuario`; FK `id_ubicacion` → `ubicaciones.id_ubicacion`. |
+| `fotografias` | Relaciona un reporte con la evidencia almacenada en Supabase Storage. | PK `id_fotografia`; FK `id_reporte` → `reportes.id_reporte` con borrado en cascada; cada reporte tiene como máximo una fotografía. |
+| `historial_estados` | Registra los cambios de estado de cada reporte y, cuando aplica, el administrador que los realizó. | PK `id_historial`; FK `id_reporte` → `reportes.id_reporte` con borrado en cascada; FK `id_administrador` → `perfiles.id_usuario` con `ON DELETE SET NULL`. |
+| `mi_calle_limpieza_fotografias` | Mantiene reservas y resultados del borrado/reconciliación de objetos de Storage huérfanos o descartados. | PK `storage_path`; `id_reporte` identifica el reporte relacionado. La migración no define FK para este campo. |
+
+El ciclo de vida de un reporte tiene cinco estados: `pendiente`, `en_revision`, `en_proceso`, `reparado` y `descartado`. Los reportes descartados se excluyen de la vista pública y la migración de limpieza contempla su purga después de 24 horas.
 
 🧩 7. Documentación del Sistema
-Estructura de Carpetas
+
+### Estructura de Carpetas
+
+Árbol resumido de las carpetas y archivos principales del repositorio (se omiten dependencias instaladas y archivos generados):
 
 ```text
-Portal_admin/
-├── CSS/
-│   └── dashboard.css
-└── HTML/
-    ├── admin-service.js
-    ├── admin-ui.js
-    ├── index.html
-    ├── reports-list.html
-    └── reports.html
+/
+├── README.md
+├── frontend-services.js
+├── assets/
+│   └── .gitkeep
+├── css/
+│   ├── design-system.css
+│   └── styles.css
+├── frontend-tests/
+│   ├── frontend-services.test.js
+│   └── password-services.test.js
+├── login-registro/
+│   ├── html/                 # Páginas de bienvenida, registro, login y recuperación
+│   │   ├── assets/
+│   │   └── css/
+│   └── js/                   # Servicios y lógica de autenticación
+├── portal_usuario/
+│   ├── html/                 # Mapa, reportes, detalle, notificaciones y perfil
+│   ├── usuario.css/          # Estilos del portal ciudadano
+│   └── *.js                  # Mapa, formularios, reportes y perfil
+├── Portal_admin/
+│   ├── CSS/                  # Dashboard, sistema de diseño y perfil
+│   └── HTML/                 # Vistas y scripts de administración
+│       └── ASSETS/
+├── backend/
+│   ├── config/               # Clientes de Supabase
+│   ├── controllers/          # Autenticación y usuario
+│   ├── database/             # Conexión y script SQL
+│   ├── models/               # Modelo de usuario
+│   ├── routes/               # Rutas de usuario
+│   ├── scripts/              # Reconciliación de limpieza fotográfica
+│   ├── services/             # Correo, validación de imágenes, sesiones y limpieza
+│   ├── test/
+│   ├── package.json
+│   └── server.js
+└── supabase/
+    ├── audits/               # Auditorías de políticas y esquema
+    ├── migrations/           # Migraciones SQL versionadas
+    └── tests/                # Compatibilidad y plan de pruebas
 ```
 
-`admin-ui.js` renderiza las tarjetas, los indicadores y la lista; `admin-service.js`
-carga reportes y guarda cambios de estado mediante `frontend-services.js`, con la
-sesión autenticada del backend.
+`frontend-services.js` es el cliente compartido para la API. El portal de administración está en `Portal_admin/`; el portal ciudadano, incluyendo las vistas de mapa y detalle de reporte, está en `portal_usuario/`.
+
+### API REST
+
+Los endpoints principales definidos en `backend/server.js` son:
+
+| Método y ruta | Uso / acceso |
+|---|---|
+| `POST /api/auth/register` | Registro de ciudadano. |
+| `POST /api/auth/login` | Inicio de sesión. |
+| `POST /api/auth/refresh` | Renovación de sesión. |
+| `POST /api/auth/password-recovery` | Solicitud de correo de recuperación. |
+| `POST /api/auth/password-recovery/complete` | Completar recuperación con los tokens recibidos. |
+| `POST /api/auth/password` | Cambio de contraseña; requiere JWT. |
+| `GET /verify` | Verificación de correo mediante token. |
+| `PUT /api/users/me` | Actualización del perfil del usuario autenticado. |
+| `GET /reportes` | Reportes públicos; `?mine=true` requiere JWT y devuelve los propios. |
+| `POST /reportes` | Crear reporte con JWT y fotografía multipart. |
+| `GET /reportes/:id` | Consultar el detalle público o autorizado de un reporte. |
+| `GET /reportes/:id/historial` | Consultar el historial público de estados. |
+| `GET /api/reportes/:id/historial` | Historial privado; requiere JWT y autorización sobre el reporte. |
+| `PUT /api/admin/reportes/:id/estado` | Cambiar estado; requiere rol administrador. Al descartar exige observación. |
+| `GET /api/admin/reportes/:id/reportante` | Consultar identidad del reportante; requiere rol administrador. |
 
 🚀 8. Instalación y Ejecución
 
-Abre la aplicación desde un servidor HTTP para que el navegador pueda comunicarse
-con el backend y gestionar la sesión correctamente (no abras los HTML directamente
-con `file://`).
+## 🚀 8. Instalación y Ejecución
 
-```powershell
-python -m http.server 8000
-```
+### Ejecución directa en línea 
 
-Abre `http://localhost:8000/login-registro/html/bienvenida.html` e inicia sesión
-con una cuenta registrada. Los reportes y cambios administrativos se consultan y
-guardan en el backend autenticado.
+La aplicación se encuentra desplegada y operativa en la nube, por lo que puede probarse directamente desde cualquier navegador móvil o de escritorio sin instalar dependencias locales:
+
+- **Aplicación Web (Frontend - GitHub Pages):** [Enlace a Mi Calle App](https://tecnologias-2026-2.github.io/mi-calle-app/login-registro/html/landing.html#sobre-nosotros)
+
+#### Guía rápida para probar el sistema:
+1. **Modo Ciudadano:** Crea una cuenta nueva en la sección de registro (o inicia sesión) para publicar un reporte con fotografía y ubicación en el mapa, hacer seguimiento en *"Mis reportes"* o gestionar tu perfil y contraseña.
+2. **Modo Administrador:** Inicia sesión con una cuenta con rol `administrador` para validar reportes, actualizar su ciclo de vida (`Pendiente`, `En revisión`, `En proceso`, `Reparado` o `Descartado`) y registrar observaciones visibles para el ciudadano.
