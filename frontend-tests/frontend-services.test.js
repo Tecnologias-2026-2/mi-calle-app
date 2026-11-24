@@ -30,6 +30,23 @@ test("report normalization preserves observations from public and authenticated 
   assert.equal(report.history[0].changedAt, "2026-11-20T12:00:00Z");
 });
 
+test("report normalization sorts history and keeps the latest non-empty observation", () => {
+  const services = createServices({ localStorage: createStorage(), sessionStorage: createStorage() });
+  const report = services.normalizeReport({
+    created_at: "2026-11-18T10:00:00Z",
+    historial_estados: [
+      { estado: "reparado", fecha_cambio: "2026-11-22T10:00:00Z", observacion: "Reparación terminada." },
+      { estado: "pendiente", fecha_cambio: "2026-11-18T10:00:00Z", observacion: " " },
+      { estado: "en_proceso", fecha_cambio: "2026-11-20T10:00:00Z", observacion: "Cuadrilla asignada." },
+      { estado: "descartado", fecha_cambio: "2026-11-23T10:00:00Z", observacion: null },
+    ],
+  });
+
+  assert.equal(report.createdAt, "2026-11-18T10:00:00Z");
+  assert.deepEqual(report.history.map((entry) => entry.status), ["pendiente", "en_proceso", "reparado", "descartado"]);
+  assert.equal(report.latestObservation, "Reparación terminada.");
+});
+
 test("report subscriptions call their backend endpoints and retain discarded user reports", async () => {
   const calls = [];
   const services = createServices({
@@ -341,6 +358,10 @@ test("Render admin operations use authenticated report and role-guarded endpoint
   assert.ok(protectedReads.every((call) => call.init.headers.get("Authorization") === "Bearer admin-token"));
   assert.equal((await services.getAdminStatistics()).length, 5);
 
+  await assert.rejects(
+    services.updateReportStatus(id, "en_proceso", "   "),
+    { code: "observation_required" },
+  );
   await services.updateReportStatus(id, "en_proceso", "Inspección realizada");
   const updateCall = calls.find((call) => call.url.endsWith(`/api/admin/reportes/${id}/estado`));
   assert.equal(updateCall.init.headers.get("Authorization"), "Bearer admin-token");

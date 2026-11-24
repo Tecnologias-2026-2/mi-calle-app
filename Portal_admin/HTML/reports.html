@@ -185,8 +185,8 @@
               </label>
             </fieldset>
 
-            <label class="update-note-label" for="status-note">Nota de actualización <span id="status-note-requirement">(opcional)</span></label>
-            <textarea class="update-note" id="status-note" rows="3" aria-describedby="status-note-requirement" placeholder="Agrega información sobre el avance del reporte..."></textarea>
+            <label class="update-note-label is-required" for="status-note">Nota de actualización <span id="status-note-requirement">(obligatoria)</span></label>
+            <textarea class="update-note" id="status-note" rows="3" aria-describedby="status-note-requirement" placeholder="Explica el motivo o avance del cambio para el ciudadano..." required aria-required="true"></textarea>
 
             <div class="update-feedback" role="status" aria-live="polite" hidden></div>
             <div class="update-actions">

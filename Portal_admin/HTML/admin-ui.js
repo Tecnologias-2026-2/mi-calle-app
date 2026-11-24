@@ -210,45 +210,155 @@ function renderCategorySummary(reports) {
   }));
 }
 
+function parseReportCreatedAt(value) {
+  if (value instanceof Date) {
+    const timestamp = value.getTime();
+    return Number.isFinite(timestamp) ? timestamp : null;
+  }
+  if (typeof value === "number") {
+    return Number.isFinite(value) ? value : null;
+  }
+  if (typeof value !== "string" || !value.trim()) return null;
+
+  const raw = value.trim();
+  const dateOnly = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (dateOnly) {
+    const year = Number(dateOnly[1]);
+    const month = Number(dateOnly[2]);
+    const day = Number(dateOnly[3]);
+    const date = new Date(year, month - 1, day);
+    if (date.getFullYear() !== year || date.getMonth() !== month - 1
+      || date.getDate() !== day) return null;
+    return date.getTime();
+  }
+
+  const timestamp = Date.parse(raw);
+  return Number.isFinite(timestamp) ? timestamp : null;
+}
+
+function getReportCreatedAt(report) {
+  const candidates = [
+    report.createdAt,
+    report.fecha_creacion,
+    report.created_at,
+    report.fecha,
+  ];
+  for (const candidate of candidates) {
+    const timestamp = parseReportCreatedAt(candidate);
+    if (timestamp !== null) return timestamp;
+  }
+  return null;
+}
+
+function getLocalDayOffset(timestamp, startDate) {
+  const date = new Date(timestamp);
+  const reportDay = Date.UTC(date.getFullYear(), date.getMonth(), date.getDate());
+  const startDay = Date.UTC(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+  return Math.floor((reportDay - startDay) / 86400000);
+}
+
+function getMonthLabel(date, currentYear) {
+  const month = date.toLocaleDateString("es-CO", { month: "short" })
+    .replace(/\.$/, "")
+    .replace(/^./, (letter) => letter.toLocaleUpperCase("es-CO"));
+  return date.getFullYear() === currentYear ? month : `${month} ${date.getFullYear()}`;
+}
+
 function renderPeriodSummary(reports, periodDays = 30) {
   const chart = document.querySelector("#admin-period-chart");
   const axis = document.querySelector(".chart-area .y-axis");
   if (!chart || !axis) return;
 
-  const days = Number(periodDays) || 30;
+  const requestedDays = Number(periodDays);
+  const days = [7, 30, 90].includes(requestedDays) ? requestedDays : 30;
   const now = Date.now();
-  const periodStart = now - days * 24 * 60 * 60 * 1000;
-  const bucketSize = (now - periodStart) / 4;
-  const counts = [0, 0, 0, 0];
+  const today = new Date(now);
+  today.setHours(0, 0, 0, 0);
+  let periodStart;
+  let labels;
+  let counts;
+  let periodDescription;
+
+  if (days === 7) {
+    periodStart = new Date(today);
+    periodStart.setDate(periodStart.getDate() - 6);
+    labels = Array.from({ length: 7 }, (_, index) => {
+      const date = new Date(periodStart);
+      date.setDate(date.getDate() + index);
+      return date.toLocaleDateString("es-CO", { day: "2-digit", month: "2-digit" });
+    });
+    counts = Array(7).fill(0);
+    periodDescription = "últimos 7 días";
+  } else if (days === 30) {
+    periodStart = new Date(today);
+    periodStart.setDate(periodStart.getDate() - 29);
+    labels = ["Sem. 1", "Sem. 2", "Sem. 3", "Sem. 4"];
+    counts = Array(4).fill(0);
+    periodDescription = "últimos 30 días";
+  } else {
+    periodStart = new Date(today.getFullYear(), today.getMonth() - 2, 1);
+    labels = Array.from({ length: 3 }, (_, index) => (
+      getMonthLabel(new Date(periodStart.getFullYear(), periodStart.getMonth() + index, 1), today.getFullYear())
+    ));
+    counts = Array(3).fill(0);
+    periodDescription = "últimos 3 meses calendario";
+  }
+
   reports.forEach((report) => {
-    const createdAt = new Date(report.createdAt).getTime();
-    if (!Number.isFinite(createdAt) || createdAt < periodStart || createdAt > now) return;
-    const bucket = Math.min(3, Math.floor((createdAt - periodStart) / bucketSize));
+    const createdAt = getReportCreatedAt(report);
+    if (createdAt === null || createdAt < periodStart.getTime() || createdAt > now) return;
+
+    let bucket;
+    if (days === 90) {
+      const date = new Date(createdAt);
+      bucket = (date.getFullYear() - periodStart.getFullYear()) * 12
+        + date.getMonth() - periodStart.getMonth();
+    } else {
+      const dayOffset = getLocalDayOffset(createdAt, periodStart);
+      if (days === 7) {
+        if (dayOffset < 0 || dayOffset >= 7) return;
+        bucket = dayOffset;
+      } else {
+        if (dayOffset < 0 || dayOffset >= 30) return;
+        bucket = Math.min(3, Math.floor(dayOffset / 7));
+      }
+    }
+    if (bucket < 0 || bucket >= counts.length) return;
     counts[bucket] += 1;
   });
 
   const maximum = Math.max(...counts);
-  const axisMaximum = Math.max(5, Math.ceil(maximum / 5) * 5);
-  axis.replaceChildren(...Array.from({ length: 6 }, (_, index) => (
-    createElement("span", "", String(Math.round(axisMaximum * (5 - index) / 5)))
-  )));
+  const axisStep = maximum <= 3 ? 1 : Math.max(1, Math.ceil(maximum / 5));
+  const axisMaximum = maximum <= 3
+    ? Math.max(1, maximum + 1)
+    : (Math.floor(maximum / axisStep) + 1) * axisStep;
+  const axisValues = Array.from(
+    { length: axisMaximum / axisStep + 1 },
+    (_, index) => axisMaximum - index * axisStep,
+  );
+  axis.replaceChildren(...axisValues.map((value) => createElement("span", "", String(value))));
 
   const gridlines = createElement("div", "chart-gridlines");
   gridlines.setAttribute("aria-hidden", "true");
-  gridlines.append(...Array.from({ length: 6 }, () => createElement("i")));
+  gridlines.append(...axisValues.map(() => createElement("i")));
   const columns = counts.map((count, index) => {
     const column = createElement("div", "bar-column");
+    const track = createElement("span", "bar-track");
     const bar = createElement("span", "bar");
-    bar.style.setProperty("--bar-height", `${maximum ? (count / maximum) * 100 : 0}%`);
-    bar.title = `${count} reportes`;
-    const label = createElement("span", "bar-label", `Sem. ${index + 1}`);
-    column.append(bar, label);
+    const height = `${(count / axisMaximum) * 100}%`;
+    bar.style.setProperty("--bar-height", height);
+    bar.title = `${count} reportes · ${labels[index]}`;
+    const value = createElement("span", "bar-value", String(count));
+    value.style.setProperty("--bar-height", height);
+    const label = createElement("span", "bar-label", labels[index]);
+    track.append(bar, value);
+    column.append(track, label);
     return column;
   });
   chart.replaceChildren(gridlines, ...columns);
   chart.parentElement.setAttribute(
     "aria-label",
-    `Reportes en los últimos ${days} días: ${counts.map((count, index) => `semana ${index + 1}, ${count}`).join("; ")}.`,
+    `Reportes en los ${periodDescription}: ${counts.map((count, index) => `${labels[index]}, ${count}`).join("; ")}.`,
   );
 }
 

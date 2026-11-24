@@ -217,7 +217,7 @@ const server = http.createServer(async (req, res) => {
         .from('historial_estados_publico')
         .select('id_historial, id_reporte, estado, fecha_cambio')
         .eq('id_reporte', idReporte)
-        .order('fecha_cambio', { ascending: true });
+        .order('fecha_cambio', { ascending: false });
       if (error) throw error;
       return sendJson(res, 200, data || []);
     } catch (error) {
@@ -298,14 +298,16 @@ const server = http.createServer(async (req, res) => {
       if (!allowedStates.has(estado)) {
         return sendJson(res, 400, { error: 'El estado del reporte no es válido.' });
       }
-      const observacion = body?.observacion == null ? null : String(body.observacion);
-      if (estado === 'descartado' && !observacion?.trim()) {
-        return sendJson(res, 400, { error: 'La observación es obligatoria para descartar un reporte.' });
+      const observacion = body?.observacion == null ? '' : String(body.observacion).trim();
+      if (!observacion) {
+        return sendJson(res, 400, {
+          error: 'Escribe una observación que explique el motivo o avance antes de cambiar el estado.',
+        });
       }
       const { error } = await authenticated.client.rpc('actualizar_estado_reporte', {
         p_id_reporte: idReporte,
         p_estado: estado,
-        p_observacion: observacion?.trim() || null,
+        p_observacion: observacion,
       });
       if (error) throw error;
       return sendJson(res, 200, { id_reporte: idReporte, estado_atencion: estado });
@@ -563,7 +565,7 @@ async function enrichReports(client, reports) {
       .from('historial_estados_publico')
       .select('id_historial, id_reporte, estado, fecha_cambio')
       .in('id_reporte', reportIds)
-      .order('fecha_cambio', { ascending: true }),
+      .order('fecha_cambio', { ascending: false }),
   ]);
   if (locationsResult.error) throw locationsResult.error;
   if (photosResult.error) throw photosResult.error;
@@ -615,7 +617,7 @@ async function getPrivateReportHistory(reportIds) {
     .from('historial_estados')
     .select('id_historial, id_reporte, estado, fecha_cambio, observacion')
     .in('id_reporte', ids)
-    .order('fecha_cambio', { ascending: true });
+    .order('fecha_cambio', { ascending: false });
   if (error) throw error;
   return data || [];
 }

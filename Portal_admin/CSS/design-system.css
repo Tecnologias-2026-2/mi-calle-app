@@ -131,8 +131,7 @@ a:focus-visible {
 
 .cancel-button,
 .select-button,
-.icon-button,
-.more-button {
+.icon-button {
   border-radius: 10px;
 }
 

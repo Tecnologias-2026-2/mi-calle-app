@@ -29,8 +29,10 @@ function reportDate(report) {
 }
 
 function latestObservation(report) {
+    if (String(report.latestObservation || "").trim()) return report.latestObservation.trim();
     const history = Array.isArray(report.history) ? report.history : [];
-    return [...history].reverse().find((entry) => entry.observation)?.observation || "";
+    return [...history].reverse()
+        .find((entry) => String(entry.observation || "").trim())?.observation.trim() || "";
 }
 
 function discardedObservation(report) {

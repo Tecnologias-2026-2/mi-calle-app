@@ -95,12 +95,12 @@ function connectStatusUpdate(reports, refreshReports) {
 
     const noteInput = document.querySelector("#status-note");
     const observation = noteInput?.value.trim() || "";
-    if (selected.value === "descartado" && !observation) {
-      noteInput.setCustomValidity("Escribe la observación que explica por qué se descarta el reporte.");
+    if (!observation) {
+      noteInput.setCustomValidity("Escribe una observación que explique el motivo o avance para el ciudadano.");
       noteInput.reportValidity();
       noteInput.setCustomValidity("");
       noteInput.focus();
-      showUpdateFeedback("La observación es obligatoria para descartar el reporte.", true);
+      showUpdateFeedback("La observación es obligatoria para cualquier cambio de estado.", true);
       return;
     }
 

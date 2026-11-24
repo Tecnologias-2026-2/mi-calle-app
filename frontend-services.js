@@ -66,17 +66,36 @@
     };
   }
 
+  function getLatestObservation(history) {
+    return [...history]
+      .reverse()
+      .find((entry) => entry.observation.trim())?.observation.trim() || "";
+  }
+
+  function normalizeHistoryList(entries, createdAt = null) {
+    return entries
+      .map((entry) => normalizeHistory(entry, createdAt))
+      .sort((first, second) => {
+        const firstTime = Date.parse(first.changedAt || "");
+        const secondTime = Date.parse(second.changedAt || "");
+        if (!Number.isFinite(firstTime)) return Number.isFinite(secondTime) ? -1 : 0;
+        if (!Number.isFinite(secondTime)) return 1;
+        return firstTime - secondTime;
+      });
+  }
+
   function normalizeReport(source = {}, { includeReporter = false } = {}) {
-    const createdAt = source.fecha_creacion || source.createdAt || source.fecha || null;
+    const createdAt = source.fecha_creacion || source.created_at || source.createdAt || source.fecha || null;
     const coordinates = source.coordenadas || source.location || {};
     const latitudeValue = source.latitud ?? coordinates.latitude ?? coordinates.latitud;
     const longitudeValue = source.longitud ?? coordinates.longitude ?? coordinates.longitud;
     const latitude = latitudeValue == null || latitudeValue === "" ? null : Number(latitudeValue);
     const longitude = longitudeValue == null || longitudeValue === "" ? null : Number(longitudeValue);
-    const historySource = source.historial_estados
-      || source.historial_estados_publico
-      || source.history
-      || [];
+    const historySource = [
+      source.historial_estados,
+      source.historial_estados_publico,
+      source.history,
+    ].find((entries) => Array.isArray(entries) && entries.length) || [];
     const photo = source.photo || {};
     const report = {
       id: String(source.id_reporte || source.id || ""),
@@ -95,10 +114,9 @@
         url: photo.url || source.foto_preview || source.fotografia_url || source.photo_url || null,
         storagePath: photo.storagePath || source.storage_path || null,
       },
-      history: Array.isArray(historySource)
-        ? historySource.map((entry) => normalizeHistory(entry, createdAt))
-        : [],
+      history: Array.isArray(historySource) ? normalizeHistoryList(historySource, createdAt) : [],
     };
+    report.latestObservation = getLatestObservation(report.history);
 
     if (includeReporter) {
       const name = source.reporter?.name || source.reportadoPor || source.nombre_reportante || null;
@@ -440,10 +458,10 @@
       }
     }
     const privateById = new Map(privateHistory.map((entry) => [entry.id, entry]));
-    return publicHistory.map((entry) => normalizeHistory({
+    return normalizeHistoryList(publicHistory.map((entry) => ({
       ...entry,
       observacion: privateById.get(entry.id_historial)?.observation || entry.observacion,
-    }));
+    })));
   }
 
   async function getPrivateReportHistory(id) {
@@ -451,7 +469,7 @@
       await legacyFetch(`/api/reportes/${encodeURIComponent(id)}/historial`, {}, true),
       "observaciones privadas del reporte",
     );
-    return history.map((entry) => normalizeHistory(entry));
+    return normalizeHistoryList(history);
   }
 
   function subscribeReports(loader, callback, onError, description) {
@@ -518,15 +536,23 @@
 
   async function updateReportStatus(id, status, observation = "") {
     const nextStatus = normalizeStatus(status);
+    const note = String(observation || "").trim();
 
     requireAdministratorSession();
+    if (!note) {
+      throw new ServiceError(
+        "Escribe una observación que explique el motivo o avance antes de cambiar el estado.",
+        400,
+        "observation_required",
+      );
+    }
     const reports = asArray(await legacyFetch("/reportes", {}, true), "reportes administrativos");
     const currentSource = reports.find((report) => String(report.id_reporte || report.id || "") === String(id));
     if (!currentSource) throw new ServiceError(`No se encontró el reporte ${id}.`, 404, "not_found");
     const currentReport = normalizeReport(currentSource);
     if (currentReport.status === nextStatus) {
       throw new ServiceError(
-        "Selecciona un estado distinto; V11.1 solo registra observaciones junto con ese cambio.",
+        "Selecciona un estado distinto para registrar la observación junto con el cambio.",
         409,
         "status_unchanged",
       );
@@ -534,7 +560,7 @@
     await legacyFetch(`/api/admin/reportes/${encodeURIComponent(id)}/estado`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ estado_atencion: nextStatus, observacion: String(observation || "") }),
+      body: JSON.stringify({ estado_atencion: nextStatus, observacion: note }),
     }, true);
     return responseDto(normalizeReport({
       ...currentReport,
@@ -546,7 +572,7 @@
     requireAdministratorSession();
     if (!status) {
       throw new ServiceError(
-        "V11.1 solo persiste observaciones junto con una transición; indica el nuevo estado.",
+        "Selecciona el nuevo estado para guardar la observación junto con la transición.",
         409,
         "observation_requires_status_change",
       );

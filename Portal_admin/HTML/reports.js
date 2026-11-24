@@ -10,7 +10,6 @@ const statusNoteRequirement = document.querySelector("#status-note-requirement")
 
 function showSelectedStatus(status) {
   const selectedIndex = statusOptions.findIndex((option) => option.value === status);
-  const observationRequired = status === "descartado";
 
   statusCards.forEach((card) => {
     const input = card.querySelector("input");
@@ -28,15 +27,11 @@ function showSelectedStatus(status) {
     connector.classList.toggle("is-complete", selectedIndex > index);
   });
 
-  statusNote.required = observationRequired;
-  statusNote.setAttribute("aria-required", String(observationRequired));
-  statusNoteLabel.classList.toggle("is-required", observationRequired);
-  statusNoteRequirement.textContent = observationRequired
-    ? "(obligatoria para descartar)"
-    : "(opcional)";
-  statusNote.placeholder = observationRequired
-    ? "Explica por qué se descarta este reporte..."
-    : "Agrega información sobre el avance del reporte...";
+  statusNote.required = true;
+  statusNote.setAttribute("aria-required", "true");
+  statusNoteLabel.classList.add("is-required");
+  statusNoteRequirement.textContent = "(obligatoria)";
+  statusNote.placeholder = "Explica el motivo o avance del cambio para el ciudadano...";
 }
 
 statusOptions.forEach((option) => {

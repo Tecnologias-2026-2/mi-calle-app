@@ -414,8 +414,7 @@ a:focus-visible {
 
 .icon-button,
 .user-menu,
-.select-button,
-.more-button {
+.select-button {
   border: 0;
   background: transparent;
   cursor: pointer;
@@ -810,7 +809,7 @@ h1 {
   width: 25px;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0 0 19px;
+  padding: 0 0 20px;
   color: #a3adbb;
   font-size: 8px;
   text-align: left;
@@ -820,13 +819,20 @@ h1 {
   position: relative;
   display: flex;
   flex: 1;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  align-items: stretch;
+  gap: 8px;
   justify-content: space-around;
   padding: 0 10px;
+  box-sizing: border-box;
+  overflow: visible;
 }
 
 .chart-gridlines {
   position: absolute;
-  inset: 0 0 19px;
+  inset: 0 0 20px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -834,7 +840,7 @@ h1 {
 }
 
 .chart-gridlines i {
-  height: 1px;
+  flex: 0 0 1px;
   background: #eff3f8;
 }
 
@@ -842,45 +848,59 @@ h1 {
   position: relative;
   z-index: 1;
   display: flex;
-  width: 18%;
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
   flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
+  align-items: stretch;
+}
+
+.bar-track {
+  position: relative;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.bar-value {
+  position: absolute;
+  right: 0;
+  bottom: calc(var(--bar-height) + 2px);
+  left: 0;
+  color: #1565c0;
+  font-size: 10px;
+  font-weight: 800;
+  line-height: 12px;
+  text-align: center;
+  pointer-events: none;
 }
 
 .bar {
-  width: 22px;
+  display: block;
+  width: 24px;
   max-width: 70%;
   height: var(--bar-height);
+  flex: 0 0 auto;
   border-radius: 4px 4px 0 0;
-  background: linear-gradient(180deg, #83b4fa, #5b98f2);
-  transition: filter 150ms ease, width 150ms ease;
+  background: linear-gradient(180deg, #2a9df4, #1565c0);
+  transition: filter 150ms ease;
 }
 
 .bar-column:hover .bar {
   filter: saturate(1.25);
-  width: 24px;
 }
 
 .bar-label {
-  position: absolute;
-  bottom: 0;
-  color: #98a4b4;
-  font-size: 8px;
+  display: flex;
+  height: 20px;
+  flex: 0 0 20px;
+  align-items: center;
+  justify-content: center;
+  color: #667085;
+  font-size: 9px;
   white-space: nowrap;
-}
-
-.more-button {
-  width: 25px;
-  height: 25px;
-  border-radius: 6px;
-  color: #9aa5b3;
-  font-size: 19px;
-  line-height: 10px;
-}
-
-.more-button:hover {
-  background: #f4f7fb;
 }
 
 .status-chart-wrap {
