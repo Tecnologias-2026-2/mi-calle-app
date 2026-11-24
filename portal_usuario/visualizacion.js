@@ -67,10 +67,11 @@ function prepararFiltroCategorias() {
         item.className = "item-leyenda";
         const icon = document.createElement("span");
         icon.className = "categoria-leyenda-icono";
-        icon.style.color = category.color;
+        icon.style.backgroundColor = category.color;
+        icon.style.borderColor = category.color;
+        icon.style.color = "#fff";
         icon.setAttribute("aria-hidden", "true");
-        const glyph = document.createElement("i");
-        glyph.className = `fa-solid ${category.icon}`;
+        const glyph = window.MiCalleMapIcons.createCategoryGlyph(category.key);
         icon.append(glyph);
         const label = document.createElement("span");
         label.textContent = category.label;

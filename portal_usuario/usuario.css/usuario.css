@@ -1569,8 +1569,13 @@ textarea::placeholder {
     place-items: center;
     border: 1px solid currentColor;
     border-radius: 50%;
-    background: #fff;
-    font-size: 0.75rem;
+    background: var(--color-secondary);
+}
+
+.categoria-leyenda-icono svg {
+    display: block;
+    width: 15px;
+    height: 15px;
 }
 
 .punto-leyenda {
@@ -2285,15 +2290,6 @@ textarea:focus-visible {
     transition: transform 160ms ease, filter 160ms ease;
 }
 
-.reporte-marker > i {
-    position: absolute;
-    top: 10px;
-    left: 12px;
-    color: #fff;
-    font-size: 12px;
-    line-height: 1;
-}
-
 .reporte-marker--pendiente {
     color: var(--color-danger);
 }
@@ -2310,9 +2306,55 @@ textarea:focus-visible {
     color: var(--color-success);
 }
 
-.reporte-marker-icon:hover svg {
+.reporte-marker-icon:hover .reporte-marker:not(.reporte-marker--categoria) > svg {
     transform: translateY(-2px);
     filter: drop-shadow(0 5px 5px rgba(26, 39, 68, 0.35));
+}
+
+.reporte-marker--categoria {
+    width: 34px;
+    height: 42px;
+    color: #fff;
+}
+
+.reporte-marker-fondo {
+    position: absolute;
+    top: 7px;
+    left: 3px;
+    width: 28px;
+    height: 28px;
+    border-radius: 50% 50% 50% 0;
+    background: var(--color-categoria);
+    box-shadow: 0 2px 4px rgba(26, 39, 68, 0.22);
+    transform: rotate(-45deg);
+}
+
+.reporte-marker-cabeza {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    display: flex;
+    width: 26px;
+    height: 26px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-categoria);
+}
+
+.reporte-marker-cabeza svg {
+    display: block;
+    width: 15px;
+    height: 15px;
+    color: #fff;
+    stroke-width: 2.2;
+    transform: none;
+    filter: none;
+    shape-rendering: geometricPrecision;
+}
+
+.reporte-marker-icon:hover .reporte-marker--categoria .reporte-marker-fondo {
+    box-shadow: 0 4px 6px rgba(26, 39, 68, 0.3);
 }
 
 .leaflet-container .leaflet-popup.reporte-popup .leaflet-popup-content-wrapper {
