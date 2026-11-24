@@ -1,8 +1,14 @@
+const reportCategories = window.MiCalleReportFormatters.categories;
+const formatCategory = window.MiCalleReportFormatters.formatCategory;
+
 function populateCategoryFilter(reports) {
   const categoryFilter = document.querySelector("#report-category-filter");
   if (!categoryFilter) return;
 
-  const categories = [...new Set(reports.map((report) => report.type))]
+  const categories = [...new Set([
+    ...reportCategories.map((category) => category.label),
+    ...reports.map((report) => formatCategory(report.type)),
+  ])]
     .sort((first, second) => first.localeCompare(second, "es"));
   categoryFilter.replaceChildren(new Option("Todas", ""));
   categories.forEach((category) => categoryFilter.add(new Option(category, category)));
@@ -30,7 +36,7 @@ function getFilteredReports(reports) {
     ].join(" ").toLocaleLowerCase("es");
     return (!search || searchableText.includes(search))
       && (!status || normalizeStatus(report.status) === normalizeStatus(status))
-      && (!category || report.type === category);
+      && (!category || formatCategory(report.type) === category);
   });
 }
 

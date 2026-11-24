@@ -1545,8 +1545,9 @@ textarea::placeholder {
 /* Leyenda */
 .leyenda-mapa {
     display: flex;
+    flex-wrap: wrap;
     justify-content: center;
-    gap: 30px;
+    gap: 12px 20px;
     margin-top: 15px;
     padding-top: 15px;
     border-top: 1px solid var(--borde-suave);
@@ -1558,6 +1559,18 @@ textarea::placeholder {
     gap: 8px;
     font-size: 0.8rem;
     color: var(--texto-medio);
+}
+
+.categoria-leyenda-icono {
+    display: inline-grid;
+    width: 24px;
+    height: 24px;
+    flex: 0 0 24px;
+    place-items: center;
+    border: 1px solid currentColor;
+    border-radius: 50%;
+    background: #fff;
+    font-size: 0.75rem;
 }
 
 .punto-leyenda {
@@ -2257,6 +2270,7 @@ textarea:focus-visible {
 }
 
 .reporte-marker {
+    position: relative;
     display: block;
     width: 36px;
     height: 44px;
@@ -2269,6 +2283,15 @@ textarea:focus-visible {
     height: 100%;
     filter: drop-shadow(0 3px 4px rgba(26, 39, 68, 0.3));
     transition: transform 160ms ease, filter 160ms ease;
+}
+
+.reporte-marker > i {
+    position: absolute;
+    top: 10px;
+    left: 12px;
+    color: #fff;
+    font-size: 12px;
+    line-height: 1;
 }
 
 .reporte-marker--pendiente {

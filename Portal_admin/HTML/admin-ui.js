@@ -60,6 +60,7 @@ const statusColors = {
   pendiente: "#FF6876",
   descartado: "#486581",
 };
+const formatReportCategory = window.MiCalleReportFormatters.formatCategory;
 
 function normalizeStatus(status) {
   return ({
@@ -185,11 +186,11 @@ function renderCategorySummary(reports) {
   container.setAttribute("aria-busy", "false");
 
   const categoryCounts = [...reports.reduce((counts, report) => {
-    counts.set(report.type, (counts.get(report.type) || 0) + 1);
+    const category = formatReportCategory(report.type);
+    counts.set(category, (counts.get(category) || 0) + 1);
     return counts;
   }, new Map()).entries()]
-    .sort((first, second) => second[1] - first[1] || first[0].localeCompare(second[0], "es"))
-    .slice(0, 4);
+    .sort((first, second) => second[1] - first[1] || first[0].localeCompare(second[0], "es"));
 
   if (categoryCounts.length === 0) {
     container.replaceChildren(createElement("p", "reports-empty", "No hay categorías registradas."));
@@ -201,7 +202,7 @@ function renderCategorySummary(reports) {
   container.replaceChildren(...categoryCounts.map(([category, count], index) => {
     const row = createElement("div", "type-row");
     const track = createElement("div", "type-track");
-    const fill = createElement("span", `type-fill ${fillColors[index]}`);
+    const fill = createElement("span", `type-fill ${fillColors[index % fillColors.length]}`);
     fill.style.setProperty("--fill-width", `${(count / maximum) * 100}%`);
     track.append(fill);
     row.append(createElement("span", "type-name", category), track, createElement("strong", "", String(count)));
@@ -296,7 +297,7 @@ function renderReports(reports, total) {
       report.reporter?.phone,
     ].filter(Boolean).join(" · ");
     main.append(
-      createElement("strong", "", `#${report.id} · ${report.type}`),
+      createElement("strong", "", `#${report.id} · ${formatReportCategory(report.type)}`),
       createElement("small", "", `${report.location.address || "Ubicación no disponible"} · ${reporterDetails}`),
     );
     link.append(
@@ -344,13 +345,8 @@ function renderReportDetails(report) {
     reportId.append(copyButton);
   }
 
-  const formattedType = String(report.type || "")
-    .replace(/[_-]+/g, " ")
-    .trim()
-    .replace(/\s+/g, " ")
-    .toLocaleLowerCase("es");
-  const displayType = formattedType
-    ? formattedType[0].toLocaleUpperCase("es") + formattedType.slice(1)
+  const displayType = report.type
+    ? formatReportCategory(report.type)
     : "Tipo no disponible";
   const facts = document.querySelectorAll(".report-facts dd");
   if (facts[0]) facts[0].textContent = displayType;

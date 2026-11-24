@@ -4,6 +4,7 @@ const contadorReportes = document.querySelector(".contador-reportes");
 const listaReportes = document.querySelector("#lista-reportes-publicos");
 const filtroCategoria = document.querySelector("#filtro-categoria");
 const filtroEstado = document.querySelector("#filtro-estado");
+const leyendaCategorias = document.querySelector("#leyenda-categorias");
 const marcadores = L.layerGroup().addTo(mapa);
 const estadosReporte = {
     pendiente: "Pendiente",
@@ -20,7 +21,8 @@ const iconosEstado = {
     descartado: "fa-ban"
 };
 const formatoCategoria = window.MiCalleReportFormatters.formatCategory;
-const crearIconoMarcador = window.MiCalleMapIcons.createStatusIcon;
+const categoriasReporte = window.MiCalleReportFormatters.categories;
+const crearIconoMarcador = window.MiCalleMapIcons.createCategoryIcon;
 let reportesDisponibles = [];
 
 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -50,10 +52,31 @@ function coordenadasReporte(reporte) {
 }
 
 function prepararFiltroCategorias() {
-    const categorias = [...new Set(reportesDisponibles.map(categoriaReporte))]
+    const seleccionActual = filtroCategoria.value;
+    const categorias = [...new Set([
+        ...categoriasReporte.map((categoria) => categoria.label),
+        ...reportesDisponibles.map(categoriaReporte)
+    ])]
         .sort((a, b) => a.localeCompare(b, "es"));
     filtroCategoria.replaceChildren(new Option("Todas", ""));
     categorias.forEach((categoria) => filtroCategoria.add(new Option(categoria, categoria)));
+    filtroCategoria.value = categorias.includes(seleccionActual) ? seleccionActual : "";
+
+    leyendaCategorias.replaceChildren(...categoriasReporte.map((category) => {
+        const item = document.createElement("div");
+        item.className = "item-leyenda";
+        const icon = document.createElement("span");
+        icon.className = "categoria-leyenda-icono";
+        icon.style.color = category.color;
+        icon.setAttribute("aria-hidden", "true");
+        const glyph = document.createElement("i");
+        glyph.className = `fa-solid ${category.icon}`;
+        icon.append(glyph);
+        const label = document.createElement("span");
+        label.textContent = category.label;
+        item.append(icon, label);
+        return item;
+    }));
 }
 
 function reportesFiltrados() {
@@ -145,7 +168,7 @@ function renderizarMapa(reportes) {
         ubicacionesValidas += 1;
         const estado = estadoNormalizado(reporte);
         const marcador = L.marker(coordenadas, {
-            icon: crearIconoMarcador(estado),
+            icon: crearIconoMarcador(reporte.type),
             title: `${categoriaReporte(reporte)} · ${etiquetaEstado(estado)}`
         }).addTo(marcadores);
         marcador.bindPopup(crearDetalleMarcador(reporte), {

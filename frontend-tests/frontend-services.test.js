@@ -153,7 +153,7 @@ test("Render adapter preserves current HTTP paths and maps payloads to normalize
   assert.equal(calls[0].init.headers.get("Authorization"), "Bearer render-token");
 
   const created = await services.createReport({
-    type: "Semáforo",
+    type: "Señalización dañada o inexistente",
     description: "Daño",
     location: { latitude: 4.7, longitude: -74.2, address: "Carrera 7" },
     photoFile: new Blob(["img"], { type: "image/jpeg" }),
@@ -161,8 +161,9 @@ test("Render adapter preserves current HTTP paths and maps payloads to normalize
   assert.equal(created.data.reportId, "R-02");
   assert.equal(calls[1].url, "https://mi-calle-app-backend.onrender.com/reportes");
   assert.equal(calls[1].init.headers.get("Authorization"), "Bearer render-token");
-  assert.equal(calls[1].init.body.get("tipo"), "Semáforo");
-  assert.equal(calls[1].init.body.get("tipo_problema"), "Semáforo");
+  assert.equal(calls[1].init.body.get("tipo"), "Señalización dañada o inexistente");
+  assert.equal(calls[1].init.body.get("tipo_problema"), "Señalización dañada o inexistente");
+  assert.equal(created.data.report.type, "Señalización dañada o inexistente");
   assert.equal(calls[1].init.body.get("latitud"), "4.7");
 
   const loggedIn = await services.login({ email: " citizen@example.com ", password: "pass" });

@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const cors = require('cors');
 const supabase = require('./config/supabase');
 const { createPublicClient, createUserClient } = require('./config/supabase-user');
+const reportCategories = require('./problem-categories');
 const { validateImage } = require('./services/image-validation.service');
 const {
   buildPhotoStoragePath,
@@ -342,7 +343,7 @@ const server = http.createServer(async (req, res) => {
       if (!authenticated) return;
       const { client: userClient } = authenticated;
       const { fields: data, file } = await readMultipartBody(req);
-      const tipoProblema = normalizeProblemType(data.tipo_problema);
+      const tipoProblema = validateProblemType(data.tipo_problema);
       const descripcion = String(data.descripcion || '').trim();
       const direccionTexto = String(data.direccion_texto || '').trim();
       const latitud = Number(data.latitud);
@@ -801,21 +802,9 @@ function requestError(message, statusCode) {
   return error;
 }
 
-function normalizeProblemType(value) {
-  const type = String(value || '').trim();
-  const legacyCategories = {
-    'Hueco en la vía': 'bache',
-    'Alcantarilla sin tapa': 'alcantarilla_sin_tapa',
-    'Semáforo en mal estado': 'otro',
-    'Señalización dañada': 'otro',
-    'Alumbrado público dañado': 'otro',
-    'Acumulación de basura': 'otro',
-    Otros: 'otro',
-  };
-  if (legacyCategories[type]) return legacyCategories[type];
-  return ['bache', 'grieta', 'hundimiento', 'alcantarilla_sin_tapa', 'otro'].includes(type)
-    ? type
-    : '';
+function validateProblemType(value) {
+  const type = typeof value === 'string' ? value : '';
+  return reportCategories.includes(type) ? type : '';
 }
 
 function handleError(res, error, message) {

@@ -12,6 +12,16 @@
                 iconAnchor: [18, 43],
                 popupAnchor: [0, -39]
             });
+        },
+        createCategoryIcon(value) {
+            const category = window.MiCalleReportFormatters.getCategory(value);
+            return L.divIcon({
+                className: "leaflet-div-icon reporte-marker-icon",
+                html: `<span class="reporte-marker" style="color:${category.color}" aria-hidden="true">${iconoSvg}<i class="fa-solid ${category.icon}" style="color:${category.color}"></i></span>`,
+                iconSize: [36, 44],
+                iconAnchor: [18, 43],
+                popupAnchor: [0, -39]
+            });
         }
     });
 })();

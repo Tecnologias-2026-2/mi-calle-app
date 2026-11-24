@@ -2,15 +2,8 @@ const BASE_URL = "https://mi-calle-app-backend.onrender.com";
 const urlReportes = `${BASE_URL}/reportes`;
 const areaMapa = document.querySelector("#area-mapa");
 const contadorReportes = document.querySelector(".contador-reportes");
-const tiposReporte = {
-    huecos: { nombre: "Hueco en la vía", icono: "fa-road" },
-    semaforo: { nombre: "Semáforo en mal estado", icono: "fa-traffic-light" },
-    alcantarilla: { nombre: "Alcantarilla sin tapa", icono: "fa-droplet" },
-    senalizacion: { nombre: "Señalización dañada", icono: "fa-signs-post" },
-    alumbrado: { nombre: "Alumbrado público dañado", icono: "fa-lightbulb" },
-    basura: { nombre: "Acumulación de basura", icono: "fa-trash" },
-    otros: { nombre: "Otros", icono: "fa-circle-exclamation" }
-};
+const formatoCategoria = window.MiCalleReportFormatters.formatCategory;
+const obtenerCategoria = window.MiCalleReportFormatters.getCategory;
 
 const estadosReporte = {
     reportado: { texto: "Reportado", pinClase: "pin-azul", estadoClase: "estado-azul" },
@@ -40,24 +33,23 @@ function obtenerPosicion(indice) {
 }
 
 function crearPin(reporte, indice) {
-    const tipo = tiposReporte[reporte.tipo] || {
-        nombre: reporte.categoria || "Reporte",
-        icono: "fa-circle-exclamation"
-    };
+    const tipo = reporte.tipo_problema || reporte.tipo || reporte.categoria;
+    const nombreCategoria = formatoCategoria(tipo);
+    const categoria = obtenerCategoria(tipo);
     const estado = estadosReporte[reporte.estado] || estadosReporte.reportado;
     const posicion = obtenerPosicion(indice);
     const pin = document.createElement("div");
 
     pin.className = `pin ${estado.pinClase}`;
-    pin.dataset.reporte = tipo.nombre;
+    pin.dataset.reporte = nombreCategoria;
     pin.dataset.ubicacion = reporte.ubicacion || "Sin ubicación";
     pin.dataset.fecha = formatearFecha(reporte.fecha);
     pin.dataset.estado = estado.texto;
     pin.dataset.estadoClase = estado.estadoClase;
-    pin.dataset.icono = tipo.icono;
+    pin.dataset.icono = categoria.icon;
     pin.setAttribute("role", "button");
     pin.setAttribute("tabindex", "0");
-    pin.setAttribute("aria-label", `Ver reporte: ${tipo.nombre}`);
+    pin.setAttribute("aria-label", `Ver reporte: ${nombreCategoria}`);
     pin.style.top = posicion.top;
     pin.style.left = posicion.left;
     pin.innerHTML = '<i class="fa-solid fa-location-dot"></i>';
